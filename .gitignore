@@ -1,7 +1,6 @@
-# Compiled class file
 *.class
 .classpath
 .project
 .settings/
 
-java_khj\.gitignore
+java_khj/.gitignore
