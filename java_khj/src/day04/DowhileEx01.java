@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class DowhileEx01 {
 
 	public static void main(String[] args) {
-		// y를 입력하면 종료하는 코드를 작성하세요.
+		// y를 입력하면 종료하는 코드를 작성하세요 (do-while문 이용).
 		char ch;
 		Scanner scan = new Scanner(System.in);
 		

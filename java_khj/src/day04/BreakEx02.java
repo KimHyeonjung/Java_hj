@@ -13,7 +13,7 @@ public class BreakEx02 {
 		int num1 = 8, num2 = 12;
 		int i = num1;
 		
-		while(i <= num1) {
+		while(i >= 1) {
 			if(num1 % i == 0 && num2 % i == 0) {				
 				System.out.println(num1 + "와 " + num2 + "의 최대 공약수는 " + i);
 				break;

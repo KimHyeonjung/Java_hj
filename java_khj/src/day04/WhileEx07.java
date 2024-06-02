@@ -15,7 +15,7 @@ public class WhileEx07 {
 		 * */
 		
 		int i = 1;
-		int num = 514;
+		int num = 4;
 		int count = 0;
 		while(i <= num) {
 			if(num % i == 0) {

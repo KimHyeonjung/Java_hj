@@ -9,7 +9,7 @@ public class WhileEx03 {
 		 * 반복문 종료 후 : 없음
 		 * */
 		int i = 1, result = 0;
-		int num = 3;
+		int num = 2;
 		while (i <= 9) {
 			result = num * i;
 			System.out.println(num + " x " + i + " = " + result);
