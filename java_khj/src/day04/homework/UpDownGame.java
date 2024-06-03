@@ -30,6 +30,8 @@ public class UpDownGame {
 			else if(num > random) {
 				System.out.println("Down!");
 			}
+//			else 
+//				System.out.println("정답입니다.");		
 		} while (num != random);
 		System.out.println("정답입니다.");		
 	}
