@@ -66,5 +66,18 @@ public class ArrayEx05 {
 		else {
 			System.out.println(num + "은 없습니다.");
 		}
+		
+		//방법3
+		System.out.print("방법3 결과 : ");
+		for(i = 0; i < arr.length; i++) {			
+			if(arr[i] == num) {
+				System.out.print(num + "은 있습니다.");
+				break;
+			}
+			else if(arr[i] == arr.length -1) {
+				System.out.println(num + "은 없습니다.");
+			}
+		}
+		
 	}
 }
