@@ -6,8 +6,8 @@ public class MethodEx05 {
 		/* 정수 배열이 주어지고 주어진 배열에 원하는 정수가 있는지 없는지 확인하는 코드를 작성하세요
 		 * 단 메서드를 이용하여*/
 		int [] arr = new int[] {1,2,3,4,5,6,7,8,9};
-		String str = "abc";
-		System.out.println(str.compareTo("a"));
+//		String str = "abc";
+//		System.out.println(str.compareTo("a"));
 		int num = 10;
 		if(contains(arr, num)) {
 			System.out.println("arr 배열에는 " + num + "가 있습니다.");
