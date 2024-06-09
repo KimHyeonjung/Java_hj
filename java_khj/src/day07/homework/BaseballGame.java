@@ -39,7 +39,7 @@ public class BaseballGame {
 		//중복되지 않는 랜덤한 수 3개 생성해 baseBallNum에 저장
 		while (storedCount < arrLength) {
 			random = (int)(Math.random() * (max - min +1) + min);
-			//baseBallNum 배열에 새로 생성한 랜덤한 수가 존재하는지 체크
+			//baseBallNum 배열에 새로 생성한 랜덤한 수가 존재하는지 체크(중복 검사)
 			for(i = 0; i < storedCount; i++) {
 				if(random == baseBallNum[i]) {
 					break;
@@ -95,19 +95,19 @@ public class BaseballGame {
 				}
 			}
 			if (strikeCount == 3) {
-				System.out.print(strikeCount + "S");
-				System.out.println("  정답입니다.");
+				System.out.println("정답입니다.");
 			}			
-			else if (strikeCount > 0) {
-				System.out.println(strikeCount + "S");
+			if (strikeCount != 0) {
+				System.out.print(strikeCount + "S");
 			}
-			else if (ballCount > 0) {
-				System.out.println(ballCount + "B");
+			if (ballCount != 0) {
+				System.out.print(ballCount + "B");
 			}
-			else {
-				System.out.println("O");
+			if (ballCount == 0 && strikeCount == 0) {
+				System.out.print("O");
 			}
 			isDupl = true;
+			System.out.println();
 	
 		} while(strikeCount != 3) ;
 	}

@@ -24,7 +24,6 @@ public class MethodEx05 {
 	 * */
 	public static boolean contains(int [] arr, int num) {
 		if(arr == null) {
-//			System.out.println("배열 null");
 			return false;
 		}
 		for(int tmp : arr) {

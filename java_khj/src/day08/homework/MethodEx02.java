@@ -10,26 +10,28 @@ public class MethodEx02 {
 	public static void main(String[] args) {
 		int n = 5;
 		int [] arr1 = new int[n];
-		addRnumArray(arr1, n);
+		createRandomArray(n, 1, 9);
 		showArray(arr1);
 	}
-	/* 기능 : 1~9사이의 랜덤한 수를 생성하는 메서드
-	 * 매개변수 : 최소값과 최대값 =>  => int max, int min 
+	/* 기능 : 최소값과 최대값 사이의 랜덤한 수를 생성하는 메서드
+	 * 매개변수 : 최소값과 최대값 =>  => int min, int max 
 	 * 리턴타입 : 랜덤한 수 => 정수 => int
 	 * 메서드명 : getRandomNum
 	 * */
-	public static int getRandomNum(int max, int min) {
+	public static int getRandomNum(int min, int max) {
 		int random = (int)(Math.random() * (max - min +1) + min);
 		return random;
 	}
-	/* 기능 : 랜덤한 수를 배열에 저장하는 메서드
-	 * 매개변수 : 정수 배열과 배열의 길이 => int 배열, int 배열길이 => int []arr, int n
+	
+	/* 기능 : 배열의 크기와 최소값과 최대값이 주어졌을 때, 랜덤한 배열을 만들어서 알려주는 메서드 
+	 * 매개변수 : 배열의 크기, 최소값, 최대값 => int n, int min, int max
 	 * 리턴타입 : 정수 배열 => int[]
-	 * 메서드명 : addRnumArray
+	 * 메서드명 : createRandomArray
 	 * */
-	public static int[] addRnumArray(int []arr, int n) {
+	public static int[] createRandomArray(int n, int min, int max) {
+		int [] arr = new int[n];
 		for(int i = 0; i < n; i++) {
-			arr[i] = getRandomNum(9, 1);
+			arr[i] = getRandomNum(min, max);
 		}
 		return arr;
 	}
