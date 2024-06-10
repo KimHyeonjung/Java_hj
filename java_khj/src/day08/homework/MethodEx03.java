@@ -11,14 +11,20 @@ public class MethodEx03 {
 	 * */
 	public static void main(String[] args) {
 		Scanner scan = new Scanner(System.in);
-		System.out.print("배열의 크기, 최소값, 최대값 입력 : ");
-		int num = scan.nextInt();
-		int min = scan.nextInt();
-		int max = scan.nextInt();
+		int size;
+		int min;
+		int max;
 		int [] rNumList;
-
-			rNumList = createRandomArray(num, min, max);
-			
+		do {
+			System.out.print("배열의 크기, 최소값, 최대값 입력 : ");
+			size = scan.nextInt();
+			min = scan.nextInt();
+			max = scan.nextInt();
+			if(size > max - min + 1) {
+				System.out.println("랜덤 숫자의 범위가 배열 크기보다 작습니다.");	
+			}
+		} while(size > max - min + 1);
+		rNumList = createRandomArray(size, min, max);
 		System.out.println(Arrays.toString(rNumList));
 	}
 	/* 기능 : 최소값과 최대값 사이의 랜덤한 수를 생성하는 메서드
@@ -36,10 +42,22 @@ public class MethodEx03 {
 	 * 리턴타입 : 정수 배열 => int[]
 	 * 메서드명 : createRandomArray
 	 * */
-	public static int[] createRandomArray(int n, int min, int max) {
-		int [] arr = new int[n];
+	public static int[] createRandomArray(int size, int min, int max) {
+		if(size < 0) {
+			return null;
+		}
+		if(min > max) {
+			int tmp = min;
+			min = max;
+			max = tmp;
+		}
+		//랜덤 숫자의 범위가 배열의 크기보다 작은 경우.
+		if(size > max - min + 1) {
+			return null;
+		}
+		int [] arr = new int[size];
 		int rNum;
-		for(int i = 0; i < n; i++) {			
+		for(int i = 0; i < size; i++) {			
 			rNum = getRandomNum(min, max);
 			while(contains(arr, i, rNum)) {
 				rNum = getRandomNum(min, max);
@@ -48,8 +66,6 @@ public class MethodEx03 {
 		}
 		return arr;
 	}
-
-
 	
 	/**기능 : 배열에 0번지부터 count-1번지까지 확인하려는 정수가 있는지 확인해서 있는지 없는지를 알려주는 메서드 
 	 * 매개변수 : 배열, 확인할 갯수 count, 확인하려는 정수 =>
@@ -59,6 +75,9 @@ public class MethodEx03 {
 	public static boolean contains(int [] arr, int count, int num) {
 		if(arr == null) {
 			return false;
+		}
+		if(count > arr.length) {
+			count = arr.length;
 		}
 		for(int i = 0; i < count; i++) {
 			if(arr[i] == num) {
