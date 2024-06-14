@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class DateEx01 {
 
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) throws ParseException  {
 		//null인 경우를 빼고 예외 발생 경우가 없다. 
 		//Date date = null;
 		Date date = new Date();

@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 public class VocabularyEx01 {
 
+
 	private static Scanner scan = new Scanner(System.in);
 
 	public static void main(String[] args) {
@@ -24,6 +25,7 @@ public class VocabularyEx01 {
 			//메뉴를 출력해주는 메서드
 			printMenu();
 			menu = scan.nextInt();
+			
 			switch (menu) {
 			case 1 :
 				//단어 등록 insertWord
@@ -54,6 +56,7 @@ public class VocabularyEx01 {
 				//System.out.println("잘못된 메뉴입니다.");
 				break;
 			}
+			
 		} while(menu != 5); // 메뉴 입력이 5가 아닐동안 메뉴를 반복해서 출력
 	}
 	

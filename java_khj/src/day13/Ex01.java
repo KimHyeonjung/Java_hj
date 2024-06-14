@@ -13,9 +13,13 @@ public class Ex01 {
 		int bookCount = 0; //
 		System.out.print("책 제목 검색 : ");
 		searchWord = scan.next();
-		for(int i = 0; i < books.length; i++) {
-			if(books[i].contains(searchWord)) {
-				System.out.println(books[i]);
+		for(String tmp : books) {
+			/*if(tmp.contains(searchWord)) {
+				System.out.println(tmp);
+				bookCount++;
+			}*/
+			if(tmp.indexOf(searchWord) >= 0) {
+				System.out.println(tmp);
 				bookCount++;
 			}
 		}
