@@ -68,26 +68,26 @@ public class PhoneManager implements Program{
 	private void search() {
 		//이름을 입력
 		scan.nextLine();
-		System.out.print("검색할 이름 입력 : ");
-		String searchName = scan.nextLine();
-		//이름에 맞는 연락처를 출력
-		printContact(searchName);
+		System.out.print("검색할 이름 입력(엔터:전체검색) : ");
+		String searchWord = scan.nextLine();
+		//검색단어에 맞는 연락처를 출력
+		printContact(searchWord);
 	}
 
 	private void delete() {
 		//삭제할 이름 입력
 		scan.nextLine();
-		System.out.print("삭제할 이름 : ");
-		String name = scan.nextLine();
-		//이름과 일치하는 연락처들을 출력
-		if(!printContact(name)) {
+		System.out.print("삭제할 연락처 정보 입력 : ");
+		String searchWord = scan.nextLine();
+		//검색단어와 일치하는 연락처들을 출력
+		if(!printContact(searchWord)) {
 			return;
 		}
 		//번호를 선택
-		System.out.print("번호 선택 : ");
+		System.out.print("삭제할 [번호] 선택 : ");
 		int index = scan.nextInt() - 1;
 		//번호가 유효한지 확인해서 유효하지 않으면 안내문구 출력 후 종료
-		if(!checkContact(name, index)) {
+		if(!checkContact(searchWord, index)) {
 			System.out.println("잘못 선택했습니다.");
 			return;
 		}
@@ -113,17 +113,17 @@ public class PhoneManager implements Program{
 	private void update() throws Exception {
 		//이름 입력
 		scan.nextLine();
-		System.out.print("검색할 이름 : ");
-		String name = scan.nextLine();
-		//연락처 리스트에서 이름과 일치하는 연락처를 번지+1과 함께 출력
-		if(!printContact(name)) {
+		System.out.print("검색할 연락처 정보 : ");
+		String searchWord = scan.nextLine();
+		//연락처 리스트에서 검색단어와 일치하는 연락처를 번지+1과 함께 출력
+		if(!printContact(searchWord)) {
 			return;
 		}
-		System.out.print("번호 선택 : ");
+		System.out.print("수정할 [번호] 선택 : ");
 		//인덱스번호 선택
 		int index = scan.nextInt() - 1;
 		//인덱스번호가 올바르지 않으면 잘못선택했습니다 출력 후 종료
-		boolean res = checkContact(name, index);
+		boolean res = checkContact(searchWord, index);
 		if(!res) {
 			System.out.println("잘못 선택했습니다.");
 			return;
@@ -144,24 +144,24 @@ public class PhoneManager implements Program{
 		list[index] = contact;		
 	}
 
-	private boolean checkContact(String name, int index) {
+	private boolean checkContact(String searchWord, int index) {
 		if(list == null || count == 0) {
 			return false;
 		}
 		if(index < 0 || index >= count) {
 			return false;
 		}
-		return list[index].getName().contains(name);		
+		return list[index].getName().contains(searchWord) || list[index].getPhoneNumber().contains(searchWord);		
 	}
 
-	private boolean printContact(String name) {
+	private boolean printContact(String searchWord) {
 		if(list == null || count == 0) {
 			System.out.println("등록된 연락처가 없습니다.");
 			return false;
 		}
-		int sameCount = 0; //이름과 일치하는 연락처 개수 => 없는 경우 안내문구를 위해
+		int sameCount = 0; //검색단어와 일치하는 연락처 개수 => 없는 경우 안내문구를 위해
 		for(int i = 0; i < count ; i++) {
-			if(list[i].getName().contains(name)) {
+			if(list[i].getName().contains(searchWord) || list[i].getPhoneNumber().contains(searchWord)) {
 				System.out.println("["+(i+1)+"]"+list[i].toString());
 				sameCount++;
 
@@ -177,6 +177,7 @@ public class PhoneManager implements Program{
 	private void insert() throws Exception {
 		//정보를 입력(이름, 번호)
 		scan.nextLine();
+		System.out.print("추가할 ");
 		System.out.print("이름 : ");
 		String name = scan.nextLine();
 		System.out.print("번호 : ");
@@ -191,8 +192,7 @@ public class PhoneManager implements Program{
 			return;
 		}
 		//없으면 등록이 완료되었습니다라고 출력
-		list[count] = contact;
-		count++;
+		list[count++] = contact;
 		System.out.println("등록이 완료되었습니다.");
 		return;		
 	}
@@ -237,7 +237,7 @@ public class PhoneManager implements Program{
 			}catch(Exception e) {
 				System.out.println(e.getMessage());
 			}
-			System.out.println(Arrays.toString(list));
+//			System.out.println(Arrays.toString(list));
 
 		}while(menu != EXIT);
 
