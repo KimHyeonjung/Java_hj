@@ -50,11 +50,6 @@ public class Ex05 {
 		System.out.println("프로그램을 종료합니다.");
 
 
-
-
-
-		
-
 	}
 
 	private static int getBall(List<Integer> com, List<Integer> user) {
