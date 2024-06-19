@@ -20,7 +20,7 @@ class Solution {
     	int[] answer = new int[2];
         int numerSum, denomSum;
         numerSum = (numer1 * denom2) + (numer2 * denom1);
-        denomSum = (denom1 * denom2) + (denom2 * denom1);
+        denomSum = (denom1 * denom2);
         
         int i = 1;
 		int gcd = 0;
@@ -30,6 +30,10 @@ class Solution {
 			}
 			i++;
 		}	
+		answer[0] = numerSum / gcd;
+		answer[1] = denomSum / gcd;
+		System.out.println(answer[0]);
+		System.out.println(answer[1]);
 		System.out.println(gcd);
     
     	return answer;
