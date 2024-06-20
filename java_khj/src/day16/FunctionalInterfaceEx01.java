@@ -20,12 +20,11 @@ public class FunctionalInterfaceEx01 {
 		list.add(new Person("고길동", "2", 40));
 		list.add(new Person("둘리", "3", 10000));
 		
+		System.out.println("--Consumer-------------");
 		print(list, c->{
 			System.out.println(c.getName());
 		});
-		
 		print(list, c->System.out.println(c.getAge()));
-		
 		print(list, c->System.out.println(c));
 		
 		Person p = randomPerson(()->{
@@ -33,6 +32,8 @@ public class FunctionalInterfaceEx01 {
 			int r = (int)(Math.random() * (max - min + 1) + min);
 			return new Person("", "", r);
 		});
+		
+		System.out.println("--Supplier-------------");
 		System.out.println(p);
 		int r1 = randomNumber(()->{
 			int min =0, max = 10000;
@@ -47,15 +48,18 @@ public class FunctionalInterfaceEx01 {
 		});
 		System.out.println(r2);
 		
+		System.out.println("--Function-------------");
 		printString(list, (p1)->p1.getName());
 		printString(list, (p1)->p1.getNum());
-		System.out.println("----Operator----");
+		
+		System.out.println("--UnaryOperator-------------");
 		increaseAge(list, (p1)->{
 			p1.setAge(p1.getAge() +1);
 			return p1;
 		});
 		System.out.println(list);
 		
+		System.out.println("--Predicate-------------");
 		print2(list, p1->p1.getAge() > 30);
 		print2(list, p1->p1.getName().equals("홍길동"));
 		
