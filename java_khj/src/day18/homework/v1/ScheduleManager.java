@@ -1,4 +1,4 @@
-package day18.homework;
+package day18.homework.v1;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -74,13 +74,12 @@ public class ScheduleManager implements Program{
 			return true;
 		}
 		if(!Pattern.matches(regex, date)) {
+			System.out.println("날짜 형식이 잘못됨(yyyy-MM-dd)");
 			return false;
 		}
 		return true;
 	}
-	//	String regex = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}$";
-	//	 if(!Pattern.matches(regex, date)) {
-	//	
+	
 
 	private void searchSchedule() throws ParseException {
 		//조회할 날짜를 입력받고
@@ -101,7 +100,7 @@ public class ScheduleManager implements Program{
 			}
 			return;
 		}
-		System.out.println("날짜 형식이 잘못됨(yyyy-MM-dd)");
+		
 
 	}
 
@@ -166,7 +165,7 @@ public class ScheduleManager implements Program{
 
 	@Override
 	public void run() {
-		String fileName = "src/day18/homework/schedule.txt";
+		String fileName = "src/day18/homework/v1/schedule.txt";
 
 		load(fileName);
 

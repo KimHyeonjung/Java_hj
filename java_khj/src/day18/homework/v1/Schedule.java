@@ -1,4 +1,4 @@
-package day18.homework;
+package day18.homework.v1;
 
 import java.io.Serializable;
 import java.util.regex.Pattern;
