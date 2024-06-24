@@ -167,10 +167,10 @@ public class Main {
 	private static void runMenu(int menu) {
 		switch (menu) {
 		case 1: 
-			day18.homework.v1.Main.main(null); 
+			day18.homework.v1.V1Main.main(null); 
 			break;
 		case 2:
-			day18.homework.v2.Main.main(null); 
+			day18.homework.v2.V2Main.main(null); 
 			break;
 		case 3:
 			System.out.println("종료합니다.");
