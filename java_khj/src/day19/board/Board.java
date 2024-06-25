@@ -26,6 +26,14 @@ public class Board implements Serializable{
 	
 	//게시글 번호를 생성할 때 활용
 	private static int count = 0;
+	
+	public static int getCount() {
+		return count;
+	}
+	
+	public static void setCount(int count1) {
+		count = count1;
+	}
 
 	//이 생성자를 이용할 때만 게시글 번호를 1증가 하도록 함
 	public Board(String title, String sub, String id, String pw) {
