@@ -38,7 +38,8 @@ public class BoardManager {
 
 	public void save(String fileName) {
 		try(FileOutputStream fos = new FileOutputStream(fileName);
-				ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+			ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+			oos.write(Board.getCount());
 			oos.writeObject(bdList);
 		} catch (Exception e) {
 			System.out.println("저장에 실패했습니다.");
@@ -47,7 +48,9 @@ public class BoardManager {
 	
 	public void load(String fileName) {
 		try(FileInputStream fis = new FileInputStream(fileName);
-				ObjectInputStream ois = new ObjectInputStream(fis)) {
+			ObjectInputStream ois = new ObjectInputStream(fis)) {
+			int count = ois.read();
+			Board.setCount(count);
 			bdList = (List<Board>)ois.readObject();
 		} catch (Exception e) {
 			System.out.println("불러오기에 실패했습니다.");
@@ -74,7 +77,7 @@ public class BoardManager {
 		switch (menu) {
 		case INSERT :
 			insert();
-			System.out.println(bdList);
+//			System.out.println(bdList);
 			break;
 		case UPDATE :
 			update("수정");
@@ -96,25 +99,45 @@ public class BoardManager {
 		System.out.println("프로그램을 종료합니다.");
 		printBar();
 	}
-
+	/**
+	 * 
+	 * @param search
+	 * @return
+	 */
+	private List<Board> getSearchList(String search) {
+		
+		List<Board> searchList = new ArrayList<Board>();
+		//전체 게시글에서 하나씩 꺼내서 전체 탐색
+		for(Board post : bdList) {
+			//게시글의 제목 또는 내용에 검색어가 포함되어 있으면 검색 리스트에 추가합니다.
+			if(post.getTitle().contains(search) ||	post.getSub().contains(search)) {
+				searchList.add(post);
+			}
+			
+		}
+		return searchList;
+		
+		//스트림을 이용하여 검색어와 일치하는 게시글 리스트를 가져옴
+//		return bdList.stream().filter(b->b.getTitle().contains(search) || b.getSub().contains(search))
+//			    .collect(Collectors.toList());
+	}
+	
 	private void search() {
 		printBar();
 		//검색어 입력
-		System.out.print("검색어 입력 : ");
+		System.out.print("검색어 입력(전체는 엔터) : ");
 		scan.nextLine();
 		String search = scan.nextLine();
 		//게시글에서 검색어가 제목 또는 내용에 들어간 게시글리스트를 가져옴
-		Stream<Board> stream = bdList.stream();
-		List<Board> tmpList = stream.filter(b->b.getTitle().contains(search) || b.getSub().contains(search))
-											    .collect(Collectors.toList());
+		List<Board> searchList = getSearchList(search);
 		//게시글 리스트가 비어있으면 안내문구 출력 후 종료
-		if(tmpList.size() == 0) {
+		if(searchList.size() == 0) {
 			printBar();
 			System.out.println("검색어가 포함된 게시글이 없습니다.");
 			return;
 		}
 		//가져온 게시글 리스트를 출력
-		System.out.println(bdList);
+		printList(searchList);
 		//게시글을 확인할건지 선택
 		printBar();
 		System.out.print("게시글 내용 확인할겨?(y / n)");
@@ -126,13 +149,12 @@ public class BoardManager {
 		//확인하면 게시글 번호를 입력
 		if(yn == 'y' ) {
 			printBar();
-			System.out.print("게시글 번호 입력 :");
+			System.out.print("검색 결과 중 확인할 게시글 번호 입력 :");
 			int num = scan.nextInt();
-
 			//입력받은 게시글 번호로 객체를 생성
 			Board bd = new Board(num);
 			//검색된 리스트에서 생성된 객체와 일치하는 번지를 확인
-			int index = tmpList.indexOf(bd);
+			int index = searchList.indexOf(bd);
 			//번지가 유효하지 않으면 안내문구 출력후 종료
 			if(index < 0) {
 				printBar();
@@ -140,9 +162,9 @@ public class BoardManager {
 				return;
 			}
 			//번지에 있는 게시글을 가져옴
-			bdList.get(index).print();
+			bd = searchList.get(index);
 			//가져온 게시글을 출력
-			printBar();
+			bd.print();
 		}
 		//메뉴로 돌아가려면.. 문구 출력
 		System.out.print("메뉴로 돌아가시려면 엔터 입력 : ");
@@ -154,6 +176,13 @@ public class BoardManager {
 		printBar();
 	}
 
+	private void printList(List<Board> searchList) {
+		for(Board post : searchList) {
+			System.out.println(post);
+		}
+		
+	}
+
 	private void delete(String type) {
 		//삭제할 게시글 번호를 입력
 		printBar();
@@ -162,13 +191,20 @@ public class BoardManager {
 		//게시글 번호에 맞는 게시글을 가져옴
 		Board tmpBd = selectPost(num);
 		//게시글이 없으면 종료
-		if(tmpBd == null) {
-			return;
+//		if(tmpBd == null) {
+//			return;
+//		}
+//		//리스트에서 게시글을 삭제
+//		bdList.remove(tmpBd);
+//		printBar();
+//		System.out.println(tmpBd.getNum() + "번 게시글이 " + type + "되었습니다.");
+//		printBar();
+		
+		//게시글을 리스트에서 삭제하는데 성공하면  안내 문구 출력 위 166~172 코드 대신
+		if(bdList.remove(tmpBd)) {
+			printBar();
+			System.out.println(tmpBd.getNum() + "번 게시글이 " + type + "되었습니다.");
 		}
-		//리스트에서 게시글을 삭제
-		bdList.remove(tmpBd);
-		System.out.println(tmpBd.getNum() + "번 게시글이 " + type + "되었습니다.");
-		printBar();
 	}
 
 	private void update(String type) {
