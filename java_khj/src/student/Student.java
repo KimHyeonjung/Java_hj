@@ -1,5 +1,6 @@
 package student;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -10,7 +11,11 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Student {
+public class Student implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	//- 학년, 반, 번호, 이름
 	private int grade;
 	private int classNum;
@@ -52,7 +57,7 @@ public class Student {
 
 	public void print() {
 		System.out.println(grade + "학년 " + classNum + "반 " + num + "번 " + name);
-		System.out.println("과목 성적");
+		System.out.println("[과목 성적]");
 		if(subjectList.size() == 0) {
 			System.out.println("등록된 과목이 없습니다.");
 			return;
@@ -60,6 +65,13 @@ public class Student {
 		for(Subject tmp : subjectList) {
 			System.out.println(tmp);
 		}
+	}
+	
+	public void update(Student std) {
+		this.grade = std.grade;
+		this.classNum = std.classNum;
+		this.num = std.num;
+		this.name = std.name;
 	}
 	
 	

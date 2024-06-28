@@ -1,12 +1,19 @@
 package student;
 
+import java.io.Serializable;
 import java.util.Objects;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-public class Subject {
+@AllArgsConstructor	
+public class Subject implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String subName;
 	private int grade;
 	private int semester;
@@ -37,6 +44,19 @@ public class Subject {
 		this.subName = subName;
 		this.grade = grade;
 		this.semester = semester;
+	}
+	@Override
+	public String toString() {
+		return subName + "  " + grade + "학년 " + semester + "학기  중간:" + midterm
+				+ ", 기말:" + finals + ", 수행평가:" + performance + "  총점:" + getTotal();
+	}
+	private double getTotal() {
+		return midterm * 0.4 + finals * 0.5 + performance * 0.1;
+	}
+	public void update(int midterm, int finals, int performance) {
+		this.midterm = midterm;
+		this.finals = finals;
+		this.performance = performance;
 	}
 	
 	
