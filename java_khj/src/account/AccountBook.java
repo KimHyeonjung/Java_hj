@@ -1,15 +1,17 @@
 package account;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 
 @Data
-@AllArgsConstructor
-public class AccountBook implements Serializable{
+
+public class AccountBook implements Serializable, Comparable<AccountBook>{
 
 	private static final long serialVersionUID = -3995952016754223086L;
 //	 * 날짜 : 2024-06-10
@@ -26,6 +28,46 @@ public class AccountBook implements Serializable{
 	private String category;
 	private String detail;
 	private int amount;
+	
+	
+	public AccountBook(String date, String inExStatus, String category, String detail, int amount) throws ParseException {
+		setDate(date);
+		this.inExStatus = inExStatus;
+		this.category = category;
+		this.detail = detail;
+		this.amount = amount;
+	}
+
+
+	public void setDate(String date) throws ParseException {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy MM dd");
+		this.date = format.parse(date);
+	}
+
+	public String getDate(){
+		SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일");
+		return format.format(date);
+	}
+
+	public String getAmount(){
+		DecimalFormat format = new DecimalFormat("\u00A4 ###,###,###");
+		return format.format(amount);
+	}
+	
+	@Override
+	public String toString() {
+		return getDate() + " | " + inExStatus + " | " + category + " |  "
+				+ getAmount() + " |   " + detail;
+	}
+
+
+	@Override
+	public int compareTo(AccountBook o) {
+		if(date.equals(o.date)) {
+			return inExStatus.compareTo(o.inExStatus);
+		}
+		return date.compareTo(o.date);
+	}
 	
 	
 	
