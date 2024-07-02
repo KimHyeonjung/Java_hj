@@ -1,5 +1,6 @@
 package day24;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -18,9 +19,10 @@ public class Ex16 {
 		 * 
 		 * 3. src/day24/ex16.txt에 2번에서 작성한 객체를 저장하세요.*/
 		String fileName= "src/day24/ex16.txt";
+		File file = new File(fileName);
 		NameAge na = new NameAge("홍길동", 21);
 		
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))){
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))){
 			oos.writeObject(na);
 			oos.flush();
 		} catch (Exception e) {
@@ -28,7 +30,7 @@ public class Ex16 {
 		}
 		/* 4. src/day24/ex16.txt에 저장된 객체를 불러온 후 콘솔창에 출력하는 코드를 작성하세요.
 		 * */
-		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))){
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))){
 			/* (NameAge)를 생략하면 에러 발생
 			 * 원인 : readObject는 리턴이 Object인데, 다운캐스팅은 자동으로 이루어지지 않는다.
 			 * 		 그래서 명시적으로 클래스 형변환을 해야 한다.
