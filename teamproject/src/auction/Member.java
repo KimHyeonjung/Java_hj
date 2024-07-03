@@ -1,6 +1,7 @@
 package auction;
 
 import java.io.Serializable;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +13,7 @@ public class Member implements Serializable{
 	private static final long serialVersionUID = 419764627536247947L;
 	private String id;
 	private String pw;
-	private Item item;
+	private List<Item> items;
 	private boolean admin;
 	
 	

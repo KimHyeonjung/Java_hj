@@ -1,4 +1,4 @@
-package auction;
+package auction.server;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
