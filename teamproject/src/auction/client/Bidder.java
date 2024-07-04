@@ -16,19 +16,14 @@ public class Bidder {
 		
 		
 		try {
-			System.out.print("아이디 입력 : ");
-			String id = scan.next();
-			System.out.print("비밀번호 입력 : ");
-			String pw = scan.next();
+			
 			Socket socket = new Socket(ip, port);
-			System.out.println("[연결 성공]");
-//			Client client = new Client(id, socket);
-//			client.receive();
+			System.out.println("[경매 서버에 연결]");
+			Client client = new Client(socket);
+			client.logIn();
 //			client.send();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println("[연결에 실패하였습니다.]");
 		}
 	}
 

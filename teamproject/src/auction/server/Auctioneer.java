@@ -24,10 +24,14 @@ public class Auctioneer {
 		List<ObjectOutputStream> list = new ArrayList<ObjectOutputStream>();
 
 		try(ServerSocket serverSocket = new ServerSocket(port)) {
+			System.out.println("경매 서버 오픈");
 			while(true) {
 				Socket socket = serverSocket.accept();
-				System.out.println("[연결 성공]");
-//				Server server = new Server(list, socket);
+				if(socket.isConnected()) {
+					System.out.println("[" + socket.getLocalAddress() + " : " + socket.getPort() + "에서 접속]");
+				}
+				
+				Server server = new Server(list, socket);
 //				server.receive();
 			}
 		} catch (IOException e) {
