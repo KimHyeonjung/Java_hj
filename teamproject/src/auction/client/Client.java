@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import auction.Member;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -15,7 +17,9 @@ public class Client {
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
 	public final static String EXIT = "-quit";
-	
+	public final static String LOGIN = "-login";
+	public final static String REGIST = "-regist";
+	public static Scanner scan = new Scanner(System.in);
 	public Client(Socket socket) {
 		this.socket = socket;
 		try {
@@ -25,24 +29,74 @@ public class Client {
 		}
 	}
 	
+	public void start() {
+		int menu = 1;
+		System.out.println("1. 로그인");
+		System.out.println("2. 회원가입");
+		System.out.println("3. 종료");
+		System.out.print("메뉴 선택 : ");
+		menu = nextInt();
+		runMenu(menu);
+	}
+	
+	public void runMenu(int menu) {
+		switch (menu) {
+		case 1 : 
+			try {
+				oos.writeUTF(LOGIN);
+			} catch (IOException e) {}
+			receive();
+			break;
+		case 2 :
+			try {
+				oos.writeUTF(REGIST);
+			} catch (IOException e) {}
+			receive();
+			break;
+		case 3 :
+			break;
+		default :
+			System.out.println("잘못된 메뉴 입니다.");
+			
+		}
+	}
+	
+	public void registration() {
+		
+	}
+	
 	public void logIn() {
-		Scanner scan = new Scanner(System.in);
 		System.out.print("아이디 입력 : ");
 		String id = scan.next();
 		System.out.print("비밀번호 입력 : ");
 		String pw = scan.next();
+		Member login = new Member(id, pw, null, false);
+		try {
+			oos.writeObject(login);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
+	
+	
+	// 로그인 하고서 수신 가능
 	public void receive() {
 		Thread t = new Thread(()->{
 			try {
 				
 				while(true) {
-					String chat = ois.readUTF();
-					if(chat.equals(EXIT)) {
+					String so = ois.readUTF();
+					if(so.equals(EXIT)) {
 						break;
 					}
-					System.out.println(": " + chat);
+					if(so.equals(LOGIN)) {
+						logIn();
+					}
+					if(so.equals(REGIST)) {
+						registration();
+					}
+						System.out.println(so);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -55,7 +109,7 @@ public class Client {
 	public void send() {
 		Thread t = new Thread(()->{
 			try {
-				Scanner scan = new Scanner(System.in);
+				
 				while(true){
 					String str = scan.nextLine();
 					oos.writeUTF(str);
@@ -69,5 +123,15 @@ public class Client {
 			}
 		});
 		t.start();
+	}
+	
+	//정수 말고 다른거 입력했을 때 예외 처리
+	public int nextInt() {
+		try {
+			return scan.nextInt();
+		} catch (InputMismatchException e) {
+			scan.nextLine();
+			return Integer.MIN_VALUE;
+		}
 	}
 }
