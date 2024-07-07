@@ -41,27 +41,45 @@ public class Server {
 	}
 
 	public void receive() {
-		try {
-			String menu ="";
-			menu = ois.readUTF();
-			if(menu.equals(LOGIN)) {
-				oos.writeUTF(LOGIN);
-			}
-			if(menu.equals(REGIST)) {
-				oos.writeUTF(REGIST);
-			}
-			Thread thread = new Thread(()->{
-				while(true) { // true 대신 경매 시간 비교식 넣으면 될듯
-					
+		Thread thread = new Thread(()->{
+			try {
+				String menu ="";
+				menu = ois.readUTF();
+				if(menu.equals(LOGIN)) {
+					oos.writeUTF(LOGIN);
+					while(true) {
+						Member login;
+						try {
+							login = (Member)ois.readObject();
+							for(Member tmp : memberList) {
+								if(tmp.equals(login)) {
+									oos.writeUTF("-identify");
+									break;
+								} else {
+									oos.writeUTF("-no");
+								}
+							}
+							break;
+						} catch (ClassNotFoundException e) {
+							e.printStackTrace();
+						}
+
+					}
 				}
-				
-			});
+				if(menu.equals(REGIST)) {
+					oos.writeUTF(REGIST);
+				}
 
+				while(true) { // true 대신 경매 시간 비교식 넣으면 될듯
+					//					if(ois.getClass()) {
+					//						
+					//					}
+				}
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 
 	@SuppressWarnings("unchecked")

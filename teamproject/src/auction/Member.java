@@ -2,6 +2,7 @@ package auction;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +16,23 @@ public class Member implements Serializable{
 	private String pw;
 	private List<Item> items;
 	private boolean admin;
+	
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Member other = (Member) obj;
+		return Objects.equals(id, other.id) && Objects.equals(pw, other.pw);
+	}
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, pw);
+	}
 	
 	
 }

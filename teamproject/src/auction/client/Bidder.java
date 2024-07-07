@@ -20,7 +20,7 @@ public class Bidder {
 			Socket socket = new Socket(ip, port);
 			System.out.println("[경매 서버에 연결]");
 			Client client = new Client(socket);
-			client.logIn();
+			client.start();
 //			client.send();
 		} catch (Exception e) {
 			System.out.println("[연결에 실패하였습니다.]");

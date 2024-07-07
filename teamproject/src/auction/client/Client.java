@@ -20,6 +20,7 @@ public class Client {
 	public final static String LOGIN = "-login";
 	public final static String REGIST = "-regist";
 	public static Scanner scan = new Scanner(System.in);
+	
 	public Client(Socket socket) {
 		this.socket = socket;
 		try {
@@ -62,6 +63,20 @@ public class Client {
 	}
 	
 	public void registration() {
+		System.out.print("아이디 입력 : ");
+		String id = scan.next();
+		System.out.print("비밀번호 입력 : ");
+		String pw1 = scan.next();
+		System.out.print("비밀번호 확인 : ");
+		String pw2 = scan.next();
+		if(pw1.equals(pw2)) {
+			Member registration = new Member(id, pw1, null, false);
+			try {
+				oos.writeObject(registration);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		
 	}
 	
@@ -95,6 +110,10 @@ public class Client {
 					}
 					if(so.equals(REGIST)) {
 						registration();
+					}
+					if(so.equals("-identity")) {
+						System.out.println("로그인 성공");
+//						입찰 기능 메서드로
 					}
 						System.out.println(so);
 				}
