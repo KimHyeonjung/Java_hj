@@ -9,15 +9,15 @@ import java.util.Scanner;
 public class Bidder {
 
 	public static void main(String[] args) {
-		Scanner scan = new Scanner(System.in);
-		System.out.print("접속할 IP와 port번호 입력 : ");
-		String ip = scan.next();
-		int port = scan.nextInt();
-		
+//		Scanner scan = new Scanner(System.in);
+//		System.out.print("접속할 IP와 port번호 입력 : ");
+//		String ip = scan.next();
+//		int port = scan.nextInt();
+//		
 		
 		try {
 			
-			Socket socket = new Socket(ip, port);
+			Socket socket = new Socket("192.168.30.209", 6006);
 			System.out.println("[경매 서버에 연결]");
 			Client client = new Client(socket);
 			client.start();

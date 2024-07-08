@@ -27,6 +27,15 @@ public class Auctioneer {
 		
 		List<ObjectOutputStream> list = new ArrayList<ObjectOutputStream>();
 		List<Member> memberList = new ArrayList<Member>();
+//		try {
+//			File file = new File("src/auction/server/memberData.txt");
+//			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
+//			oos.writeObject(memberList);
+//			oos.close();
+//		} catch (Exception e) {
+//			System.out.println("파일 저장 실패");
+//		}
+		
 		try(ServerSocket serverSocket = new ServerSocket(port)) {
 			System.out.println("경매 서버 오픈");
 			while(true) {
@@ -36,11 +45,12 @@ public class Auctioneer {
 				}
 				
 				Server server = new Server(list, memberList, socket);
-//				server.receive();
+				server.receive();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 	}
 
 

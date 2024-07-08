@@ -31,13 +31,13 @@ public class Client {
 	}
 	
 	public void start() {
-		int menu = 1;
-		System.out.println("1. 로그인");
-		System.out.println("2. 회원가입");
-		System.out.println("3. 종료");
-		System.out.print("메뉴 선택 : ");
-		menu = nextInt();
-		runMenu(menu);
+		int menu;
+			System.out.println("1. 로그인");
+			System.out.println("2. 회원가입");
+			System.out.println("3. 종료");
+			System.out.print("메뉴 선택 : ");
+			menu = nextInt();
+			runMenu(menu);
 	}
 	
 	public void runMenu(int menu) {
@@ -45,6 +45,7 @@ public class Client {
 		case 1 : 
 			try {
 				oos.writeUTF(LOGIN);
+				oos.flush();
 			} catch (IOException e) {}
 			receive();
 			break;
@@ -55,6 +56,7 @@ public class Client {
 			receive();
 			break;
 		case 3 :
+			System.out.println("종료");
 			break;
 		default :
 			System.out.println("잘못된 메뉴 입니다.");
@@ -69,13 +71,15 @@ public class Client {
 		String pw1 = scan.next();
 		System.out.print("비밀번호 확인 : ");
 		String pw2 = scan.next();
-		if(pw1.equals(pw2)) {
-			Member registration = new Member(id, pw1, null, false);
-			try {
-				oos.writeObject(registration);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		if(!pw1.equals(pw2)) {
+			System.out.println("비밀번호가 일치하지 않습니다.");
+			return;
+		}
+		Member registration = new Member(id, pw1, null, false);
+		try {
+			oos.writeObject(registration);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		
 	}
@@ -88,6 +92,7 @@ public class Client {
 		Member login = new Member(id, pw, null, false);
 		try {
 			oos.writeObject(login);
+			oos.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -99,9 +104,9 @@ public class Client {
 	public void receive() {
 		Thread t = new Thread(()->{
 			try {
-				
 				while(true) {
 					String so = ois.readUTF();
+					System.out.println(so);
 					if(so.equals(EXIT)) {
 						break;
 					}
@@ -115,7 +120,7 @@ public class Client {
 						System.out.println("로그인 성공");
 //						입찰 기능 메서드로
 					}
-						System.out.println(so);
+						
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

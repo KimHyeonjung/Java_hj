@@ -33,7 +33,7 @@ public class Server {
 			this.oos = new ObjectOutputStream(socket.getOutputStream());
 			this.ois = new ObjectInputStream(socket.getInputStream());
 			list.add(oos); //연결중인 모든 클라이언트들에게 보내주기 위해 생성된 socket의 output스트림을 저장
-			File file = new File("memberData.txt");
+			File file = new File("src/auction/server/memberData.txt");
 			loadMemberList(file);
 			Collections.synchronizedList(memberList);
 		} catch (Exception e) {
@@ -45,18 +45,24 @@ public class Server {
 			try {
 				String menu ="";
 				menu = ois.readUTF();
+				System.out.println(menu);
 				if(menu.equals(LOGIN)) {
+					System.out.println(socket.getLocalAddress() + "이 로그인 시도]");
 					oos.writeUTF(LOGIN);
+					oos.flush();
 					while(true) {
+						System.out.println("test");
 						Member login;
 						try {
 							login = (Member)ois.readObject();
 							for(Member tmp : memberList) {
 								if(tmp.equals(login)) {
 									oos.writeUTF("-identify");
+									oos.flush();
 									break;
 								} else {
 									oos.writeUTF("-no");
+									oos.flush();
 								}
 							}
 							break;
@@ -68,6 +74,25 @@ public class Server {
 				}
 				if(menu.equals(REGIST)) {
 					oos.writeUTF(REGIST);
+					while(true) {
+						Member registration;
+						try {
+							registration = (Member)ois.readObject();
+							for(Member tmp : memberList) {
+								if(tmp.equals(registration)) {
+									oos.writeUTF("-duplication");
+									break;
+								} else {
+									memberList.add(registration);
+									oos.writeUTF("-ok");
+								}
+							}
+							break;
+						} catch (ClassNotFoundException e) {
+							e.printStackTrace();
+						}
+
+					}
 				}
 
 				while(true) { // true 대신 경매 시간 비교식 넣으면 될듯
@@ -80,6 +105,7 @@ public class Server {
 				e.printStackTrace();
 			}
 		});
+		thread.start();
 	}
 
 	@SuppressWarnings("unchecked")
