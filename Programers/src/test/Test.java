@@ -1,20 +1,24 @@
 package test;
 
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
 
 public class Test {
 
 	public static void main(String[] args) {
-		Date ctime = new Date(System.currentTimeMillis());
-		Date ctime2 = new Date(System.currentTimeMillis() + 5000);
 		
-		System.out.println(ctime);
-		System.out.println(ctime2);
-		while(ctime2.after(new Date(System.currentTimeMillis()))) {
-			
-			
+		
+		
+		Instant start = Instant.now();
+		System.out.println(start);
+		while (Duration.between(start, Instant.now()).toMinutes() < 1) {
+			// 반복할 작업을 여기 추가하세요
+//			System.out.println(Duration.between(start, Instant.now()));
 		}
-		System.out.println("종료");
+		System.out.println("반복문이 종료되었습니다.");
+
 	}
 
 }

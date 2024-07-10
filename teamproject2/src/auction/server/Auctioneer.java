@@ -8,6 +8,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,8 +28,12 @@ public class Auctioneer {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		Item item = addItem();
+		
 		List<ObjectOutputStream> list = new ArrayList<ObjectOutputStream>();
+//		Instant now = Instant.now();
+		Item item = addItem();
+//		System.out.print("진행 시간(s) : ");
+		
 		
 		try(ServerSocket serverSocket = new ServerSocket(port)) {
 			System.out.println("경매 서버 오픈");
@@ -50,17 +55,16 @@ public class Auctioneer {
 	public static Item addItem() {
 		System.out.println("[경매 물품 등록]");
 		String name;
-		int price, time;
+		int price;
 		System.out.print("물품명: ");
 		name = scan.nextLine();
 		System.out.print("시작가 : ");
 		price = scan.nextInt();
-		System.out.print("타이머(s) : ");
-		time = scan.nextInt();
-		Date timer = new Date(System.currentTimeMillis() + (time * 1000));
 		
 		
-		return new Item(name, price, timer, "");
+		
+		
+		return new Item(name, price, "");
 	}
 
 

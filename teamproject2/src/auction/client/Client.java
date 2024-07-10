@@ -21,6 +21,7 @@ public class Client {
 	public static Scanner scan = new Scanner(System.in);
 	
 	public Client(Socket socket, String id) {
+		this.id = id;
 		this.socket = socket;
 		try {
 			ois = new ObjectInputStream(socket.getInputStream());
@@ -30,6 +31,14 @@ public class Client {
 	}
 	
 	public void start() {
+		try {
+			Item item =	(Item)ois.readObject();
+			System.out.println(item);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		int menu;
 			System.out.println("1. 경매 참가");
 			System.out.println("2. 종료");
@@ -41,14 +50,8 @@ public class Client {
 	public void runMenu(int menu) {
 		switch (menu) {
 		case 1 : 
-			try {
-				Item item =	(Item)ois.readObject();
-				System.out.println(item);
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			receive();
+			send();
 			break;
 		case 2 :
 			break;
@@ -62,9 +65,9 @@ public class Client {
 		Thread t = new Thread(()->{
 			try {
 				while(true) {
-					String so = ois.readUTF();
-					System.out.println(so);
-					if(so.equals(EXIT)) {
+					String sd = ois.readUTF();
+					System.out.println(sd);
+					if(sd.equals(EXIT)) {
 						break;
 					}
 						
@@ -80,9 +83,10 @@ public class Client {
 	public void send() {
 		Thread t = new Thread(()->{
 			try {
-				
 				while(true){
-					String str = scan.nextLine();
+					System.out.print("희망 입찰가 입력: ");
+					String str = scan.next();
+					oos.writeUTF(id);
 					oos.writeUTF(str);
 					oos.flush();
 					if(str.equals(EXIT)) {
