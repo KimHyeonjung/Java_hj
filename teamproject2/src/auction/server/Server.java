@@ -56,17 +56,21 @@ public class Server {
 		Thread thread = new Thread(()->{
 			String id = "";
 			try {
+				id = ois.readUTF();
+				System.out.println("[ "+ id + "님 입장 ]");
 				oos.writeObject(item);
 				oos.flush();
 				System.out.println("아이템 전송");
 				
 				while(true) { // true 대신 경매 시간 비교식 넣으면 될듯
 					id = ois.readUTF();
-					String chat = ois.readUTF();
-					System.out.println(id + ": " + chat);
+					String str = ois.readUTF();
+					int price = Integer.parseInt(str);
+					System.out.println(id + ": " + str);
 					//최고입찰가와 입찰자를 아이템 등록
+					item.updateBid(id, price);
 						//메세지를 보낸 소켓을 제외한 다른 소켓에 메세지를 전송
-							sendAll(id, chat);
+							sendAll();
 				}
 				//				System.out.println("[ 경매종료 ]");
 
@@ -77,11 +81,18 @@ public class Server {
 		thread.start();
 	}
 
-	public void sendAll(String id, String message) {
+	public void sendAll() {
 		for(ObjectOutputStream tmp : list) {
 			//메세지를 보낸 소켓을 제외한 다른 소켓에 메세지를 전송
-			if(tmp != oos) {
-			}
+//			if(tmp != oos) {
+				try {
+					System.out.println(item);
+					tmp.writeObject(item);
+					tmp.flush();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+//			}
 		}
 	}
 

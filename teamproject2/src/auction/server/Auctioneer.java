@@ -36,7 +36,7 @@ public class Auctioneer {
 		
 		
 		try(ServerSocket serverSocket = new ServerSocket(port)) {
-			System.out.println("경매 서버 오픈");
+			System.out.println("<< 경매 서버 오픈 >>");
 			while(true) {
 				Socket socket = serverSocket.accept();
 				if(socket.isConnected()) {

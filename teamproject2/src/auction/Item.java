@@ -1,6 +1,7 @@
 package auction;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -16,10 +17,19 @@ public class Item implements Serializable{
 	private int price;
 	private String bidder;
 	
-	@Override
-	public String toString() {
-		return "진행중인 경매 [물품명: " + name + ", 현재 입찰가: " + price + ", 입찰자: " + bidder + "]";
+	public String getPrice() {
+		DecimalFormat format = new DecimalFormat("\u00A4 ###,###,###");
+		return format.format(price);
 	}
 	
+	@Override
+	public String toString() {
+		return "진행중인 경매 [물품명: " + name + ", 최고 입찰가: " + getPrice() + ", 입찰자: " + bidder + "]";
+	}
+	
+	public void updateBid(String id, int price) {
+		this.bidder = id;
+		this.price = price;
+	}
 	
 }

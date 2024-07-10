@@ -17,7 +17,7 @@ public class Bidder {
 		String id = scan.next();
 		try {
 			
-			Socket socket = new Socket("192.168.30.209", 6006);
+			Socket socket = new Socket("182.227.11.155", 6006);
 			System.out.println("[경매 서버에 연결]");
 			Client client = new Client(socket, id);
 			client.start();

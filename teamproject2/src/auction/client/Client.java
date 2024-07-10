@@ -32,8 +32,11 @@ public class Client {
 	
 	public void start() {
 		try {
+			oos.writeUTF(id);
+			oos.flush();
 			Item item =	(Item)ois.readObject();
-			System.out.println(item);
+			System.out.println("진행중인 경매 [물품명: " + item.getName() 
+			+ ", 시작가: " + item.getPrice() + ", 종료: " + "]");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -50,8 +53,8 @@ public class Client {
 	public void runMenu(int menu) {
 		switch (menu) {
 		case 1 : 
-			receive();
 			send();
+			receive();
 			break;
 		case 2 :
 			break;
@@ -64,13 +67,15 @@ public class Client {
 	public void receive() {
 		Thread t = new Thread(()->{
 			try {
+				Item item;
 				while(true) {
-					String sd = ois.readUTF();
-					System.out.println(sd);
-					if(sd.equals(EXIT)) {
-						break;
+					try {
+						item = (Item)ois.readObject();
+						System.out.println(item + "test");
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
 					}
-						
+					
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -86,12 +91,13 @@ public class Client {
 				while(true){
 					System.out.print("희망 입찰가 입력: ");
 					String str = scan.next();
-					oos.writeUTF(id);
-					oos.writeUTF(str);
-					oos.flush();
 					if(str.equals(EXIT)) {
 						break;
 					}
+					oos.writeUTF(id);
+					oos.writeUTF(str);
+					oos.flush();
+					
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
