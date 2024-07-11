@@ -27,9 +27,9 @@ public class Item implements Serializable{
 		return "진행중인 경매 [물품명: " + name + ", 최고 입찰가: " + getPrice() + ", 입찰자: " + bidder + "]";
 	}
 	
-	public void updateBid(String id, int price) {
-		this.bidder = id;
-		this.price = price;
-	}
+//	public void updateBid(String id, int price) {
+//		this.bidder = id;
+//		this.price = price;
+//	}
 	
 }

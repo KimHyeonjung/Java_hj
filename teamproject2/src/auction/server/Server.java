@@ -2,35 +2,34 @@ package auction.server;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import auction.Item;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 
+@Data
 @AllArgsConstructor
 public class Server {
 
 	private List<ObjectOutputStream> list = Collections.synchronizedList(new ArrayList<ObjectOutputStream>());
 	private List<Item> itemList = Collections.synchronizedList(new ArrayList<Item>());
-	private Item item;
 	private Socket socket;
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
 	public final static String EXIT = "-quit";
 
 
-	public Server(List<ObjectOutputStream> list, Item item, Socket socket) {
+	public Server(List<ObjectOutputStream> list, Socket socket) {
 		this.list = list;
 		this.socket = socket;
-		this.item = item;
 		try { // Server 객체 생성시 input, output 스트림도 같이 생성해줌
 			this.oos = new ObjectOutputStream(socket.getOutputStream());
 			this.ois = new ObjectInputStream(socket.getInputStream());
@@ -52,15 +51,16 @@ public class Server {
 		}
 	}
 
-	public void receive() {
+	public void receive(Item item, int period) {
 		Thread thread = new Thread(()->{
 			String id = "";
 			try {
 				id = ois.readUTF();
 				System.out.println("[ "+ id + "님 입장 ]");
 				oos.writeObject(item);
+				oos.writeByte(period);				
 				oos.flush();
-				System.out.println("아이템 전송");
+				System.out.println("경매정보 전송");
 				
 				while(true) { // true 대신 경매 시간 비교식 넣으면 될듯
 					id = ois.readUTF();
@@ -68,9 +68,9 @@ public class Server {
 					int price = Integer.parseInt(str);
 					System.out.println(id + ": " + str);
 					//최고입찰가와 입찰자를 아이템 등록
-					item.updateBid(id, price);
+					Item updateBid = new Item(item.getName(), price, id);
 						//메세지를 보낸 소켓을 제외한 다른 소켓에 메세지를 전송
-							sendAll();
+							sendAll(updateBid);
 				}
 				//				System.out.println("[ 경매종료 ]");
 
@@ -81,13 +81,13 @@ public class Server {
 		thread.start();
 	}
 
-	public void sendAll() {
+	public void sendAll(Item updateBid) {
 		for(ObjectOutputStream tmp : list) {
 			//메세지를 보낸 소켓을 제외한 다른 소켓에 메세지를 전송
-//			if(tmp != oos) {
+//			if(tmp != oos) { //본인도 확인 가능하도록 함
 				try {
-					System.out.println(item);
-					tmp.writeObject(item);
+					System.out.println(updateBid);
+					tmp.writeObject(updateBid);
 					tmp.flush();
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -95,28 +95,6 @@ public class Server {
 //			}
 		}
 	}
-
-	//	public void send(ObjectOutputStream oos, String id, String message) {
-	//		
-	//		if(oos == null) {
-	//			return;
-	//		}
-	//		Thread t = new Thread(()->{
-	//			
-	//			try {
-	//				synchronized (oos) {
-	//					oos.writeUTF(id);
-	//					oos.writeUTF(message);
-	//					oos.flush();
-	//				}
-	//			} catch (IOException e) {
-	//				list.remove(oos);
-	//			}
-	//		});
-	//		t.start();
-	//	}
-
-
 
 	@SuppressWarnings("unchecked")
 	private void loadItemList(File file) {

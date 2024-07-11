@@ -35,8 +35,9 @@ public class Client {
 			oos.writeUTF(id);
 			oos.flush();
 			Item item =	(Item)ois.readObject();
+			int period = ois.read();
 			System.out.println("진행중인 경매 [물품명: " + item.getName() 
-			+ ", 시작가: " + item.getPrice() + ", 종료: " + "]");
+			+ ", 시작가: " + item.getPrice() + ", 남은시간: " + period + "]");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -71,7 +72,7 @@ public class Client {
 				while(true) {
 					try {
 						item = (Item)ois.readObject();
-						System.out.println(item + "test");
+						System.out.println(item);
 					} catch (ClassNotFoundException e) {
 						e.printStackTrace();
 					}
