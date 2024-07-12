@@ -9,6 +9,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,7 +29,7 @@ public class Auctioneer {
 		int port = 6006;
 		try {
 			String ip = InetAddress.getLocalHost().getHostAddress();
-			System.out.println(ip);
+			System.out.println(ip + "  " + port);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
@@ -36,9 +39,9 @@ public class Auctioneer {
 		System.out.print("진행 시간(분) : ");
 		int period = (scan.nextInt() * 60);
 		Instant finish = Instant.now().plusSeconds(period);
-		
+		ZonedDateTime  auctionFinish = finish.atZone(ZoneId.of("Asia/Seoul"));
 		try(ServerSocket serverSocket = new ServerSocket(port)) {
-			System.out.println("<< 경매 서버 오픈 >>");
+			System.out.println("<< 경매 서버 오픈 >> 종료 시간: " + auctionFinish.format(DateTimeFormatter.ofPattern("HH시 mm분 ss초")));
 			while(true) {
 				Socket socket = serverSocket.accept();
 				if(socket.isConnected()) {

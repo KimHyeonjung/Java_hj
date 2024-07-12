@@ -72,8 +72,8 @@ public class Server {
 				oos.writeObject(item);
 				oos.writeObject(finish); 
 				oos.flush();
-				System.out.println("경매정보 전송");
-				System.out.println(finish); //test
+//				System.out.println("경매정보 전송");
+//				System.out.println(finish); //test
 				while(true) { // true 대신 경매 시간 비교식 넣으면 될듯
 					id = ois.readUTF();
 					String str = ois.readUTF();
@@ -88,8 +88,6 @@ public class Server {
 						Item close = null;
 						sendAll(close);
 					}
-					
-					
 				}
 				//				
 
@@ -105,7 +103,6 @@ public class Server {
 			//메세지를 보낸 소켓을 제외한 다른 소켓에 메세지를 전송
 //			if(tmp != oos) { //본인도 확인 가능하도록 함
 				try {
-					System.out.println(updateBid);
 					tmp.writeObject(updateBid);
 					tmp.flush();
 				} catch (IOException e) {

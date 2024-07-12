@@ -24,7 +24,7 @@ public class Item implements Serializable{
 	
 	@Override
 	public String toString() {
-		return "진행중인 경매 [물품명: " + name + ", 최고 입찰가: " + getPriceWon() + ", 입찰자: " + bidder + "]";
+		return "진행중인 경매 [물품명: " + name + "] [최고입찰가: " + getPriceWon() + "] [입찰자: " + bidder + "]";
 	}
 	
 //	public void updateBid(String id, int price) {
