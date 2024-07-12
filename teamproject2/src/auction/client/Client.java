@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.time.Instant;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -19,7 +20,7 @@ public class Client {
 	private String id;
 	public final static String EXIT = "-quit";
 	public static Scanner scan = new Scanner(System.in);
-	
+	public static int checkBid;
 	public Client(Socket socket, String id) {
 		this.id = id;
 		this.socket = socket;
@@ -35,9 +36,9 @@ public class Client {
 			oos.writeUTF(id);
 			oos.flush();
 			Item item =	(Item)ois.readObject();
-			int period = ois.read();
+			Instant finish = (Instant)ois.readObject();
 			System.out.println("진행중인 경매 [물품명: " + item.getName() 
-			+ ", 시작가: " + item.getPrice() + ", 남은시간: " + period + "]");
+			+ ", 시작가: " + item.getPriceWon() + ", 남은시간: " + finish + "]");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -73,6 +74,12 @@ public class Client {
 					try {
 						item = (Item)ois.readObject();
 						System.out.println(item);
+						if(item == null) {
+							System.out.println("[경매가 종료되었습니다.]");
+						}else {
+							checkBid = item.getPrice();
+							System.out.println(checkBid + "test");
+						}
 					} catch (ClassNotFoundException e) {
 						e.printStackTrace();
 					}
@@ -92,13 +99,18 @@ public class Client {
 				while(true){
 					System.out.print("희망 입찰가 입력: ");
 					String str = scan.next();
+					int bid = Integer.parseInt(str);
 					if(str.equals(EXIT)) {
 						break;
 					}
-					oos.writeUTF(id);
-					oos.writeUTF(str);
-					oos.flush();
-					
+					if(bid < checkBid) {
+						System.out.println("현 가격보다 낮습니다.");
+						continue;
+					} else {
+						oos.writeUTF(id);
+						oos.writeUTF(str);
+						oos.flush();
+					}
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

@@ -51,28 +51,47 @@ public class Server {
 		}
 	}
 
-	public void receive(Item item, int period) {
+	public void timer(Instant finish) {
+		Thread thread = new Thread(()->{
+			while(finish.isAfter(Instant.now())) {
+				
+			}
+			System.out.println("[ 경매 종료 ]");
+			Item close = null;
+			sendAll(close);
+		});
+		thread.start();
+	}
+	
+	public void receive(Item item, Instant finish) {
 		Thread thread = new Thread(()->{
 			String id = "";
 			try {
 				id = ois.readUTF();
 				System.out.println("[ "+ id + "님 입장 ]");
 				oos.writeObject(item);
-				oos.writeByte(period);				
+				oos.writeObject(finish); 
 				oos.flush();
 				System.out.println("경매정보 전송");
-				
+				System.out.println(finish); //test
 				while(true) { // true 대신 경매 시간 비교식 넣으면 될듯
 					id = ois.readUTF();
 					String str = ois.readUTF();
-					int price = Integer.parseInt(str);
-					System.out.println(id + ": " + str);
-					//최고입찰가와 입찰자를 아이템 등록
-					Item updateBid = new Item(item.getName(), price, id);
+					if(finish.isAfter(Instant.now())) {
+						int price = Integer.parseInt(str);
+						System.out.println("[" + id + "님 " + str + "원 입찰]");
+						//최고입찰가와 입찰자를 아이템 등록
+						Item updateBid = new Item(item.getName(), price, id);
 						//메세지를 보낸 소켓을 제외한 다른 소켓에 메세지를 전송
-							sendAll(updateBid);
+						sendAll(updateBid);
+					} else {
+						Item close = null;
+						sendAll(close);
+					}
+					
+					
 				}
-				//				System.out.println("[ 경매종료 ]");
+				//				
 
 			} catch (IOException e) {
 				System.out.println("[ "+id + "님 퇴장 ]");

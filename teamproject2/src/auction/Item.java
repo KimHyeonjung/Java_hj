@@ -17,14 +17,14 @@ public class Item implements Serializable{
 	private int price;
 	private String bidder;
 	
-	public String getPrice() {
+	public String getPriceWon() {
 		DecimalFormat format = new DecimalFormat("\u00A4 ###,###,###");
 		return format.format(price);
 	}
 	
 	@Override
 	public String toString() {
-		return "진행중인 경매 [물품명: " + name + ", 최고 입찰가: " + getPrice() + ", 입찰자: " + bidder + "]";
+		return "진행중인 경매 [물품명: " + name + ", 최고 입찰가: " + getPriceWon() + ", 입찰자: " + bidder + "]";
 	}
 	
 //	public void updateBid(String id, int price) {
