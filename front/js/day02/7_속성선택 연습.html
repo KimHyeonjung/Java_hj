@@ -6,9 +6,9 @@
 <title>속성 선택</title>
 </head>
 <body>
-	<button onclick="/*decrease()*/decrease2(2)">-</button>
+	<button onclick="/*decrease()*/increase2(-1)">-</button>
 	<input type="text" value="0" readonly id="input">
-	<button onclick="/*increase()*/increase2(2)">+</button>
+	<button onclick="/*increase()*/increase2(1)">+</button>
 	<script>
 		//숫자가 감소하는 함수
 		function decrease(){
@@ -27,22 +27,12 @@
 			var numNode = document.getElementsByTagName("input")[0];
 			++numNode.value;
 		}
-		function decrease2(amount){
-			var numNode = document.getElementsByTagName("input")[0];
-			//선택한 요소의 value값을 가져옴
-			var num = numNode.value;
-			//concole.log(typeof num); //input태그에서 가져온 value는 항상 문자열
-			num = num - amount;
-			//가져온 값을 감소
-			numNode.value = num;
-		}
-		//숫자가 증가하는 함수
+		
+		//매개변수로 증감 값을 가져와 함수 하나만 사용하기
 		function increase2(amount){
 			var numNode = document.getElementsByTagName("input")[0];
-			//concole.log(typeof num); //input태그에서 가져온 value는 항상 문자열
 			var num2 = numNode.value;
-			num2 = +num2 + amount;
-			//가져온 값을 감소		
+			num2 = +num2 + amount;				
 			numNode.value = num2;
 		}
 	</script>
