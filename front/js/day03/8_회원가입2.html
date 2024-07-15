@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>회원가입</title>
+	<style>
+		.container{
+			border: 1px solid black;
+		}
+		.form-group .form-control{
+			display: block; width: 100%; box-sizing: border-box;
+			height: 30px; border-radius: 5px; border: 2px solid aqua;
+			margin: 5px 0;
+		}
+		#btn{
+			width: 100%; height: 30px; border: 2px solid aquamarine; border-radius: 5px;
+			cursor: pointer;
+		}
+		.error{ color: red;}
+	</style>
+</head>
+<body>
+	<!-- 
+	아이디, 비번, 비번 확인을 입력해서 회원 가입을 진행하는 코드를 작성하세요
+	단, 
+		- 아이디는 영어로만, 비번은 영어, 숫자만 사용가능.
+		- 비번 확인은 비번과 같음
+	-->
+		<div class="container">
+			<form action="" method="get" id="form">
+				<h3>회원가입</h3>
+				<div class="form-group">
+					<label for="id">아이디 :</label> 
+					<input type="text" name="id" placeholder="아이디" id="id" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="pw">비번 :</label> 
+					<input type="password" name="pw" placeholder="비번" id="pw" class="form-control">					
+				</div>
+				<div class="form-group">
+					<label for="pw2">비번 확인 :</label> 
+					<input type="password" name="pw2" placeholder="비번 확인" id="pw2" class="form-control">
+				</div>
+				<div>
+					<button type="submit" id="btn">가입</button>
+				</div>
+			</form>
+		</div>
+		<script>
+			const form = document.getElementById('form');
+			const btn = document.getElementById('btn');
+			const inputId = document.getElementById('id');
+			const inputPw = document.getElementById('pw');
+			const inputPw2 = document.getElementById('pw2');
+
+			form.addEventListener('submit', function(e){			
+				//전송을 막을지 막지 않을지를 결정하는 변수, true면 전송 안함
+				//아이디, 비번, 비번확인 검사를 모두 하기 위해서
+				var flag = false;
+
+				removeSpan(inputId);
+				removeSpan(inputPw);
+				removeSpan(inputPw2);
+
+				if(!checkId()){
+					appendSpan(inputId,'아이디는 영문 8~13자리 입니다.')
+					flag = true;
+				}
+				if(!checkPw()){
+					appendSpan(inputPw, '비번은 영문,숫자 8~13자리 입니다.')
+					flag = true;
+				}
+				if(!checkPw2()){
+					appendSpan(inputPw2, '비번이 일치하지 않습니다..')
+					flag = true;
+				}
+				if(flag){
+					e.preventDefault();
+				}
+
+				// e.preventDefault(); //form태그의 기본 기능인 전송을 막아줌
+			});
+
+			function checkId(){
+				//영문 8~13
+				const regex = /^[a-zA-Z]{8,13}$/;
+				var id = inputId.value;
+				return regex.test(id);
+			}
+			function checkPw(){
+				//영문, 숫자 8~13
+				const regex = /^\w{8,13}$/;
+				var pw = inputPw.value;
+				return regex.test(pw);
+			}
+			function checkPw2(){
+				var pw = inputPw.value;
+				var pw2 = inputPw2.value;
+				return pw == pw2;
+			}
+
+			function appendSpan(element, str){
+				var span = document.createElement('span');
+				var textNode = document.createTextNode(str);
+				var classAttr = document.createAttribute('class');
+				classAttr.value = 'error';
+				span.append(textNode);
+				span.setAttributeNode(classAttr);
+				element.after(span);
+			}
+			function removeSpan(element){
+				var span = document.nextElementSibling;
+				if(span){
+					span.remove();
+				}
+				
+			}
+		</script>
+</body>
+</html>
