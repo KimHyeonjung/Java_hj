@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>요소 탐색</title>
+	<style>
+		*{
+			margin: 10px;
+		}
+		body *{
+			padding: 10px;
+		}
+		#menu{ background-color: yellow;}
+	</style>
+</head>
+<body>
+	<nav>
+		<a href="#">네이버로</a>
+		<ul id="menu">
+			<li>메뉴1</li>
+			<li>메뉴2</li>
+			<li>메뉴3</li>
+		</ul>
+		<a href="#">구글로</a>
+	</nav>
+	<script>
+		const menu = document.getElementById('menu');
+		/*
+		요소 탐색
+			- 텍스트 노드를 제외한 요소노드들을 탐색
+			- 태그로 된 노드들
+		요소.parentElement
+			- 부모 요소를 탐색
+		요소.firstElemnetChild
+			- 첫번째 자식 요소
+		요소.lastElemnetChild
+			- 마지막 자식 요소
+		*/
+		var parentNode = menu.parentElement;
+		parentNode.style.border = '1px solid black';
+
+		//ul태그의 첫번째 li태그 
+		var firstElement = menu.firstElementChild;
+		firstElement.style.color = 'red'
+		//ul태그의 마지막 li태그 사이에 있는 엔터와 탭들이 마지막 노드
+		var lastElement = menu.lastElementChild;
+		lastElement.style.color = 'blue'
+		/*
+		요소.children
+			- 요소의 자식 요소들을 가져옴
+			- forEach 사용 불가능
+		*/
+		console.log('----------------------------')
+		var children = menu.children;
+		for(element of children){
+			element.style.fontSize = '30px'
+		}
+		/*
+		요소.previousElementSibling
+			- 요소 바로 앞에 있는 형제 요소
+		요소.nextElementSibling
+			- 요소 바로 뒤에 있는 형제 요소
+		*/
+		console.log('----------------------------')
+		var prev = menu.previousElementSibling;
+		var next = menu.nextElementSibling;
+		prev.style.textDecoration = 'none';
+		next.style.textDecoration = 'black';
+	</script>
+</body>
+</html>
