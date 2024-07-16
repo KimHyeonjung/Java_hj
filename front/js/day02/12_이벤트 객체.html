@@ -4,10 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>이벤트 객체</title>
+<style>
+	#parent{
+		border: 1px solid black;
+		width: 100px; height: 100px; display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	#child{
+		border: 1px solid red;
+		width: 50px; height: 50px; 
+	}
+</style>
 </head>
 <body>
-	<div id="box">
-		<button id="btn">버튼</button>
+	<div id="parent">
+		<div id="child">
+			<button id="btn">버튼</button>
+		</div>
+		
 	</div>
 	<hr>
 	<input type="text" id="input">
@@ -15,7 +30,8 @@
 	<a href="http://naver.com" id="box2" style="height: 800px; background: yellow; display: block;"></a>
 	<script>
 		const btn = document.getElementById('btn');
-		const box = document.getElementById('box');
+		const parent1 = document.getElementById('parent');
+		const child = document.getElementById('child');
 		const box2 = document.getElementById('box2');	
 		const input = document.getElementById('input');
 		/*
@@ -43,8 +59,8 @@
 			- 브라우저마다 상이
 		*/
 		btn.addEventListener('click', function(e){
-			//버블링/캡처링을 중지시켰기 때문에 box클릭이 실행되지 않음
-			e.stopPropagation();
+			//버블링 중지시켰기 때문에 box클릭이 실행되지 않음
+			// e.stopPropagation();
 			console.log(`-------버튼입니다.-------`);
 			console.log(`이벤트 발생 요소 (최초) :`);
 			console.log(e.target);
@@ -54,8 +70,18 @@
 			console.log(`이벤트 생성 시간 : ${e.timeStamp}`);
 		});
 
-		box.addEventListener('click', function(e){
-			console.log(`-------박스입니다.-------`);
+		parent1.addEventListener('click', function(e){
+			console.log(`-------부모입니다.-------`);
+			console.log(`이벤트 발생 요소 (최초) :`);
+			console.log(e.target);
+			console.log(`이벤트 발생 요소 (현재) :`);
+			console.log(e.currentTarget);
+			console.log(`이벤트 단계 : ${e.eventPhase}`);
+			console.log(`이벤트 생성 시간 : ${e.timeStamp}`);
+		});
+
+		child.addEventListener('click', function(e){
+			console.log(`-------자식입니다.-------`);
 			console.log(`이벤트 발생 요소 (최초) :`);
 			console.log(e.target);
 			console.log(`이벤트 발생 요소 (현재) :`);
@@ -110,7 +136,7 @@
 		});
 		/*
 		stopPropagation()
-			- 버블링을 중지/캡처링 중지
+			- 버블링을 중지
 			- 현재 요소에 등록된 다른 이벤트들을 호출
 		stopImmediatePropagation()
 			- 버블링/캡처링 중지
