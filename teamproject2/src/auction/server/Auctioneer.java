@@ -68,8 +68,11 @@ public class Auctioneer {
 		System.out.println("1. 경매 물품 등록");
 		System.out.println("2. 경매 낙찰 리스트");
 		System.out.print("메뉴 선택 : ");
-		menu = nextInt();
-		runMenu(menu);
+		
+			menu = nextInt();
+			runMenu(menu);
+			
+		
 	}
 
 
