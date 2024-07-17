@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>게시글 등록</title>
+	<script src="../../static/js/jquery.min.js"></script>
+	<style>
+		.container{
+			width: 500px; margin: 0 auto;
+		}
+		.form-group{ margin-bottom: 10px;}
+		.form-control{
+			display: block; width: 100%; box-sizing: border-box;
+			border: 1px solid black; border-radius: 5px;
+			min-height: 24px; line-height: 22px; margin-top: 5px;
+		}
+		.btn{
+			display: block; width: 100%; box-sizing: border-box;
+			border: 1px solid black; border-radius: 5px; line-height: 24px;
+		}
+		.table{ border-collapse: collapse; width: 100%;}
+		.table th, .table td{
+			border: 1px solid black; border-width: 1px 0;
+		}
+		td{ text-align: center; }
+	
+	</style>
+</head>
+<body>
+	<!-- <div class="container">
+		<form action="">
+			<h1>게시글 등록</h1>
+			<div class="box title">
+				<label for="title">제목</label>
+				<input type="text" name="title" id="title">
+			</div>
+			<div class="box writer">
+				<label for="writer">작성자</label>
+				<input type="text" name="writer" id="writer">
+			</div>
+			<div class="box content">
+				<label for="content">내용</label>
+				<textarea name="content" id="content" cols="30" rows="10"></textarea>
+			</div>
+			<div class="box btn">
+				<button>등록</button>
+			</div>
+		</form>
+	</div>
+	<hr> -->
+	<div class="container">
+		<h1>게시글 등록</h1>
+		<form action="" class="form">
+			<div class="form-group">
+				<label for="">제목 : </label>
+				<input type="text" name="title" id="title" class="form-control">
+			</div>
+			<div class="form-group">
+				<label for="">작성자 : </label>
+				<input type="text" name="writer" id="writer" class="form-control">
+			</div>
+			<div class="form-group">
+				<label for="">내용 : </label>
+				<textarea rows="10" name="content" id="content" class="form-control"></textarea>
+			</div>
+			<div class="form-group">
+				<button class="btn" type="submit">등록</button>
+			</div>
+		</form>
+	</div>
+	<hr>
+	<div class="container">
+		<h1>게시글 리스트</h1>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>번호</th>
+					<th>제목</th>
+					<th>작성자</th>
+					<th>조회수</th>
+				</tr>
+			</thead>
+			<tbody class="list">
+				
+			</tbody>
+		</table>
+	</div>
+	<script>
+	
+		var list = [];
+		//form 태그에 submit 이벤트를 등록
+		$('.form').submit(function(){
+			//제목을 가져옴
+			var title = $('#title').val();
+			//작성자를 가져옴
+			var writer = $('#writer').val();
+			//내용을 가져옴
+			var content = $('#content').val();
+			//제목, 내용, 작성자를 이용해서 객체를 생성
+			/*
+			var post = {
+				'num' : list.length + 1,
+				'title' : title,
+				'writer' : writer,
+				'content' : content,
+				'views' : 0
+			} */
+			var post = new Post(list.length + 1, title, writer, content);
+			var post = Post2(list.length + 1, title, writer, content);
+			var post = new Post3(list.length + 1, title, writer, content);
+			//생성한 객체를 list 앞에 추가
+			if(title != ''){
+				list.unshift(post);
+			}
+			
+			//제목, 작성자, 내용을 비움
+			$('#title').val('');
+			$('#writer').val('');
+			$('#content').val('');
+			//displayList를 호출
+			displayList(list);
+			//false를 리턴
+			return false;
+		});
+		//list를 이용해서 테이블에 번호, 제목, 작성자, 조회수를 화면에 배치하는 함수
+		function displayList(list){
+			var str ='';
+			if(list.length == 0){
+				str = `
+				<tr>	
+					<th colspan="4">등록된 게시글이 없습니다.</th>
+				</tr>		
+				`;
+			} 
+				for(var i = 0; i < list.length; i++){
+				str +=`
+					<tr>
+						<td>${list[i].num}</td>
+						<td>${list[i].title}</td>
+						<td>${list[i].writer}</td>
+						<td>${list[i].views}</td>
+					</tr>
+				`;
+				}
+			$('.list').html(str);
+		}
+		
+		class Post{
+			constructor(num, title, writer, content){
+				this.num = num;
+				this.title = title;
+				this.content = content;
+				this.writer = writer;
+				this.views = 0;
+			}
+		}
+		function Post2(num, title, writer, content){
+			return {
+				'num' : num,
+				'title' : title,
+				'writer' : writer,
+				'content' : content,
+				'views' : 0
+			}
+		}
+		
+		function Post3(num, title, writer, content){
+			this.num = num;
+			this.title = title;
+			this.content = content;
+			this.writer = writer;
+			this.views = 0;
+		}
+		
+	</script>
+</body>
+</html>
