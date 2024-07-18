@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title></title>
+	<script src="../../static/js/jquery.min.js"></script>
+	<style>
+		.container{
+			width: 45%;
+		}		
+		.form-group>label, .form-group>input{
+			float: left; 
+		}
+		.form-group{
+			margin-left: -5px;
+		}
+		.content{
+			display: flex; align-items: center;
+		}		
+		
+		.form-group::after{
+			display: block; content: ''; clear: both;
+		}
+		.label{
+			width: 80px; text-align: center; font-weight: bold;
+			
+		}
+		.form-group>.form-control{
+			width: calc(100% - 100px); box-sizing: border-box; border-radius: 5px;
+			border: 1px solid; line-height: 20px;
+		}
+		.form-control{
+			margin-bottom: 10px;
+		}
+		.text-center{
+			text-align: center; margin-top: 20px;
+		}
+
+		.table{
+			border: 1px solid black; width: 100%;
+		}
+		.table th, .table td{
+			border: 1px solid black;
+		}
+		.table th{
+			background-color: tomato;
+		}
+		.table td{
+			background-color: beige;
+		}
+		.list-num{	width: 40px;	}
+		.list-title{	width: auto;	}
+		.list-writer{	width: 140px;	}
+		.list-date{	width: 140px;	}
+		.list-views{	width: 60px;	}
+		.list-btn{ width: 70px;}
+		.table .btn{
+			width: 100%;
+		}
+		[class^=error]{
+			color: red; margin-bottom: 10px; display: none;
+			font-size: small; width: 100%; text-align: right;
+		}
+
+	</style>
+</head>
+<body>
+	<div>
+		<form action="insert.no" method="post">
+			<fieldset>
+				<legend>공지사항 작성하기</legend>
+				<div  class="container">
+					<div class="title form-group">
+						<label for="title" class="label">제목</label>
+						<input type="text" name="title" id="title" placeholder="제목을 입력하시오." class="form-control">
+					</div>
+					<div class="error-title"></div>
+					<div class="content form-group">
+						<label for="content" class="label">내용</label>
+						<textarea rows="10" name="content" id="content" placeholder="내용을 입력하시오." class="form-control"></textarea>
+					</div>
+					<div class="error-content"></div>
+					<div class="uploadFile form-group">
+						<label class="label">첨부파일</label>
+						<button name="uploadFile">파일 선택</button> 선택된 파일 없음
+					</div>
+					<div class="form-group text-center">
+						<button class="btn" >작성하기</button>
+					</div>
+				</div>				
+			</fieldset>	
+		</form>
+	</div>	
+	<hr>
+	<div>
+		<table class="table">
+			<thead>
+				<tr>
+					<th class="list-num">번호</th>
+					<th colspan="2" class="list-title">제목</th>
+					<th class="list-writer">작성자</th>
+					<th class="list-date">작성일</th>
+					<th class="list-views">조회수</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>9</td>
+					<td>공지사항 제목9</td>
+					<td class="list-btn"><button class="btn">바로가기</button></td>
+					<td>user01</td>
+					<td>2021-03-29</td>
+					<td>34</td>
+				</tr>
+				<tr>
+					<td>6</td>
+					<td>공지사항 제목6</td>
+					<td><button class="btn">바로가기</button></td>
+					<td>answ445</td>
+					<td>2021-03-29</td>
+					<td>14</td>
+				</tr>
+				<tr>
+					<td>3</td>
+					<td>공지사항 제목3</td>
+					<td><button class="btn">바로가기</button></td>
+					<td>user01</td>
+					<td>2021-03-29</td>
+					<td>74</td>
+				</tr>
+				<tr>
+					<td>2</td>
+					<td>공지사항 제목2</td>
+					<td><button class="btn">바로가기</button></td>
+					<td>user01</td>
+					<td>2021-03-29</td>
+					<td>43</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>공지사항 제목1</td>
+					<td><button class="btn">바로가기</button></td>
+					<td>user01</td>
+					<td>2021-03-29</td>
+					<td>12</td>
+				</tr>
+				
+			</tbody>
+			<tfoot>
+				<tr>
+					<th colspan="4">전체공지사항 갯수</th>
+					<th colspan="2">5개</th>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+	
+	<script>		
+		$('form').submit(function(){
+			var flag = true;
+			var title = $('#title').val();
+			if(title == ''){
+				$('.error-title').text('*필수입력사항').show();
+				flag = false;
+			}
+			else {
+				$('.error-title').text('').hide();
+			}
+			var content = $('#content').val();
+			if(content == ''){
+				$('.error-content').text('*필수입력사항').show();
+				flag = false;
+			}
+			else{
+				$('.error-content').text('').hide();
+			}
+		
+			return flag;
+		});
+	</script>
+</body>
+</html>
