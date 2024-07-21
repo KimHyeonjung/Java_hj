@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>구현</title>
+	<!-- <script src="../../static/js/jquery.min.js"></script> -->
+	<script src="http://code.jquery.com/jquery-3.7.1.js"></script>
+	<style>
+		
+		.container{					
+			border: 1px solid gray; width: 400px; height: auto;
+			display: block; padding: 10px;
+		}
+		.form-group{
+			margin: 10px; height: 30px; 
+		}
+		.form-group>label, .form-group>input, .form-group>button{
+			height: 30px; line-height: 30px;
+			float: left;
+		}		
+		.form-group::after{
+			clear: both; content: ''; display: block;
+		}
+		.form-group>label{	width: 110px;	 font-weight: bold; }
+		
+		.form-group>.form-control{ 
+			width: calc(100% - 120px);	box-sizing: border-box;
+			border-style: none; border-bottom: 2px dashed black;
+			
+		}
+		.btn{ 			
+			box-sizing: border-box;
+			width: 100%; background-color: rgb(170, 237, 193); 
+			border-style: none; height: 40px; margin-top: 30px;
+			
+		}
+		[class^=error]{
+			color: black; margin-bottom: 10px; display: none; 
+			font-size: 11px; float: right; margin-right: 20px;
+		}
+	</style>
+</head>
+<body>	
+		<form action="" id="form">
+			<div class="container">
+				<div class="form-group">
+					<label>	아이디 </label>
+					<input type="text" name="id" class="form-control">
+				</div>
+				<div>
+					<label for="id" id="id-error" class="error"></label>
+				</div>
+	
+				<div class="form-group">
+					<label>	패스워드 </label> 
+					<input type="password" name="pw" id="pw" class="form-control">
+				</div>
+				<div>
+					<label for="pw" id="pw-error" class="error"></label>
+				</div>
+	
+				<div class="form-group">
+					<label>	패스워드 확인	</label>
+					<input type="password" name="pw2" class="form-control">
+				</div>
+				<div>
+					<label for="pw2" id="pw2-error" class="error"></label>
+				</div>	
+	
+				<div class="form-group">
+					<label>	이메일 </label> 
+					<input type="email" name="email" class="form-control email">
+				</div>
+				<div>
+					<label for="email" id="email-error" class="error"></label>
+				</div>
+	
+				<div class="form-group">
+					<label>	주소 </label>
+					<input type="text" name="address" class="form-control address">
+				</div>	
+				<div class="form-group">
+					<label>	 </label>
+					<input type="text" name="address" class="form-control address">
+				</div>			
+				<div>
+					<label for="address" id="address-error" class="error"></label>
+				</div>
+				<div>
+					<button type="submit" class="btn">가입</button>
+				</div>
+			</div>			
+		</form>
+	</div>
+	
+	<script>
+		$('#pw').click(function(){
+			$('#pw-error').text( "영문자 대/소문자 특수문자, 숫자 포함 8 ~ 32자").show();
+		});
+		$('#pw').blur(function(){
+			$('#pw-error').text('').hide();
+		});
+
+		$('.email').click(function(){
+			checkText();
+		});
+		$('.address').click(function(){
+			checkText();
+		});
+		
+		function checkText(){
+			var id = $('[name=id]').val();
+			var pw = $('[name=pw]').val();
+			var pw2 = $('[name=pw2]').val();
+			if(id == ''){
+				$('#id-error').text( "필수 입력 항목입니다.").show();				
+			} else {
+				$('#id-error').text('').hide();				
+			}
+			if(pw == ''){
+				$('#pw-error').text( "필수 입력 항목입니다.").show();
+			} else {
+				$('#pw-error').text('').hide();
+			}
+			if(pw2 == ''){
+				$('#pw2-error').text( "필수 입력 항목입니다.").show();
+			} else {
+				$('#pw2-error').text('').hide();
+			}
+		}
+	</script>
+</body>
+</html>

@@ -129,34 +129,41 @@
 			$(this).css('border-color', 'black');
 		});
 
+		var offset = null;//마우스를 눌렀을 때 박스의 
+		var x = null;//마우스를 눌렀을 때 x 좌표
+		var y = null;//마우스를 눌렀을 때 y 좌표
 		$('.box4').mousemove(function(e){
 			if(!flag)
 				return;
-			var offset = $(this).offset();
-			var x = offset.left;
-			var y = offset.top;
-			var rx = e.pageX - x;
-			var ry = e.pageY - y;
-			$('#x').text(parseInt(rx));
-			$('#y').text(parseInt(ry));
+		
+			var mx = e.pageX - x;
+			var my = e.pageY - y;
+			$('#x').text(parseInt(mx));
+			$('#y').text(parseInt(my));
+			//return;
 			$(this).css({
 				'position' : 'absolute',
-				'top' : ry,
-				'left': rx,
-				'width' : 500
+				'top' : offset.top + my,
+				'left': offset.left + mx,
+				'width' : $(this).width()
 			})
-		});
+		})
 		var flag = false;
-		$('.box4').mousedown(function(){
+		$('.box4').mousedown(function(e){
 			flag = true;
+			offset = $(this).offset();
+			x = e.pageX;
+			y = e.pageY;
 		});
 		$('.box4').mouseup(function(){
 			flag = false;
 			$(this).css({
-				'postion' : 'static'
+				'position' : 'static'
 			})
 		});
-
+		$('.box4').mouseleave(function(){
+			$('.box4').mouseup();
+		})
 		/*
 		submit(콜백함수)
 			- form태그가 전송되기전 실행되는 이벤트
