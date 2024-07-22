@@ -1,7 +1,9 @@
 package auction.membership;
 
 import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,25 +16,23 @@ import java.net.Socket;
 import java.util.Collections;
 import java.util.TreeMap;
 
-public class Server implements Serializable{
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 6623862612832840667L;
+public class Server {
+
 	private static final int PORT = 12345; // 서버 포트 번호
     private static final String USERS_FILE = "users.txt"; // 사용자 정보 파일    
     private static TreeMap<String, String> users;
-    
 
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
+		users = new TreeMap<String, String>();
+//				System.out.println(users);	//test용			
+		Collections.synchronizedMap(users);
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("서버가 시작되었습니다. 포트 번호: " + PORT);           
-//            saveUsers();
             try (ObjectInputStream objectIn = new ObjectInputStream(new FileInputStream(USERS_FILE))) {
 				users = (TreeMap<String, String>)objectIn.readObject(); //파일에 있는 회원들 정보를 불러오기
-				Collections.synchronizedMap(users);
-				System.out.println(users);				
+			} catch(FileNotFoundException e) {
+//				saveUsers();
 			}
             UserSearch search = new UserSearch();
 			search.start();
@@ -142,23 +142,30 @@ public class Server implements Serializable{
 					String choice = consoleInput.readLine();
 
 	                if (choice.equals("1")) {
-	                    // 회원가입
-	                    System.out.print("아이디: ");
-	                    int count = 0;
-	                    String username = consoleInput.readLine();
-	                    for(String key: users.keySet()) {
-	                    	 if(key.contains(username)) {
-	 	                    	System.out.println("아이디: " + key + "  /  비밀번호: " + users.get(key));
-	 	                    	count++;
-	 	                    } 
+	                	if(users.isEmpty()) {
+	                		System.out.println("등록된 회원정보가 없습니다.");	                		
+	                	} else {
+	                		System.out.print("아이디: ");
+	                		int count = 0;
+	                		String username = consoleInput.readLine();
+	                		for(String key: users.keySet()) {
+	                			if(key.contains(username)) {
+	                				System.out.println("아이디: " + key + "  /  비밀번호: " + users.get(key));
+	                				count++;
+	                			} 
+	                		}
+	                		if(count == 0) {
+	                			System.out.println("등록되지 않은 아이디입니다.");
+	                		}
 	                	}
-	                    if(count == 0) {
-	                    	System.out.println("등록되지 않은 아이디입니다.");
-	                    }
 
-	                } else if (choice.equals("2")) {	                	
-	                	for(String key: users.keySet()) {
-	                		System.out.println("아이디: " + key + "  /  비밀번호: " + users.get(key));
+	                } else if (choice.equals("2")) {
+	                	if(users.isEmpty()) {
+	                		System.out.println("등록된 회원정보가 없습니다.");	                		
+	                	} else {
+	                		for(String key: users.keySet()) {
+	                			System.out.println("아이디: " + key + "  /  비밀번호: " + users.get(key));
+	                		}
 	                	}
 	                } else if (choice.equals("3")) {
 	                    break;
