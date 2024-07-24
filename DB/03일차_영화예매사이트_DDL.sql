@@ -145,6 +145,29 @@ CREATE TABLE `character` (
 	`ch_pic`	varchar(255)	NULL,
 	`ch_pe_num`	int	NOT NULL
 );
+DROP TABLE IF EXISTS `ticketing_list`;
+
+CREATE TABLE `ticketing_list` (
+	`tl_num`	int primary key auto_increment	NOT NULL,
+	`ti_num`	int	NOT NULL,
+	`se_num`	int	NOT NULL
+);
+
+ALTER TABLE `ticketing_list` ADD CONSTRAINT `FK_ticketing_TO_ticketing_list_1` FOREIGN KEY (
+	`ti_num`
+)
+REFERENCES `ticketing` (
+	`ti_num`
+);
+
+ALTER TABLE `ticketing_list` ADD CONSTRAINT `FK_seat_TO_ticketing_list_1` FOREIGN KEY (
+	`se_num`
+)
+REFERENCES `seat` (
+	`se_num`
+);
+
+
 
 ALTER TABLE `movie_genre` ADD CONSTRAINT `FK_genre_TO_movie_genre_1` FOREIGN KEY (
 	`mg_ge_name`

@@ -137,20 +137,9 @@ INSERT INTO `SCHEDULE` VALUES
 
 (NULL, '08:40', 20240727, 1, 1, 6),(NULL, '17:00', 20240727, 0, 1, 6); -- 3관
 
-# 성인 : 14000원, 청소년 : 10000원, 조조성인 : 12000원, 조조청소년 : 8000원
-INSERT INTO PRICE VALUES
-(NULL, '성인', 14000),
-(NULL, '청소년', 10000),
-(NULL, '조조 성인', 12000),
-(NULL, '조조 청소년', 8000);
 # abc123회원이 CGV강남 1관 10:00에 사영하는 데드풀과 울버린 성인2장을 예매하는 쿼리
-# 좌석은 A1, A2
-INSERT INTO TICKETING VALUES
-(NULL, 2, 0, 24000, 6, 'abc123');
-INSERT INTO TICKETING_LIST VALUES
-(NULL, 1, 1), (NULL, 1, 2);
 
 
-SELECT * FROM SEAT;
+SELECT * FROM SCHEDULE;
 
 
