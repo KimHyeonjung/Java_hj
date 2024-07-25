@@ -1,0 +1,132 @@
+USE UNIVERSITY;
+
+# 학과 코드, 이름, 전공이 주어졌을 때 신입생을 등록하는 프로시저
+DROP PROCEDURE IF EXISTS INSERT_FRESHMAN;
+DELIMITER //
+CREATE PROCEDURE INSERT_FRESHMAN(
+	IN _MAJOR_CODE CHAR(3),
+    IN _MAJOR VARCHAR(15), 
+    IN _NAME VARCHAR(30)
+)
+BEGIN
+	DECLARE _YEAR INT;
+    DECLARE _NUM CHAR(3);
+    DECLARE _ST_NUM CHAR(10);
+	# 학번을 생성
+    # 년 + 학과코드 + 순서
+    # 프로시저가 실행될 때 년도를 가져옴
+    SET _YEAR = (SELECT YEAR(NOW()));
+    SET _NUM = (SELECT COUNT(*)+1 FROM STUDENT WHERE ST_MAJOR = _MAJOR);
+    SET _NUM = (SELECT LPAD(_NUM, 3, '0'));
+    SET _ST_NUM = CONCAT(_YEAR, _MAJOR_CODE, _NUM);
+    INSERT INTO STUDENT VALUES(_ST_NUM, _NAME, _MAJOR, 1);
+END //
+DELIMITER ;
+# 프로시저 호출
+CALL INSERT_FRESHMAN('160', '컴퓨터공학', '김순신');
+# 결과 확인
+
+
+# 학번, 강의번호, 중간, 기말, 과제, 출석이 주어지면 학점을 계산해서 추가하는 프로시저를 생성해보세요
+DROP PROCEDURE IF EXISTS UPDATE_POINT;
+DELIMITER //
+CREATE PROCEDURE UPDATE_POINT(
+	IN _ST_NUM CHAR(10),
+    IN _LE_NUM INT, 
+    IN _MID INT,
+    IN _FINAL INT,
+    IN _HOMEWORK INT,
+    IN _ATTENDANCE INT    
+    # 중간 : 40%, 기말 : 40%, 과제 : 10%, 출석 : 10%
+)
+BEGIN
+	DECLARE _TOTAL INT;
+    DECLARE _CREDIT VARCHAR(2);
+    SET _TOTAL = (SELECT _MID * 0.4 + _FINAL * 0.4 + 
+    _HOMEWORK * 0.1 + _ATTENDANCE * 0.1);
+	# 최종 성적이 95점 이상 A+, 90점 이상 A, 85점 이상 B+, ..., 60점 미만 F
+    # 총점이 95점 이상이면 A+
+    IF _TOTAL >= 95 THEN
+        SET _CREDIT = 'A+';
+    # 총점이 90점 이상이면 A
+    ELSEIF _TOTAL >= 90 THEN
+        SET _CREDIT = 'A';
+    # 총점이 85점 이상이면 B+
+    ELSEIF _TOTAL >= 85 THEN
+        SET _CREDIT = 'B+';
+    # 총점이 80점 이상이면 B
+    ELSEIF _TOTAL >= 80 THEN
+        SET _CREDIT = 'B';
+    # 총점이 75점 이상이면 C+
+    ELSEIF _TOTAL >= 75 THEN
+        SET _CREDIT = 'C+';
+    # 총점이 70점 이상이면 C
+    ELSEIF _TOTAL >= 70 THEN
+        SET _CREDIT = 'C';
+    # 총점이 65점 이상이면 D+
+    ELSEIF _TOTAL >= 65 THEN
+        SET _CREDIT = 'D+';
+    # 총점이 60점 이상이면 D
+    ELSEIF _TOTAL >= 60 THEN
+        SET _CREDIT = 'D';
+    # 아니면 F   
+    ELSE
+		SET _CREDIT = 'F';
+	END IF;
+	UPDATE COURSE
+    SET
+		CO_MID = _MID,
+        CO_FINAL = _FINAL,
+        CO_HOMEWORK = _HOMEWORK,
+        CO_ATTENDANCE = _ATTENDANCE,
+		CO_TOTAL = _CREDIT
+	WHERE
+		CO_ST_NUM = _ST_NUM AND CO_LE_NUM = _LE_NUM;
+END //
+DELIMITER ;
+
+CALL UPDATE_POINT('2024160005', 1, 100, 100, 100, 100);
+
+SELECT * FROM COURSE;
+
+# 프로시저 확인
+SHOW PROCEDURE STATUS;
+# 프로시저 스크립트 확인
+SHOW CREATE PROCEDURE INSERT_FRESHMAN;
+
+USE CGV;
+# 예매자 아이디, 예매 상영시간번호, 성인수, 청소년수가 주어지면 티켓을 예매하는 프로시저를 생성하고 테스트
+DROP PROCEDURE IF EXISTS PURCHASE_TICKET;
+DELIMITER //
+CREATE PROCEDURE PURCHASE_TICKET(
+	IN _ID VARCHAR(15),
+    IN _SD_NUM INT,
+    IN _ADULT INT,
+    IN _TEENAGER INT
+)
+BEGIN
+	DECLARE _ADULT_PRICE INT;
+	DECLARE _TEENAGER_PRICE INT;
+	DECLARE _MORNING INT;	
+	DECLARE _TOTAL INT;	
+    # 조조영화여부를 가져옴(1:조조, 0:아님)
+    SET _MORNING = (SELECT SD_EARLY FROM SCHEDULE WHERE SD_NUM = _SD_NUM);
+    CASE _MORNING
+		WHEN 1 THEN
+			SET _ADULT_PRICE = (SELECT PR_PRICE * _ADULT FROM PRICE WHERE PR_TYPE = '조조 성인');
+            SET _TEENAGER_PRICE = (SELECT PR_PRICE * _TEENAGER FROM PRICE WHERE PR_TYPE = '조조 청소년');
+		ELSE
+			SET _ADULT_PRICE = (SELECT PR_PRICE * _ADULT FROM PRICE WHERE PR_TYPE = '성인');
+			SET _TEENAGER_PRICE = (SELECT PR_PRICE * _TEENAGER FROM PRICE WHERE PR_TYPE = '청소년');
+	END CASE;  
+    SET _TOTAL = _ADULT_PRICE + _TEENAGER_PRICE;
+    INSERT INTO TICKETING VALUES
+    (NULL, _ADULT, _TEENAGER, _TOTAL, _SD_NUM, _ID);
+END //
+DELIMITER ;
+
+CALL PURCHASE_TICKET('abc123', 8, 3, 0);
+
+
+
+
