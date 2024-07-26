@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="db.student.dao.StudentDAO">
+	<select id="selectStudent" resultType="StudentVO">
+		select 
+			* 
+		from 
+			student 
+		where 
+			st_grade = #{std.st_grade} 
+			and st_class = #{std.st_class} 
+			and st_num = #{std.st_num}
+	</select>
+	<insert id="insertStudent">
+		insert into student(st_grade, st_class, st_num, st_name)
+		values(#{std.st_grade}, #{std.st_class}, #{std.st_num}, #{std.st_name})
+	</insert>
+	<update id="updateStudent">
+		update student
+		set
+			st_grade = #{new.st_grade},
+			st_class = #{new.st_class},
+			st_num = #{new.st_num},
+			st_name = #{new.st_name}
+		where
+			st_key = #{new.st_key}
+	</update>
+	<delete id="deleteStudent">
+		delete from student
+		where 
+			st_grade = #{std.st_grade} 
+			and st_class = #{std.st_class} 
+			and st_num = #{std.st_num}
+	</delete>
+</mapper>
+
+
