@@ -1,4 +1,4 @@
-package auction.membership;
+package member;
 
 import java.io.*;
 import java.net.*;

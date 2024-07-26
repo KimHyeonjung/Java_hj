@@ -1,4 +1,4 @@
-package auction.client;
+package auction;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -11,7 +11,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import auction.Item;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

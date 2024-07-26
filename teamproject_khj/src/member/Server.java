@@ -1,4 +1,4 @@
-package auction.membership;
+package member;
 
 import java.io.BufferedReader;
 import java.io.EOFException;

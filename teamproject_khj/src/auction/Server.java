@@ -1,4 +1,4 @@
-package auction.server;
+package auction;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,9 +17,9 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import auction.Item;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import main.Auctioneer;
 
 @Data
 @AllArgsConstructor
