@@ -1,4 +1,4 @@
-package member;
+package sample;
 
 import java.io.*;
 import java.net.*;
