@@ -5,7 +5,7 @@ import java.net.*;
 
 public class Client {
     private static final String SERVER_IP = "localhost";
-    private static final int SERVER_PORT = 12345;
+    private static final int SERVER_PORT = 6006;
 
     public static void main(String[] args) {
         try (

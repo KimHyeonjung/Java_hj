@@ -1,4 +1,4 @@
-package db.student.main;
+package db.student.model.vo;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

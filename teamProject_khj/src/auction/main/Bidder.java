@@ -1,11 +1,9 @@
-package main;
+package auction.main;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
-
-import auction.Client;
 
 
 public class Bidder {
@@ -21,8 +19,6 @@ public class Bidder {
 			
 			Socket socket = new Socket(ip, port);
 			System.out.println("[경매 서버에 연결]");
-			Client client = new Client(socket, id);
-			client.start();
 		} catch (Exception e) {
 			System.out.println("[연결에 실패하였습니다.]");
 		}

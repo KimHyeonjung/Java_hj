@@ -1,4 +1,4 @@
-package main;
+package auction.main;
 
 public class ClientMain {
 
