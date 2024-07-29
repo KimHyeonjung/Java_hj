@@ -1,5 +1,6 @@
 package auction.controller;
 
+import java.time.LocalTime;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -49,9 +50,10 @@ public class AuctionController {
 				System.out.print("인상액 > ");
 				increment = scan.nextInt();
 			}
+			LocalTime endTime = LocalTime.now().plusMinutes(validityPeriod);
 			int highestBid = startPrice;
 			//경매현황에는 경매품명, 시작가, 최고입찰가, 종료시간, 입찰 가능액 있다
-			PresentCondition presentCondition = new PresentCondition(name, startPrice, highestBid, validityPeriod, increment);
+			PresentCondition presentCondition = new PresentCondition(name, startPrice, highestBid, endTime, increment);
 			System.out.println("-[등록완료]-");
 			return presentCondition;
 			//경매기록에는 날짜, 경매품명, 시작가, 낙찰가, 낙찰자 아이디가 있다.

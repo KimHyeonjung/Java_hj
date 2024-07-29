@@ -1,6 +1,8 @@
 package auction.main;
 
 import java.text.DecimalFormat;
+import java.time.LocalTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -11,7 +13,7 @@ public class PresentCondition{
 	private String name;
 	private int startPrice;
 	private int highestBid;
-	private int endTime;
+	private LocalTime endTime;
 	private int possibleAmount;
 	
 	public String getStartPriceWon() {

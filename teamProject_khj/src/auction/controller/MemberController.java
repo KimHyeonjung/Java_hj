@@ -106,6 +106,13 @@ public class MemberController {
 			System.out.println(member);
 		}
 	}
+	public boolean checkIdPw(String id, String password) {
+		if(!memberService.exists(id)) {
+			System.out.println("[등록되지 않은 아이디]");
+			return false;
+		} 
+		return memberService.checkIdPw(id, password);
+	}
 	
 
 }

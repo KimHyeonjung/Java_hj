@@ -224,7 +224,10 @@ public class Auctioneer {
 		}		
 		private void handleBid(String request) {
 			//들어온 입찰 처리
-
+			String[] parts = request.split(":");
+			String bid = parts[1];
+			
+			sendAll(presentCondition);
 		}
 
 		// 회원가입 요청 처리
@@ -237,7 +240,6 @@ public class Auctioneer {
 			String contact = parts[5];
 			MemberVO member = new MemberVO(id, password, name, address, contact);
 			boolean notExists = memberController.insertMember(member);
-
 			if(!notExists) {
 				out.println("ALREADY_EXISTS");
 			} else {	            	
@@ -249,33 +251,22 @@ public class Auctioneer {
 		// 로그인 요청 처리
 		public void handleLogin(String request) throws IOException {
 			String[] parts = request.split(":");
-			String username = parts[1];
+			String id = parts[1];
 			String password = parts[2];
 
-
-			boolean found = false;
-			//
-			//			if (users.isEmpty()) {
-			//				out.println("USERS_EMPTY");
-			//			} else {
-			//				if(users.containsKey(username)) {
-			//					if(users.get(username).equals(password)) {
-			//						found = true;            				
-			//					}
-			//				}
-			//
-			//				if (found) {
-			//					out.println("LOGIN_SUCCESS");
-			//				} else {
-			//					out.println("LOGIN_FAIL");
-			//				}            		
-			//			}
+			if (memberController.checkIdPw(id, password)) {
+				out.println("LOGIN_SUCCESS");
+			} else {
+				out.println("LOGIN_FAIL");
+			}            		
+			
 		}
+
 	}	
 	public void sendAll(PresentCondition presentCondition) {
 
 	}
-
+	
 	public int nextInt() {
 		try {
 			return scan.nextInt();

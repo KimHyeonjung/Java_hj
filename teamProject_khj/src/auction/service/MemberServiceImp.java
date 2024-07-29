@@ -76,5 +76,13 @@ public class MemberServiceImp implements MemberService{
 		searchMemberInfo = "%"+searchMemberInfo+"%";
 		return memberDao.selectMember(searchMemberInfo);
 	}
+	@Override
+	public boolean checkIdPw(String id, String password) {
+		if(id == null || password == null) {
+			return false;
+		}
+		int dbCheckCount = memberDao.selectMemberLoginCheck(id, password);
+		return dbCheckCount > 0;
+	}
 
 }

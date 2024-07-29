@@ -20,4 +20,6 @@ public interface MemberDAO {
 
 	boolean deleteMember(@Param("memberId")String memberId);
 
+	int selectMemberLoginCheck(@Param("id")String id, @Param("password")String password);
+
 }

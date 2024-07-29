@@ -16,4 +16,6 @@ public interface MemberService {
 
 	ArrayList<MemberVO> searchMember(String searchMemberInfo);
 
+	boolean checkIdPw(String id, String password);
+
 }

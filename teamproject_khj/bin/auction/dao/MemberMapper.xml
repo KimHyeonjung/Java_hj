@@ -49,6 +49,15 @@
 			or me_address like #{search}
 			or me_contact like #{search} 
 	</select>
+	<select id="selectMemberLoginCheck" resultType="int">
+		select
+			count(*)
+		from
+			member
+		where
+			me_id = #{id} 
+			and me_password = #{password} 
+	</select>
 </mapper>
 
 
