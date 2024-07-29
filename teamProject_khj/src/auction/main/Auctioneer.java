@@ -16,6 +16,7 @@ import java.util.Scanner;
 
 import auction.controller.AuctionController;
 import auction.controller.MemberController;
+import auction.model.vo.MemberVO;
 
 /* 1. 회원정보 관리
  * 2. 경매 관리
@@ -65,7 +66,7 @@ public class Auctioneer {
 			auctionMenuList();
 			break;
 		case 3 :
-			
+
 			System.out.println("[프로그램 종료]");
 			break;
 		default :
@@ -82,10 +83,10 @@ public class Auctioneer {
 			System.out.println("4. 입찰기록 조회");
 			System.out.println("5. 이전 메뉴");
 			System.out.print("메뉴 선택 : ");
-			
+
 			menu = nextInt();
 			runAuctionMenu(menu);
-			
+
 		}while(menu != 5);
 	}	
 
@@ -111,7 +112,7 @@ public class Auctioneer {
 			break;
 		case 2 :
 			if(presentCondition == null) {
-				System.out.println("먼저 경매정보를 입력해주세요");
+				System.out.println("먼저 경매정보를 입력해주세요");				
 				break;
 			}
 			auctionState = true;
@@ -145,11 +146,11 @@ public class Auctioneer {
 			System.out.println("잘못된 메뉴 입니다.");
 		}
 	}
-	
+
 
 	// 
 	class OpenServer extends Thread{
-		
+
 		public void run() {
 			int port = 6006; // 서버 포트번호
 			try {
@@ -172,8 +173,8 @@ public class Auctioneer {
 			} 
 		}
 	}
-	
-	
+
+
 	// 클라이언트 요청 처리를 담당하는 쓰레드
 	class ClientHandler extends Thread {
 		private final Socket clientSocket;
@@ -223,23 +224,25 @@ public class Auctioneer {
 		}		
 		private void handleBid(String request) {
 			//들어온 입찰 처리
-			
+
 		}
 
 		// 회원가입 요청 처리
 		public void handleRegister(String request) throws IOException {
 			String[] parts = request.split(":");
-			String username = parts[1];
+			String id = parts[1];
 			String password = parts[2];
+			String name = parts[3];
+			String address = parts[4];
+			String contact = parts[5];
+			MemberVO member = new MemberVO(id, password, name, address, contact);
+			boolean notExists = memberController.insertMember(member);
 
-			//			if(users.containsKey(username)) {
-			//				out.println("ALREADY_EXISTS");
-			//			} else {
-			//				users.put(username, password);
-			//				saveUsers();
-			//				out.println("REGISTER_SUCCESS");
-			//				System.out.println(users);
-			//			}
+			if(!notExists) {
+				out.println("ALREADY_EXISTS");
+			} else {	            	
+				out.println("REGISTER_SUCCESS");
+			}
 		}
 
 
@@ -268,10 +271,11 @@ public class Auctioneer {
 			//				}            		
 			//			}
 		}
+	}	
+	public void sendAll(PresentCondition presentCondition) {
 
 	}
 
-	
 	public int nextInt() {
 		try {
 			return scan.nextInt();

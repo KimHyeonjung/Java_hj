@@ -9,7 +9,6 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import auction.dao.AuctionDAO;
-import auction.dao.MemberDAO;
 import auction.model.vo.AuctionVO;
 
 public class AuctionServiceImp implements AuctionService{
@@ -29,7 +28,8 @@ public class AuctionServiceImp implements AuctionService{
 			e.printStackTrace();
 		}
 	}
-
+	
+	@Override
 	public boolean insertAuction(AuctionVO auction) {
 		if(auction == null) {
 			return false;

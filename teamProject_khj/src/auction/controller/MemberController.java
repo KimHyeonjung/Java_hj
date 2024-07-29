@@ -4,16 +4,27 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import auction.model.vo.MemberVO;
+import auction.service.MemberService;
 import auction.service.MemberServiceImp;
 
 public class MemberController {	
 	private Scanner scan;
-	private MemberServiceImp memberService = new MemberServiceImp();
+	private MemberService memberService = new MemberServiceImp();
 
 	public MemberController(Scanner scan) {
 		this.scan = scan;
 	}
-	// 회원 추가 ------------------------------------------------------------------
+	// 회원 추가 : 클라이언트 요청 ------------------
+	public boolean insertMember(MemberVO member) {
+		if(memberService.insertMember(member)) {
+			System.out.println("[회원 추가 완료]");
+			return true;
+		} else {
+			System.out.println("[추가 실패 : 등록된 아이디]");
+			return false;
+		}
+	}
+	// 회원 추가 : 서버 
 	public void insertMember() {
 
 		MemberVO member = inputMemberInfo();
@@ -95,5 +106,6 @@ public class MemberController {
 			System.out.println(member);
 		}
 	}
+	
 
 }

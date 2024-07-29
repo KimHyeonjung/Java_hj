@@ -6,11 +6,12 @@ import java.util.regex.Pattern;
 
 import auction.main.PresentCondition;
 import auction.model.vo.AuctionVO;
+import auction.service.AuctionService;
 import auction.service.AuctionServiceImp;
 
 public class AuctionController {
 	private Scanner scan;
-	private AuctionServiceImp auctionService = new AuctionServiceImp();
+	private AuctionService auctionService = new AuctionServiceImp();
 
 	public AuctionController(Scanner scan) {
 		this.scan = scan;
@@ -63,7 +64,7 @@ public class AuctionController {
 	
 	private String getRegex(String regex) {
 		if(regex.equals("itemName")) {
-			return "^\\w{1,20}$";
+			return "^[a-zA-Z0-9가-힣]{1,20}$";
 		}
 //		if(regex.equals("validityPeriod")) {
 //			return "";
@@ -78,7 +79,9 @@ public class AuctionController {
 		if(presentCondition == null) {
 			return;
 		}
-		AuctionVO auction = new AuctionVO(presentCondition.getName(), presentCondition.getStartPrice(), presentCondition.getHighestBid());
+		String au_name = presentCondition.getName();
+		int au_start_price = presentCondition.getStartPrice();
+		AuctionVO auction = new AuctionVO(au_name, au_start_price);
 		if(auctionService.insertAuction(auction)) {
 			System.out.println("[경매 시작]");
 		} else {
