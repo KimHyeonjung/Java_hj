@@ -3,6 +3,7 @@ package db.student.main;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import db.student.controller.ScoreController;
 import db.student.controller.StudentController;
 import db.student.controller.SubjectController;
 import program.Program;
@@ -13,6 +14,7 @@ public class StudentManager implements Program{
 	
 	private StudentController studentController = new StudentController(scan); 
 	private SubjectController subjectController = new SubjectController(scan); 
+	private ScoreController scoreController = new ScoreController(scan); 
 //////////////////////////////////////////////////////////////////////////////////////상위 메뉴
 	@Override
 	public void printMenu() {
@@ -134,12 +136,15 @@ public class StudentManager implements Program{
 			break;
 		case 2 :
 //			insertSubjectScore();
+			scoreController.insertScore();
 			break;
 		case 3:
 //			updateSubjectScore();
+			scoreController.updateScore();
 			break;
 		case 4 : 
 //			deleteSubjectScore();
+			scoreController.deleteScore();
 			break;
 		case 5 :
 			prev();
@@ -339,53 +344,8 @@ public class StudentManager implements Program{
 		printBar();
 		System.out.println("성적을 수정하였습니다.");
 	}
-	private void deleteSubjectScore() {
-		printBar();
-		//학생 정보를 입력하여 객체를 생성
-		StudentVO std = inputStdInfo();
-		//학생 리스트에서 학생객체가 몇번지에 있는지 번지를 가져옴
-		int index = list.indexOf(std);
-		//번지가 유효하지 않으면 알림문구 출력 후 종료
-		if(index < 0) {
-			printBar();
-			System.out.println("일치하는 학생이 없습니다.");
-			return;
-		}
-		//번지에 있는 학생 객체를 가져옴
-		std = list.get(index);
-		//학생의 과목 리스트를 가져옴
-		List<SubjectVO> tmpList = std.getSubjectList();
-		//삭제할 과목, 학년, 학기 정보를 입력
-		SubjectVO subject = inputRequiredSubject();
-		//과목이 과목리스트에 없으면 안내문구 출력 후 종료
-		if(!subjectList.contains(subject.getSubName())) {
-			printBar();
-			System.out.println("등록되지 않은 과목 성적입니다. 삭제 불가");
-			return;
-		}
-		
-		//학생 과목 리스트에서 과목 객체를 삭제하여 성공하면 안내문구 출력 후 종료
-		if(tmpList.remove(subject)) {
-			printBar();
-			System.out.println(subject.getGrade()+"학년 "+subject.getSemester()+"학기 "
-								+subject.getSubName()+" 성적을 삭제했습니다.");
-			return;
-		}
-		//실패하면 안내문구 출력 후 종료
-		printBar();
-		System.out.println("미등록. 삭제불가");
-	}
 	
-	public SubjectVO inputRequiredSubject() {
-		System.out.print("과목 : ");
-		scan.nextLine();
-		String subName = scan.nextLine();
-		System.out.print("학년 : ");
-		int grade = scan.nextInt();
-		System.out.print("학기 : ");
-		int semester = scan.nextInt();
-		return new SubjectVO(subName, grade, semester, 0, 0, 0);
-	}
+	
 	
 	
 	
