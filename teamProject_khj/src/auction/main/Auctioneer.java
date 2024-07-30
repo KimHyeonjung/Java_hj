@@ -9,11 +9,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import auction.controller.AuctionController;
 import auction.controller.MemberController;
@@ -35,6 +37,7 @@ public class Auctioneer {
 	boolean auctionState = false; // 경매 시작 상태
 	boolean firstState = true; // 경매 시작 후 처음인지 아닌지
 	PresentCondition presentCondition;
+	LocalTime finishAuction;
 	public Auctioneer(){
 		clients = new ArrayList<PrintWriter>();
 		Collections.synchronizedList(clients); //리스트 동기화
@@ -108,11 +111,11 @@ public class Auctioneer {
 			runMemberMenu(menu);
 		}
 	}	
-
+	// 경매 메뉴 
 	private void runAuctionMenu(int menu) {
 		switch (menu) {
 		case 1 : 
-			presentCondition = auctionController.insertItem();
+			presentCondition = insertItem();
 			break;
 		case 2 :
 			if(presentCondition == null) {
@@ -120,10 +123,10 @@ public class Auctioneer {
 				break;
 			}
 			auctionState = true;
-			firstState = true;
 			auctionController.startAuction(presentCondition);
 			sendAll(presentCondition);
 			firstState = false;
+			auctionTimer(finishAuction);
 			break;
 		case 3 :
 			//			searchAuctionDB();
@@ -135,6 +138,25 @@ public class Auctioneer {
 			System.out.println("잘못된 메뉴 입니다.");
 		}		
 	}
+	private void auctionTimer(LocalTime finishAuction2) {
+		Thread at = new Thread(()->{
+			int count = 10;
+			while(true) {
+				if(finishAuction2.minusSeconds(count).isBefore(LocalTime.now())) {
+					out.println("경매 종료까지 " + count + "초 남았습니다.");
+					count--;
+				}
+				if(count == 0) {
+					out.println("FINISH:경매가 종료되었습니다.");
+					auctionState = false;
+					break;
+				}
+			}
+		});
+		at.start();
+	} 
+
+	// 멤버 메뉴
 	private void runMemberMenu(int menu) {
 		switch (menu) {
 		case 1 : 
@@ -151,6 +173,53 @@ public class Auctioneer {
 			break;
 		default :
 			System.out.println("잘못된 메뉴 입니다.");
+		}
+	}
+	//	경매품명, 시작가, 입찰 유효 시간, 인상액 을 입력하여 등록하는 기능
+	public PresentCondition insertItem() {
+		try {
+
+			System.out.print("경매품명 입력 > ");
+			scan.nextLine();
+			String name = scan.nextLine();
+			if(!Pattern.matches(getRegex("itemName"), name)) {
+				System.out.println("[20자 이내로 입력, 특수문자 사용금지]");
+				return null;
+			}
+			System.out.print("시작가 입력 > ");
+			int startPrice;
+			while((startPrice = scan.nextInt()) < 0) {
+				System.out.println("[음수 입력]");
+				System.out.print("시작가 입력 > ");
+				startPrice = scan.nextInt();
+			}
+			System.out.print("유효시간 입력(분) > ");
+			int validityPeriod = scan.nextInt();
+			while(validityPeriod < 1 || validityPeriod > 120) {
+				System.out.println("[1~120분]");
+				System.out.print("유효시간 입력(분) > ");
+				validityPeriod = scan.nextInt();
+			}
+			System.out.print("인상액 입력 > ");
+			int increment = scan.nextInt();
+			while(increment < 100 || increment > 1000000) {
+				System.out.println("[100~1,000,000]");
+				System.out.print("인상액 > ");
+				increment = scan.nextInt();
+			}
+			//현재 시간에 입력한 유효시간을 더함
+			LocalTime endTime = LocalTime.now().plusMinutes(validityPeriod);
+			finishAuction = endTime;
+			int highestBid = startPrice;
+			//경매현황에는 경매품명, 시작가, 최고입찰가, 종료시간, 인상액 있다
+			PresentCondition presentCondition = new PresentCondition(name, startPrice, highestBid, endTime, increment);
+			System.out.println("-[등록완료]-");
+			return presentCondition;
+			//경매기록에는 날짜, 경매품명, 시작가, 낙찰가, 낙찰자 아이디가 있다.
+		} catch (InputMismatchException e) {
+			System.out.println("[입력이 올바르지 않음]");
+			scan.nextLine();
+			return null;
 		}
 	}
 
@@ -199,24 +268,24 @@ public class Auctioneer {
 				clients.add(out);
 				String request;
 				while ((request = in.readLine()) != null) {
-						if (request.startsWith("BID")) {
-							handleBid(request);
-						} else if (request.startsWith("REGISTER")) {
-							handleRegister(request);
-						} else if (request.startsWith("LOGIN")) {
-							String[] parts = request.split(":");
-							id = parts[1];
-							handleLogin(request);
-						} else if (request.equals("EXIT")) {
-							break;
-						}						
-					
+					if (request.startsWith("BID")) {
+						handleBid(request);
+					} else if (request.startsWith("REGISTER")) {
+						handleRegister(request);
+					} else if (request.startsWith("LOGIN")) {
+						String[] parts = request.split(":");
+						id = parts[1];
+						handleLogin(request);
+					} else if (request.equals("EXIT")) {
+						break;
+					}						
+
 				}
 
 				System.out.println("클라이언트 연결 종료: " + clientSocket);
 				clientSocket.close();
 			} catch (IOException e) {
-//				e.printStackTrace();
+				//				e.printStackTrace();
 			}
 			finally {
 				if(id != null) {
@@ -239,7 +308,7 @@ public class Auctioneer {
 				String bid = parts[2];
 				presentCondition.setHighestBidToInt(bid);
 				sendAll(presentCondition);
-				
+
 			} else {
 				out.println("진행중인 경매가 없습니다.");
 			}
@@ -280,36 +349,51 @@ public class Auctioneer {
 			} else {
 				out.println("LOGIN_FAIL");
 			}            		
-			
+
 		}
 
 	}	
 	// 로그인 중인 회원들에게 경매현황을 전송하는 기능
 	public void sendAll(PresentCondition presentCondition) {
 		String name = presentCondition.getName();
-		String startPrice = presentCondition.getStartPriceWon();
-		String highestPrice = presentCondition.getHighestBidWon();
+		String startPrice = Integer.toString(presentCondition.getStartPrice());
+		String highestPrice = Integer.toString(presentCondition.getHighestBid());
 		String endTime = presentCondition.getEndTimeToString();
-		String increment = presentCondition.getIncrementWon();
+		String increment = Integer.toString(presentCondition.getIncrement());
 		for(PrintWriter out : clients) {
 			if(firstState) {
 				out.println("경매를 시작합니다.");
 			}
-			out.println(name + ":" + startPrice +":" + highestPrice + ":" + endTime + ":" + increment);
+			out.println("PRESENT_CONDITION::" + name + "::" + startPrice +"::" + highestPrice + "::" + endTime + "::" + increment);
 		}
 	}
 	// 경매현황을 전송하는 기능 
 	public void sendOne(PresentCondition presentCondition) {
 		String name = presentCondition.getName();
-		String startPrice = presentCondition.getStartPriceWon();
-		String highestPrice = presentCondition.getHighestBidWon();
+		String startPrice = Integer.toString(presentCondition.getStartPrice());
+		String highestPrice = Integer.toString(presentCondition.getHighestBid());
 		String endTime = presentCondition.getEndTimeToString();
-		String increment = presentCondition.getIncrementWon();
-		
-		out.println(name + ":" + startPrice +":" + highestPrice + ":" + endTime + ":" + increment);
-		
+		String increment = Integer.toString(presentCondition.getIncrement());
+		System.out.println(increment);
+
+		out.println("PRESENT_CONDITION::" + name + "::" + startPrice +"::" + highestPrice + "::" + endTime + "::" + increment);
+
 	}
-	
+
+	//정규표현식 모음
+	private String getRegex(String regex) {
+		if(regex.equals("itemName")) {
+			return "^[a-zA-Z0-9가-힣]{1,20}$";
+		}
+		if(regex.equals("validityPeriod")) {
+			return "";
+		}
+		if(regex.equals("increment")) {
+			return "";
+		}
+		return null;
+	}
+
 	public int nextInt() {
 		try {
 			return scan.nextInt();

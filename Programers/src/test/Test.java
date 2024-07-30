@@ -1,5 +1,6 @@
 package test;
 
+import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Scanner;
@@ -20,7 +21,6 @@ public class Test {
 ////			System.out.println(Duration.between(start, Instant.now()));
 //		}
 //		System.out.println("반복문이 종료되었습니다.");
-
 	}
 	public static void auctionTimer() {
 		Thread t = new Thread(()->{
@@ -31,7 +31,6 @@ public class Test {
 				if(finish.minusSeconds(count).isBefore(Instant.now())) {
 					System.out.println("경매 종료까지 " + count + "초 남았습니다.");
 					count--;
-					continue;
 				}
 				if(count == 0) {
 					break;

@@ -16,19 +16,7 @@ public class PresentCondition{
 	private int highestBid;
 	private LocalTime endTime;
 	private int increment;
-	
-	public String getStartPriceWon() {
-		DecimalFormat format = new DecimalFormat("\u00A4 ###,###,###");
-		return format.format(startPrice);
-	}
-	public String getHighestBidWon() {
-		DecimalFormat format = new DecimalFormat("\u00A4 ###,###,###");
-		return format.format(highestBid);
-	}
-	public String getIncrementWon() {
-		DecimalFormat format = new DecimalFormat("\u00A4 ###,###,###");
-		return format.format(increment);
-	}
+		
 	public String getEndTimeToString() {
 		String endTime = this.endTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 		return endTime;

@@ -5,20 +5,22 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.text.DecimalFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Pattern;
 
 
 public class Bidder {
 
-	private String SERVER_IP = "192.168.30.209";
+	private String SERVER_IP = "localhost";
 	private int SERVER_PORT = 6006;
 	Socket socket;
 	BufferedReader in;
 	PrintWriter out;
 	BufferedReader consoleInput;
 	int possibleMinBid; 
-	LocalTime finishAuction; 
+	 
 	public Bidder() {
 		try {
 			socket = new Socket(SERVER_IP, SERVER_PORT);
@@ -63,7 +65,12 @@ public class Bidder {
 			if (choice.equals("1")) {
 				System.out.print("입찰가 입력 > ");
 				String bid = consoleInput.readLine();
-				out.println("BID:" + id + ":" + bid);
+				if(Integer.parseInt(bid) >= possibleMinBid) {
+					out.println("BID:" + id + ":" + bid);
+				} else {
+					System.out.println(getFormatWon(possibleMinBid) + "원 이상만 입찰 가능합니다.");
+				}
+					
 
 
 			} else if (choice.equals("2")) {
@@ -76,13 +83,22 @@ public class Bidder {
 	}
 
 	// 경매현황 수신
-	private void auctionPcReceiver() {
+	private void bidderReceiver() {
 		Thread thread = new Thread(()->{
 			while(true) {
 				try {
 					synchronized(in) {
 						String response = in.readLine();
-						printAuctionPc(response);
+						if (response.startsWith("PRESENT_CONDITION")) {
+							printAuctionPc(response);
+						} else if (response.startsWith("FINISH")) {
+							String[] parts = response.split(":");
+							String notify = parts[1];
+							System.out.println(notify);
+							break;
+						} else {
+							System.out.println(response);
+						}
 
 					}
 				} catch (IOException e) {
@@ -95,18 +111,17 @@ public class Bidder {
 	}
 	// 전송받은 경매현황을 출력해주는 기능
 	private void printAuctionPc(String response) {
-		String[] parts = response.split(":");
-		String name = parts[0];
-		String startPrice = parts[1];
-		String highestPrice = parts[2];
-		String endTime = parts[3];
-		String increment = parts[4];
-		finishAuction = LocalTime.parse(endTime, DateTimeFormatter.ofPattern("HH:mm:ss"));
+		String[] parts = response.split("::");
+		String name = parts[1];
+		String startPrice = parts[2];
+		String highestPrice = parts[3];
+		String endTime = parts[4];
+		String increment = parts[5];
 		int highestPriceInt = Integer.parseInt(highestPrice);
 		int incrementInt = Integer.parseInt(increment);		
-		possibleMinBid = highestPriceInt + incrementInt;
-		System.out.println("진행중인 경매 [경매품: " + name + "][시작가: " + startPrice + "][최고입찰가: " 
-				+ highestPrice +"][종료시간: " + endTime + "][인상액: " + increment + "]");	
+		possibleMinBid = highestPriceInt + incrementInt; // 입찰 가능 금액
+		System.out.println("진행중인 경매 [경매품: " + name + "][시작가: " + getFormatWon(startPrice) + "][최고입찰가: " 
+				+ getFormatWon(highestPrice) +"][종료시간: " + endTime + "][최소 입찰 가능액: " + getFormatWon(possibleMinBid) + "]");	
 	}
 	// 로그인을 하기 위한 기능
 	public void logIn() throws IOException {
@@ -120,7 +135,7 @@ public class Bidder {
 
 		String response = in.readLine();
 		if (response.equals("LOGIN_SUCCESS")) {
-			auctionPcReceiver(); 
+			bidderReceiver(); 
 			System.out.println("[로그인 성공]");
 			bidStart(id); 
 		} else if (response.equals("LOGIN_FAIL")) {
@@ -132,14 +147,34 @@ public class Bidder {
 		// 회원가입
 		System.out.print("아이디 > ");
 		String id = consoleInput.readLine();
+		if(!Pattern.matches(getRegex("id"), id)) {
+			System.out.println("[영문+숫자 3~12자 첫글자는 영문만 가능]");
+			return;
+		}
 		System.out.print("비밀번호 > ");
 		String password = consoleInput.readLine();
+		if(!Pattern.matches(getRegex("password"), password)) {
+			System.out.println("[영문+숫자 4~14자 첫글자는 영문만 가능]");
+			return;
+		}
 		System.out.print("이름 > ");
 		String name = consoleInput.readLine();
+		if(!Pattern.matches(getRegex("name"), name)) {
+			System.out.println("[영문 2~10자, 한글 2~5자]");
+			return;
+		}
 		System.out.print("주소 > ");
 		String address = consoleInput.readLine();
+		if(!Pattern.matches(getRegex("address"), address)) {
+			System.out.println("[최대 35자까지만 가능]");
+			return;
+		}
 		System.out.print("전화번호 > ");
 		String contact = consoleInput.readLine();
+		if(!Pattern.matches(getRegex("contact"), contact)) {
+			System.out.println("[전화번호 형식이 잘못됨]");
+			return;
+		}
 
 		out.println("REGISTER:" + id + ":" + password + ":" + name + ":" + address + ":" + contact);
 
@@ -149,5 +184,33 @@ public class Bidder {
 		} else {
 			System.out.println("회원가입 실패: 이미 존재하는 사용자 이름입니다.");
 		}
+	}
+	//정규표현식 모음
+	private String getRegex(String regex) {
+		if(regex.equals("id")) {
+			return "^[a-zA-Z][a-zA-Z0-9]{2,11}$";
+		}
+		if(regex.equals("password")) {
+			return "^[a-zA-Z][a-zA-Z0-9]{3,13}$\"";
+		}
+		if(regex.equals("name")) {
+			return "^([가-힣]{2,5}|[a-zA-Z]{2,10})$";
+		}
+		if(regex.equals("address")) {
+			return "^[a-zA-Z0-9가-힣]{1,35}$";
+		}
+		if(regex.equals("contact")) {
+			return "^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$";
+		}
+		return null;
+	}
+	public String getFormatWon(int price) {
+		DecimalFormat format = new DecimalFormat("###,###,###,###");
+		return format.format(price);
+	}
+	public String getFormatWon(String price) {
+		int priceInt = Integer.parseInt(price);
+		DecimalFormat format = new DecimalFormat("###,###,###,###");
+		return format.format(priceInt);
 	}
 }
