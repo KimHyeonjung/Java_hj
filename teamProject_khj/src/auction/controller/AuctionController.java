@@ -50,6 +50,7 @@ public class AuctionController {
 				System.out.print("인상액 > ");
 				increment = scan.nextInt();
 			}
+			//현재 시간에 입력한 유효시간을 더함
 			LocalTime endTime = LocalTime.now().plusMinutes(validityPeriod);
 			int highestBid = startPrice;
 			//경매현황에는 경매품명, 시작가, 최고입찰가, 종료시간, 입찰 가능액 있다
@@ -64,6 +65,7 @@ public class AuctionController {
 		}
 	}
 	
+	//정규표현식들
 	private String getRegex(String regex) {
 		if(regex.equals("itemName")) {
 			return "^[a-zA-Z0-9가-힣]{1,20}$";

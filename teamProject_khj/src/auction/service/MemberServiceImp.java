@@ -49,7 +49,7 @@ public class MemberServiceImp implements MemberService{
 			return false;
 		}
 		String dbMemberId = memberDao.selectMemberId(memberId);
-		System.out.println(dbMemberId); //확인용
+//		System.out.println(dbMemberId); //확인용
 		//등록되지 않은 아이디이면 false 반환
 		return dbMemberId != null;
 	}

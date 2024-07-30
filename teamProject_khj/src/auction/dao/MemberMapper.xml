@@ -9,7 +9,7 @@
 		from 
 			member 
 		where 
-			me_id = #{memberId} 
+			binary(me_id) = #{memberId} 
 	</select>	
 	<insert id="insertMember">
 		insert into member(me_id, me_password, me_name, me_address, me_contact)
@@ -21,7 +21,7 @@
 		from 
 			member 
 		where 
-			me_id = #{memberId}
+			binary(me_id) = #{memberId}
 	</select>	
 	<update id="updateMember">
 		update member
@@ -31,12 +31,12 @@
 			me_address = #{newMember.me_address},
 			me_contact = #{newMember.me_contact}
 		where
-			me_id = #{newMember.me_id}
+			binary(me_id) = #{newMember.me_id}
 	</update>
 	<delete id="deleteMember">
 		delete from member
 		where 
-			me_id = #{memberId}
+			binary(me_id) = #{memberId}
 	</delete>
 	<select id="selectMember">
 		select 
@@ -44,7 +44,7 @@
 		from 
 			member 
 		where 
-			me_id like #{search} 
+			binary(me_id) like #{search} 
 			or me_name like #{search} 
 			or me_address like #{search}
 			or me_contact like #{search} 
@@ -55,8 +55,8 @@
 		from
 			member
 		where
-			me_id = #{id} 
-			and me_password = #{password} 
+			binary(me_id) = #{id} 
+			and binary(me_password) = #{password} 
 	</select>
 </mapper>
 

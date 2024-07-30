@@ -8,6 +8,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.InputMismatchException;
@@ -29,7 +30,10 @@ public class Auctioneer {
 	AuctionController auctionController = new AuctionController(scan);
 	OpenServer serverStart;
 	List<PrintWriter> clients;
-	boolean auctionState = false;
+	private BufferedReader in;
+	private PrintWriter out;
+	boolean auctionState = false; // 경매 시작 상태
+	boolean firstState = true; // 경매 시작 후 처음인지 아닌지
 	PresentCondition presentCondition;
 	public Auctioneer(){
 		clients = new ArrayList<PrintWriter>();
@@ -116,7 +120,10 @@ public class Auctioneer {
 				break;
 			}
 			auctionState = true;
+			firstState = true;
 			auctionController.startAuction(presentCondition);
+			sendAll(presentCondition);
+			firstState = false;
 			break;
 		case 3 :
 			//			searchAuctionDB();
@@ -163,7 +170,7 @@ public class Auctioneer {
 				while(true) {
 					Socket clientSocket = serverSocket.accept();
 					if(clientSocket.isConnected()) {
-						System.out.println("[" + clientSocket.getLocalAddress() + " : " + clientSocket.getPort() + "에서 접속]");
+						System.out.println("[" + clientSocket + "에서 접속]");
 					}				
 					ClientHandler clientHandler = new ClientHandler(clientSocket);
 					clientHandler.start();
@@ -178,8 +185,6 @@ public class Auctioneer {
 	// 클라이언트 요청 처리를 담당하는 쓰레드
 	class ClientHandler extends Thread {
 		private final Socket clientSocket;
-		private BufferedReader in;
-		private PrintWriter out;
 
 		public ClientHandler(Socket socket) {
 			this.clientSocket = socket;
@@ -187,33 +192,38 @@ public class Auctioneer {
 
 		@Override
 		public void run() {
+			String id = null;
 			try {
 				in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				out = new PrintWriter(clientSocket.getOutputStream(), true);
 				clients.add(out);
 				String request;
 				while ((request = in.readLine()) != null) {
-					if(auctionState) {
 						if (request.startsWith("BID")) {
 							handleBid(request);
-						}
-					} else {
-						if (request.startsWith("REGISTER")) {
+						} else if (request.startsWith("REGISTER")) {
 							handleRegister(request);
 						} else if (request.startsWith("LOGIN")) {
+							String[] parts = request.split(":");
+							id = parts[1];
 							handleLogin(request);
 						} else if (request.equals("EXIT")) {
 							break;
 						}						
-					}
+					
 				}
 
 				System.out.println("클라이언트 연결 종료: " + clientSocket);
 				clientSocket.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 			finally {
+				if(id != null) {
+					System.out.println("[나감 : " + id + "]");
+				} else {
+					System.out.println("[나감 : " + clientSocket + "]");
+				}
 				clients.remove(out);
 				try {
 					clientSocket.close();
@@ -224,10 +234,15 @@ public class Auctioneer {
 		}		
 		private void handleBid(String request) {
 			//들어온 입찰 처리
-			String[] parts = request.split(":");
-			String bid = parts[1];
-			
-			sendAll(presentCondition);
+			if(auctionState) {
+				String[] parts = request.split(":");
+				String bid = parts[2];
+				presentCondition.setHighestBidToInt(bid);
+				sendAll(presentCondition);
+				
+			} else {
+				out.println("진행중인 경매가 없습니다.");
+			}
 		}
 
 		// 회원가입 요청 처리
@@ -255,7 +270,13 @@ public class Auctioneer {
 			String password = parts[2];
 
 			if (memberController.checkIdPw(id, password)) {
+				System.out.println("[로그인 : "+id+"] ");
 				out.println("LOGIN_SUCCESS");
+				if(auctionState) {
+					sendOne(presentCondition);
+				} else {
+					out.println("진행중인 경매가 없습니다.");
+				}
 			} else {
 				out.println("LOGIN_FAIL");
 			}            		
@@ -263,8 +284,30 @@ public class Auctioneer {
 		}
 
 	}	
+	// 로그인 중인 회원들에게 경매현황을 전송하는 기능
 	public void sendAll(PresentCondition presentCondition) {
-
+		String name = presentCondition.getName();
+		String startPrice = presentCondition.getStartPriceWon();
+		String highestPrice = presentCondition.getHighestBidWon();
+		String endTime = presentCondition.getEndTimeToString();
+		String increment = presentCondition.getIncrementWon();
+		for(PrintWriter out : clients) {
+			if(firstState) {
+				out.println("경매를 시작합니다.");
+			}
+			out.println(name + ":" + startPrice +":" + highestPrice + ":" + endTime + ":" + increment);
+		}
+	}
+	// 경매현황을 전송하는 기능 
+	public void sendOne(PresentCondition presentCondition) {
+		String name = presentCondition.getName();
+		String startPrice = presentCondition.getStartPriceWon();
+		String highestPrice = presentCondition.getHighestBidWon();
+		String endTime = presentCondition.getEndTimeToString();
+		String increment = presentCondition.getIncrementWon();
+		
+		out.println(name + ":" + startPrice +":" + highestPrice + ":" + endTime + ":" + increment);
+		
 	}
 	
 	public int nextInt() {
