@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="db.community.dao.PostDAO">
+	<select id="selectCommunity" resultType="CommunityVO">
+		select * from community where co_name = #{co_name}
+	</select>
+	<insert id="insertCommunity">
+		insert into community(co_name) values(#{co_name})
+	</insert>
+	<update id="updateCommunity">
+		update community
+		set
+			co_name = #{vo.co_name}
+		where
+			co_num = #{vo.co_num}
+	</update>
+</mapper>
+
+

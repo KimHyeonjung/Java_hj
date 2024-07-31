@@ -25,5 +25,6 @@
 	
 	<mappers>
 	  <mapper resource="db/community/dao/MemberMapper.xml"/>
+	  <mapper resource="db/community/dao/PostMapper.xml"/>
 	</mappers>
 </configuration>
