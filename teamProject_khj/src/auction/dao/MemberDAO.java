@@ -8,7 +8,7 @@ import auction.model.vo.MemberVO;
 
 public interface MemberDAO {
 
-	ArrayList<MemberVO> selectMember(@Param("search")String searchMemberInfo);
+	ArrayList<MemberVO> selectMemberList(@Param("search")String searchMemberInfo);
 
 	boolean insertMember(@Param("member")MemberVO member);
 
@@ -19,7 +19,5 @@ public interface MemberDAO {
 	boolean updateMember(@Param("newMember")MemberVO newMember);
 
 	boolean deleteMember(@Param("memberId")String memberId);
-
-	int selectMemberLoginCheck(@Param("id")String id, @Param("password")String password);
 
 }

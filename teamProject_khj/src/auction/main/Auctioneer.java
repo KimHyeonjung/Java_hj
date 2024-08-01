@@ -9,7 +9,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.InputMismatchException;
@@ -19,6 +18,7 @@ import java.util.regex.Pattern;
 
 import auction.controller.AuctionController;
 import auction.controller.MemberController;
+import auction.model.vo.BidVO;
 import auction.model.vo.MemberVO;
 
 /* 1. 회원정보 관리
@@ -111,13 +111,41 @@ public class Auctioneer {
 			runMemberMenu(menu);
 		}
 	}	
+	// 경매 타이머
+	private void auctionTimer(LocalTime finishAuction2) {
+		Thread at = new Thread(()->{
+			int count = 10;
+			while(true) {
+				if(finishAuction2.minusSeconds(count).isBefore(LocalTime.now())) {
+					out.println("경매 종료까지 " + count + "초 남았습니다.");
+					count--;
+				}
+				if(count == 0) {
+					out.println("FINISH::경매가 종료되었습니다.");
+					auctionState = false;
+					auctionController.finishAuction();
+					break;
+				}
+			}
+		});
+		at.start();
+	} 
+
 	// 경매 메뉴 
 	private void runAuctionMenu(int menu) {
 		switch (menu) {
 		case 1 : 
+			if(auctionState) {
+				System.out.println("진행중인 경매가 있습니다.");
+				break;
+			}
 			presentCondition = insertItem();
 			break;
 		case 2 :
+			if(auctionState) {
+				System.out.println("진행중인 경매가 있습니다.");
+				break;
+			}
 			if(presentCondition == null) {
 				System.out.println("먼저 경매정보를 입력해주세요");				
 				break;
@@ -138,24 +166,7 @@ public class Auctioneer {
 			System.out.println("잘못된 메뉴 입니다.");
 		}		
 	}
-	private void auctionTimer(LocalTime finishAuction2) {
-		Thread at = new Thread(()->{
-			int count = 10;
-			while(true) {
-				if(finishAuction2.minusSeconds(count).isBefore(LocalTime.now())) {
-					out.println("경매 종료까지 " + count + "초 남았습니다.");
-					count--;
-				}
-				if(count == 0) {
-					out.println("FINISH:경매가 종료되었습니다.");
-					auctionState = false;
-					break;
-				}
-			}
-		});
-		at.start();
-	} 
-
+	
 	// 멤버 메뉴
 	private void runMemberMenu(int menu) {
 		switch (menu) {
@@ -272,9 +283,7 @@ public class Auctioneer {
 						handleBid(request);
 					} else if (request.startsWith("REGISTER")) {
 						handleRegister(request);
-					} else if (request.startsWith("LOGIN")) {
-						String[] parts = request.split(":");
-						id = parts[1];
+					} else if (request.startsWith("LOGIN")) {						
 						handleLogin(request);
 					} else if (request.equals("EXIT")) {
 						break;
@@ -304,55 +313,46 @@ public class Auctioneer {
 		private void handleBid(String request) {
 			//들어온 입찰 처리
 			if(auctionState) {
-				String[] parts = request.split(":");
+				String[] parts = request.split("::");
+				String id = parts[1];
 				String bid = parts[2];
-				presentCondition.setHighestBidToInt(bid);
-				sendAll(presentCondition);
+				presentCondition.setHighestBidToInt(bid); // 경매현황 최고입찰가 갱신
+				if(auctionController.insertBid(id, bid)) { // 입찰기록 db에 추가
+					sendAll(presentCondition);
+				}
 
 			} else {
 				out.println("진행중인 경매가 없습니다.");
 			}
 		}
 
-		// 회원가입 요청 처리
-		public void handleRegister(String request) throws IOException {
-			String[] parts = request.split(":");
+		// 신규 회원 확인
+		public void handleRegister(String request) {
+			String[] parts = request.split("::");
 			String id = parts[1];
-			String password = parts[2];
-			String name = parts[3];
-			String address = parts[4];
-			String contact = parts[5];
-			MemberVO member = new MemberVO(id, password, name, address, contact);
-			boolean notExists = memberController.insertMember(member);
-			if(!notExists) {
-				out.println("ALREADY_EXISTS");
-			} else {	            	
-				out.println("REGISTER_SUCCESS");
-			}
+			String name = parts[2];
+			String address = parts[3];
+			String contact = parts[4];
+			MemberVO member = new MemberVO(id, name, address, contact);
+			System.out.println("[신규회원 가입] ");
+			System.out.println(member);
 		}
 
 
 		// 로그인 요청 처리
-		public void handleLogin(String request) throws IOException {
-			String[] parts = request.split(":");
+		public void handleLogin(String request) {
+			String[] parts = request.split("::");
 			String id = parts[1];
-			String password = parts[2];
-
-			if (memberController.checkIdPw(id, password)) {
-				System.out.println("[로그인 : "+id+"] ");
-				out.println("LOGIN_SUCCESS");
-				if(auctionState) {
-					sendOne(presentCondition);
-				} else {
-					out.println("진행중인 경매가 없습니다.");
-				}
+			
+			System.out.println("[로그인 > "+ id);			
+			if(auctionState) {
+				sendOne(presentCondition);
 			} else {
-				out.println("LOGIN_FAIL");
-			}            		
-
+				out.println("진행중인 경매가 없습니다.");
+			}
 		}
-
 	}	
+	
 	// 로그인 중인 회원들에게 경매현황을 전송하는 기능
 	public void sendAll(PresentCondition presentCondition) {
 		String name = presentCondition.getName();

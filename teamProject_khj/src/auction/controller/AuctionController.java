@@ -7,13 +7,13 @@ import java.util.regex.Pattern;
 
 import auction.main.PresentCondition;
 import auction.model.vo.AuctionVO;
+import auction.model.vo.BidVO;
 import auction.service.AuctionService;
 import auction.service.AuctionServiceImp;
 
 public class AuctionController {
 	private Scanner scan;
 	private AuctionService auctionService = new AuctionServiceImp();
-
 	public AuctionController(Scanner scan) {
 		this.scan = scan;
 	}
@@ -32,4 +32,16 @@ public class AuctionController {
 			System.out.println("[기록 실패]");
 		}
 	}
+
+	public boolean insertBid(String id, String bid) {
+		int intBid = Integer.parseInt(bid);
+		return auctionService.insertBid(id, intBid);
+	}
+
+	public void finishAuction() {
+		 if(auctionService.updateAuction()) {
+			 System.out.println("[경매기록 완료]");
+		 }
+	}
+
 }

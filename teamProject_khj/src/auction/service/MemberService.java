@@ -14,8 +14,8 @@ public interface MemberService {
 
 	boolean deleteMember(String memberId);
 
-	ArrayList<MemberVO> searchMember(String searchMemberInfo);
+	ArrayList<MemberVO> searchMemberList(String searchMemberInfo);
 
-	boolean checkIdPw(String id, String password);
+	MemberVO logIn(String id, String password);
 
 }

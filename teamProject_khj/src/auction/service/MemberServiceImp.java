@@ -69,20 +69,24 @@ public class MemberServiceImp implements MemberService{
 		return memberDao.deleteMember(memberId);
 	}
 	// 회원 검색
-	public ArrayList<MemberVO> searchMember(String searchMemberInfo) {
+	public ArrayList<MemberVO> searchMemberList(String searchMemberInfo) {
 		if(searchMemberInfo == null) {
 			return null;
 		}
 		searchMemberInfo = "%"+searchMemberInfo+"%";
-		return memberDao.selectMember(searchMemberInfo);
+		return memberDao.selectMemberList(searchMemberInfo);
 	}
+	
 	@Override
-	public boolean checkIdPw(String id, String password) {
-		if(id == null || password == null) {
-			return false;
+	public MemberVO logIn(String id, String password) {
+		MemberVO user = memberDao.selectMemberById(id);
+		if(user == null) {
+			return null;
 		}
-		int dbCheckCount = memberDao.selectMemberLoginCheck(id, password);
-		return dbCheckCount > 0;
+		if(user.getMe_password().equals(password)) {
+			return user;
+		}
+		return null;
 	}
 
 }

@@ -38,7 +38,7 @@
 		where 
 			binary(me_id) = #{memberId}
 	</delete>
-	<select id="selectMember">
+	<select id="selectMemberList" resultType="MemberVO">
 		select 
 			*
 		from 
@@ -48,15 +48,6 @@
 			or me_name like #{search} 
 			or me_address like #{search}
 			or me_contact like #{search} 
-	</select>
-	<select id="selectMemberLoginCheck" resultType="int">
-		select
-			count(*)
-		from
-			member
-		where
-			binary(me_id) = #{id} 
-			and binary(me_password) = #{password} 
 	</select>
 </mapper>
 
