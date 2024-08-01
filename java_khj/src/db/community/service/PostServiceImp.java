@@ -2,6 +2,7 @@ package db.community.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -9,7 +10,10 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import db.community.dao.PostDAO;
+import db.community.model.vo.CommentVO;
 import db.community.model.vo.CommunityVO;
+import db.community.model.vo.PostVO;
+import db.community.pagination.Criteria;
 
 public class PostServiceImp implements PostService{
 	
@@ -74,5 +78,106 @@ public class PostServiceImp implements PostService{
 			oldVo.setCo_name(newName.trim());
 			//다오에게 이전 커뮤니티VO를 주면서 커뮤니티명을 수정하려고 요청하고 처리 여부를 반환
 			return postDao.updateCommunity(oldVo);
+	}
+
+	@Override
+	public boolean deleteCommunity(String name) {	
+		//등록된 커뮤니티수가 1이면 false를 리턴
+		List<CommunityVO> list = postDao.selectCommunityList();
+		if(list.size() == 1) {
+			return false;
+		}
+		return postDao.deleteCommunity(name);
+	}
+
+	@Override
+	public List<CommunityVO> getCommunityList() {
+		return postDao.selectCommunityList();
+	}
+
+	@Override
+	public boolean insetPost(PostVO post) {
+		if(post == null) {
+			return false;
+		}
+		//제목 null체크, 빈문자열 체크
+		if(!checkString(post.getPo_title())) {
+			return false;
+		}
+		//내용 null체크, 빈문자열 체크
+		if(!checkString(post.getPo_sub())) {
+			return false;
+		}
+		//다오에게 게시글 VO를 주면서 게시글을 등록하라고 요청한 후 성공여부를 반환
+		try {
+			return postDao.insertPost(post);
+		} catch(Exception e) {
+			return false;
+		}
+	}
+	//문자열이 null이거나 공백으로 된 문자열이면 false, 아니면 true
+	private boolean checkString(String str) {
+		if(str == null || str.trim().length() == 0 ) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public List<PostVO> getPostList(Criteria cri) {
+		if(cri == null) {
+			throw new RuntimeException();
+		}
+		return postDao.selectPostList(cri);
+	}
+
+	@Override
+	public PostVO getPost(int poNum) {
+		return postDao.selectPost(poNum);
+	}
+
+	@Override
+	public int selectPostListTotalCount(Criteria cri) {
+		if(cri == null) {
+			return 0;
+		}
+		return postDao.selectPostListCount(cri);
+	}
+
+	@Override
+	public boolean deletePost(int po_num) {
+		return postDao.deletePost(po_num);
+	}
+
+	@Override
+	public boolean updatePost(PostVO post) {
+		if(post == null) {
+			return false;
+		}
+		if(!checkString(post.getPo_title()) || !checkString(post.getPo_sub())) {
+			return false;
+		}
+		return postDao.updatePost(post);
+	}
+
+	@Override
+	public boolean insertComment(CommentVO comment) {
+		if(comment == null) {
+			return false;
+		}
+		if(!checkString(comment.getCm_content())) {
+			return false;
+		}
+		return postDao.insertComment(comment);
+	}
+
+	@Override
+	public List<CommentVO> getCommentList(int po_num) {
+		return postDao.selectCommentList(po_num);
+	}
+
+	@Override
+	public void updatePostView(int poNum) {
+		postDao.updatePostView(poNum);
 	}
 }

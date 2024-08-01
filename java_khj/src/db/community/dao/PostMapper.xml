@@ -16,6 +16,49 @@
 		where
 			co_num = #{vo.co_num}
 	</update>
+	<delete id="deleteCommunity">
+		delete from community where co_name = #{co_name}
+	</delete>
+	<select id="selectCommunityList" resultType="CommunityVO">
+		select * from community order by co_num
+	</select> 
+	<!-- useGeneratedKeys="true" keyProperty="post.po_num"
+	 추가된 기본키를 가져와서 post.po_num에 넣어줌  -->
+	<insert id="insertPost" useGeneratedKeys="true" keyProperty="post.po_num">
+		insert into post(po_co_num, po_title, po_sub, po_me_id) values
+		(#{post.po_co_num}, #{post.po_title}, #{post.po_sub}, #{post.po_me_id});
+	</insert>
+	<select id="selectPostList" resultType="PostVO">
+		select * from post where po_co_num = #{cri.coNum} and po_title like concat('%',#{cri.search},'%')
+		limit #{cri.pageStart}, #{cri.perPageNum}
+	</select>
+	<select id="selectPost" resultType="PostVO">
+		select * from post where po_num = #{po_num}
+	</select>
+	<select id="selectPostListCount" resultType="int">
+		select count(*) from post where po_co_num = #{cri.coNum} and po_title like concat('%',#{cri.search},'%')
+	</select>
+	<delete id="deletePost">
+		delete from post where po_num = #{po_num}
+	</delete>
+	<update id="updatePost">
+		update post set
+			po_title = #{po.po_title},
+			po_sub = #{po.po_sub}
+		where
+			po_num = #{po.po_num}
+	</update>
+	<insert id="insertComment">
+		INSERT INTO COMMENT(CM_NUM, CM_CONTENT, CM_ME_ID, CM_PO_NUM, CM_ORI_NUM)
+		SELECT IFNULL(MAX(CM_NUM),0) + 1, #{co.cm_content}, #{co.cm_me_id}, #{co.cm_po_num}, IFNULL(MAX(CM_NUM),0) + 1 
+		FROM COMMENT;
+	</insert>
+	<select id="selectCommentList" resultType="CommentVO">
+		select * from Comment where cm_po_num = #{po_num} 
+	</select>
+	<update id="updatePostView">
+		update post set po_views = po_views + 1 where po_num = #{po_num}
+	</update>
 </mapper>
 
 

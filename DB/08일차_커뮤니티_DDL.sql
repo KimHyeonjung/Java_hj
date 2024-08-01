@@ -105,7 +105,7 @@ ALTER TABLE `post` ADD CONSTRAINT `FK_community_TO_post_1` FOREIGN KEY (
 )
 REFERENCES `community` (
 	`co_num`
-);
+) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `post` ADD CONSTRAINT `FK_member_TO_post_1` FOREIGN KEY (
 	`po_me_id`
@@ -126,7 +126,7 @@ ALTER TABLE `comment` ADD CONSTRAINT `FK_post_TO_comment_1` FOREIGN KEY (
 )
 REFERENCES `post` (
 	`po_num`
-);
+)ON DELETE CASCADE;
 
 ALTER TABLE `report` ADD CONSTRAINT `FK_member_TO_report_1` FOREIGN KEY (
 	`rp_me_id`
@@ -147,14 +147,14 @@ ALTER TABLE `file` ADD CONSTRAINT `FK_post_TO_file_1` FOREIGN KEY (
 )
 REFERENCES `post` (
 	`po_num`
-);
+)ON DELETE CASCADE;
 
 ALTER TABLE `recommend` ADD CONSTRAINT `FK_post_TO_recommend_1` FOREIGN KEY (
 	`re_po_num`
 )
 REFERENCES `post` (
 	`po_num`
-);
+) ON DELETE CASCADE;
 
 ALTER TABLE `recommend` ADD CONSTRAINT `FK_member_TO_recommend_1` FOREIGN KEY (
 	`re_me_id`

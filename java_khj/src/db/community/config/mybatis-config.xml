@@ -16,9 +16,9 @@
 	    <transactionManager type="JDBC"/>
 	    <dataSource type="POOLED">
 	      <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
-	      <property name="url" value="jdbc:mysql://192.168.30.209:3306/community"/>
-	      <property name="username" value="cgv_admin"/>
-	      <property name="password" value="admin123"/>
+	      <property name="url" value="jdbc:mysql://localhost:3306/community"/>
+	      <property name="username" value="root"/>
+	      <property name="password" value="root"/>
 	    </dataSource>
 	  </environment>
 	</environments>	
