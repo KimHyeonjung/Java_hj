@@ -23,6 +23,7 @@ public class Bidder {
 	PrintWriter out;
 	MemberVO member = null;
 	int possibleMinBid; 
+	boolean auctionState = false;
 	private Scanner scan = new Scanner(System.in);
 	MemberController memberController = new MemberController(scan);
 	AuctionController auctionController = new AuctionController(scan);
@@ -49,14 +50,14 @@ public class Bidder {
 			if (choice == '1') {
 				member = memberController.logIn();
 				if(member != null) {
-					out.println("LOGIN::"+ member.getMe_id());
+					out.println("LOGIN::"+ member.getMe_id()); // 서버에 로그인 알림
 					bidderReceiver();
 					bidStart();
 				}
 			} else if (choice == '2') {
 				MemberVO nMem = memberController.register();
 					out.println("REGISTER::"+nMem.getMe_id()+"::"+nMem.getMe_name()+"::"
-				+ nMem.getMe_address() +"::"+ nMem.getMe_contact());
+				+ nMem.getMe_address() +"::"+ nMem.getMe_contact()); // 서버에 회원가입 알림
 			} else if (choice == '3') {
 				out.println("EXIT");
 				break;
@@ -74,13 +75,17 @@ public class Bidder {
 			System.out.print("선택: ");
 			char choice = scan.next().charAt(0);
 
-			if (choice == '1') {
-				System.out.print("입찰가 입력 > ");
-				int bid = scan.nextInt();
-				if(bid >= possibleMinBid) {
-					out.println("BID::" + member.getMe_id() + "::" + bid);
+			if (choice == '1') {	
+				if(auctionState) {
+					System.out.print("입찰가 입력 > ");
+					int bid = scan.nextInt();
+					if(bid >= possibleMinBid) {
+						out.println("BID::" + member.getMe_id() + "::" + bid);
+					} else {
+						System.out.println(getFormatWon(possibleMinBid) + "원 이상만 입찰 가능합니다.");
+					}
 				} else {
-					System.out.println(getFormatWon(possibleMinBid) + "원 이상만 입찰 가능합니다.");
+					System.out.println("진행중인 경매가 없습니다.");
 				}
 
 			} else if (choice == '2') {
@@ -100,19 +105,25 @@ public class Bidder {
 					synchronized(in) {
 						String response = in.readLine();
 						if (response.startsWith("PRESENT_CONDITION")) {
+							auctionState = true;
+							System.out.println("[입찰 성공]");
 							printAuctionPc(response);
 						} else if (response.startsWith("FINISH")) {
 							String[] parts = response.split("::");
 							String notify = parts[1];
 							System.out.println(notify);
 							break;
+						} else if(response.startsWith("AUCTION_OFF")) {
+							auctionState = false;
+							String[] parts = response.split("::");
+							String notify = parts[1];
+							System.out.println(notify);
 						} else {
 							System.out.println(response);
 						}
 
 					}
 				} catch (IOException e) {
-					e.printStackTrace();
 				}
 			}
 		});

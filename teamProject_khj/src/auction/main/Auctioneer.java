@@ -30,7 +30,7 @@ public class Auctioneer {
 	private Scanner scan = new Scanner(System.in);
 	MemberController memberController = new MemberController(scan);
 	AuctionController auctionController = new AuctionController(scan);
-	OpenServer serverStart;
+	RunMainMenu runMainMenu;
 	List<PrintWriter> clients;
 	private BufferedReader in;
 	private PrintWriter out;
@@ -43,28 +43,33 @@ public class Auctioneer {
 		Collections.synchronizedList(clients); //리스트 동기화
 	}
 
-	public void start() throws InterruptedException {
-		serverStart = new OpenServer();
-		serverStart.start();		
+	public void start() {
+		int port = 6006; // 서버 포트번호
 		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
+			String ip = InetAddress.getLocalHost().getHostAddress();
+			System.out.println(ip + "  " + port);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
 		}
-		int menu = 0;
-		do {
-			System.out.println("1. 회원 관리");
-			System.out.println("2. 경매 관리");
-			System.out.println("3. 종료");
-			System.out.print("메뉴 선택 : ");
-
-			menu = nextInt();
-			runMenu(menu);
-
-		} while(menu != 3);
+		runMainMenu = new RunMainMenu();
+		runMainMenu.start();
+		try(ServerSocket serverSocket = new ServerSocket(port)) {
+			while(true) {
+				Socket clientSocket = serverSocket.accept();
+				if(clientSocket.isConnected()) {
+					System.out.println("[" + clientSocket + "에서 접속]");
+				}				
+				ClientHandler clientHandler = new ClientHandler(clientSocket);
+				clientHandler.start();
+			}
+		}  catch (IOException e) {
+			e.printStackTrace();
+		} 
+		
 	}
 
 
-	public void runMenu(int menu) throws InterruptedException {
+	public void runMenu(int menu)  {
 		switch (menu) {
 		case 1 : 
 			memberMenuList();
@@ -236,28 +241,19 @@ public class Auctioneer {
 
 
 	// 
-	class OpenServer extends Thread{
-
+	class RunMainMenu extends Thread{
 		public void run() {
-			int port = 6006; // 서버 포트번호
-			try {
-				String ip = InetAddress.getLocalHost().getHostAddress();
-				System.out.println(ip + "  " + port);
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			}
-			try(ServerSocket serverSocket = new ServerSocket(port)) {
-				while(true) {
-					Socket clientSocket = serverSocket.accept();
-					if(clientSocket.isConnected()) {
-						System.out.println("[" + clientSocket + "에서 접속]");
-					}				
-					ClientHandler clientHandler = new ClientHandler(clientSocket);
-					clientHandler.start();
-				}
-			}  catch (IOException e) {
-				e.printStackTrace();
-			} 
+			int menu = 0;
+			do {
+				System.out.println("1. 회원 관리");
+				System.out.println("2. 경매 관리");
+				System.out.println("3. 종료");
+				System.out.print("메뉴 선택 : ");
+
+				menu = nextInt();
+				runMenu(menu);
+
+			} while(menu != 3);
 		}
 	}
 
@@ -265,14 +261,14 @@ public class Auctioneer {
 	// 클라이언트 요청 처리를 담당하는 쓰레드
 	class ClientHandler extends Thread {
 		private final Socket clientSocket;
-
+		String logId = null;
 		public ClientHandler(Socket socket) {
 			this.clientSocket = socket;
 		}
 
 		@Override
 		public void run() {
-			String id = null;
+			
 			try {
 				in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -290,15 +286,13 @@ public class Auctioneer {
 					}						
 
 				}
-
-				System.out.println("클라이언트 연결 종료: " + clientSocket);
 				clientSocket.close();
 			} catch (IOException e) {
 				//				e.printStackTrace();
 			}
 			finally {
-				if(id != null) {
-					System.out.println("[나감 : " + id + "]");
+				if(logId != null) {
+					System.out.println("[나감 : " + logId + "]");
 				} else {
 					System.out.println("[나감 : " + clientSocket + "]");
 				}
@@ -343,12 +337,12 @@ public class Auctioneer {
 		public void handleLogin(String request) {
 			String[] parts = request.split("::");
 			String id = parts[1];
-			
+			logId = id;
 			System.out.println("[로그인 > "+ id);			
 			if(auctionState) {
 				sendOne(presentCondition);
 			} else {
-				out.println("진행중인 경매가 없습니다.");
+				out.println("AUCTION_OFF::진행중인 경매가 없습니다.");
 			}
 		}
 	}	
@@ -374,7 +368,6 @@ public class Auctioneer {
 		String highestPrice = Integer.toString(presentCondition.getHighestBid());
 		String endTime = presentCondition.getEndTimeToString();
 		String increment = Integer.toString(presentCondition.getIncrement());
-		System.out.println(increment);
 
 		out.println("PRESENT_CONDITION::" + name + "::" + startPrice +"::" + highestPrice + "::" + endTime + "::" + increment);
 
