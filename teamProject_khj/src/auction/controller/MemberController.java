@@ -52,6 +52,12 @@ public class MemberController {
 			System.out.println("[영문+숫자 4~14자]");
 			return null;
 		}
+		System.out.print("비밀번호 확인> ");
+		String password2 = scan.next();
+		if(!password.equals(password2)) {
+			System.out.println("[비밀번호가 일치하지 않습니다.]");
+			return null;
+		}
 		System.out.print("이름 > ");
 		String name = scan.next();
 		if(!Pattern.matches(getRegex("name"), name)) {
@@ -174,7 +180,7 @@ public class MemberController {
 				return "^([가-힣]{2,5}|[a-zA-Z]{2,10})$";
 			}
 			if(regex.equals("address")) {
-				return "^[a-zA-Z0-9가-힣]{1,35}$";
+				return "^[a-zA-Z0-9가-힣 ]{1,35}$";
 			}
 			if(regex.equals("contact")) {
 				return "^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$";

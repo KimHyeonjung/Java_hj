@@ -71,7 +71,7 @@ public class Auctioneer {
 		}  catch (IOException e) {
 			e.printStackTrace();
 		} 
-		
+
 	}
 	// 
 	class RunMainMenu extends Thread{
@@ -181,7 +181,8 @@ public class Auctioneer {
 			}
 			auctionState = true;
 			auctionController.startAuction(presentCondition);
-			sendAll(presentCondition);
+			out.println("AUCTION_ON::경매를 시작합니다.");
+			sendAll(presentCondition, "-");
 			firstState = false;
 			auctionTimer(finishAuction);
 			break;
@@ -197,7 +198,9 @@ public class Auctioneer {
 			System.out.println("잘못된 메뉴 입니다.");
 		}		
 	}
-	
+
+
+
 	private void searchBid() {
 		System.out.print("검색어 입력 >");
 		String search = scan.next();		
@@ -230,7 +233,7 @@ public class Auctioneer {
 			break;
 		}
 	}
-	
+
 	private void SearchAuction() {
 		String search = scan.next();		
 		//검색된 경매기록 출력
@@ -317,14 +320,17 @@ public class Auctioneer {
 
 		@Override
 		public void run() {
-			
+
 			try {
 				in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				out = new PrintWriter(clientSocket.getOutputStream(), true);
 				clients.add(out);
 				String request;
 				while ((request = in.readLine()) != null) {
-					if (request.startsWith("BID")) {
+					if (request.startsWith("JOIN")) {
+						handleJoin(request);
+					}
+					else if (request.startsWith("BID")) {
 						handleBid(request);
 					} else if (request.startsWith("REGISTER")) {
 						handleRegister(request);
@@ -361,7 +367,7 @@ public class Auctioneer {
 				String bid = parts[2];
 				presentCondition.setHighestBidToInt(bid); // 경매현황 최고입찰가 갱신
 				if(auctionController.insertBid(id, bid)) { // 입찰기록 db에 추가
-					sendAll(presentCondition);
+					sendAll(presentCondition, id);
 				}
 
 			} else {
@@ -378,10 +384,16 @@ public class Auctioneer {
 			String contact = parts[4];
 			System.out.println("아이디확인" + id);
 			MemberVO member = new MemberVO(id, "", name, address, contact);
-			System.out.println("[신규회원 가입] ");
+			System.out.println("<신규회원 가입> ");
 			System.out.println(member);
 		}
-
+		public void handleJoin(String request) {
+			if(auctionState) {
+				sendOne(presentCondition); 
+			} else {
+				out.println("AUCTION_OFF::진행중인 경매가 없습니다.");
+			}
+		}
 
 		// 로그인 요청 처리
 		public void handleLogin(String request) {
@@ -389,16 +401,10 @@ public class Auctioneer {
 			String id = parts[1];
 			logId = id;
 			System.out.println("[로그인 > "+ id);			
-			if(auctionState) {
-				sendOne(presentCondition);
-			} else {
-				out.println("AUCTION_OFF::진행중인 경매가 없습니다.");
-			}
 		}
 	}	
-	
 	// 로그인 중인 회원들에게 경매현황을 전송하는 기능
-	public void sendAll(PresentCondition presentCondition) {
+	public void sendAll(PresentCondition presentCondition, String id) {
 		String name = presentCondition.getName();
 		String startPrice = Integer.toString(presentCondition.getStartPrice());
 		String highestPrice = Integer.toString(presentCondition.getHighestBid());
@@ -408,7 +414,7 @@ public class Auctioneer {
 			if(firstState) {
 				out.println("경매를 시작합니다.");
 			}
-			out.println("PRESENT_CONDITION::" + name + "::" + startPrice +"::" + highestPrice + "::" + endTime + "::" + increment);
+			out.println("PRESENT_CONDITION::" + name + "::" + startPrice +"::" + highestPrice + "::" + endTime + "::" + increment + "::" + id);
 		}
 	}
 	// 경매현황을 전송하는 기능 

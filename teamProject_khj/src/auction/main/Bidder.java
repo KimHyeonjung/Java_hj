@@ -24,7 +24,7 @@ public class Bidder {
 	MemberVO member = null;
 	int possibleMinBid; 
 	boolean auctionState = false;
-	boolean Bdding = false;
+	boolean Bidding = false;
 	private Scanner scan = new Scanner(System.in);
 	MemberController memberController = new MemberController(scan);
 	AuctionController auctionController = new AuctionController(scan);
@@ -51,10 +51,9 @@ public class Bidder {
 			if (choice == '1') {
 				member = memberController.logIn();
 				if(member != null) {
-					out.println("LOGIN::"+ member.getMe_id()); // 서버에 로그인 알림
-					Bdding = true;
 					bidderReceiver();
-					bidStart();
+					out.println("LOGIN::"+ member.getMe_id()); // 서버에 로그인 알림
+					auctionStart();
 				}
 			} else if (choice == '2') {
 				MemberVO nMem = memberController.register();
@@ -65,6 +64,7 @@ public class Bidder {
 						+ nMem.getMe_address() +"::"+ nMem.getMe_contact()); // 서버에 회원가입 알림
 			} else if (choice == '3') {
 				out.println("EXIT");
+				System.out.println("[프로그램 종료]");
 				break;
 			} else {
 				System.out.println("잘못된 선택입니다.");
@@ -72,9 +72,9 @@ public class Bidder {
 		}
 
 	}
-	private void bidStart() {
+	private void auctionStart() {
 		while (true) {
-			System.out.println("1. 입찰하기");
+			System.out.println("1. 경매 참여");
 			System.out.println("2. 경매기록조회");
 			System.out.println("3. 나가기");
 			System.out.print("선택: ");
@@ -82,13 +82,8 @@ public class Bidder {
 
 			if (choice == '1') {	
 				if(auctionState) {
-					System.out.print("입찰가 입력 > ");
-					int bid = scan.nextInt();
-					if(bid >= possibleMinBid) {
-						out.println("BID::" + member.getMe_id() + "::" + bid);
-					} else {
-						System.out.println(getFormatWon(possibleMinBid) + "원 이상만 입찰 가능합니다.");
-					}
+					Bidding = true;
+					bidStart();
 				} else {
 					System.out.println("진행중인 경매가 없습니다.");
 				}
@@ -97,7 +92,32 @@ public class Bidder {
 				auctionController.getBidListById(member.getMe_id());
 				PrintController.bar();
 			} else if (choice == '3') {	
-				Bdding = false;
+				Bidding = false;
+				break;
+			} else {
+				System.out.println("잘못된 선택입니다.");
+			}
+		}
+	}
+
+	private void bidStart() {
+		while (true) {
+			System.out.println("1. 입찰하기");
+			System.out.println("2. 이전으로");
+			System.out.print("선택: ");
+			char choice = scan.next().charAt(0);
+
+			if (choice == '1') {	
+				System.out.print("입찰가 입력 > ");
+				int bid = scan.nextInt();
+				if(bid >= possibleMinBid) {
+					out.println("BID::" + member.getMe_id() + "::" + bid);
+				} else {
+					System.out.println(getFormatWon(possibleMinBid) + "원 이상만 입찰 가능합니다.");
+				}
+
+			} else if (choice == '2') {	
+				Bidding = false;
 				break;
 			} else {
 				System.out.println("잘못된 선택입니다.");
@@ -108,15 +128,19 @@ public class Bidder {
 	// 경매현황 수신
 	private void bidderReceiver() {
 		Thread thread = new Thread(()->{
-			while(Bdding) {
+			while(true) {
 				try {
 					synchronized(in) {
 						String response;
 						try {
 							response = in.readLine();
-							if (response.startsWith("PRESENT_CONDITION")) {
+							if(response.startsWith("AUCTION_ON")) {
 								auctionState = true;
-								System.out.println("[입찰 성공]");
+								String[] parts = response.split("::");
+								String notify = parts[1];
+								System.out.println(notify);
+							}
+							else if (response.startsWith("PRESENT_CONDITION")) {
 								printAuctionPc(response);
 							} else if (response.startsWith("FINISH")) {
 								String[] parts = response.split("::");
@@ -133,7 +157,7 @@ public class Bidder {
 							}
 						}catch(NullPointerException e) {
 						}
-						
+
 
 					}
 				} catch (IOException e) {
@@ -151,6 +175,10 @@ public class Bidder {
 		String highestPrice = parts[3];
 		String endTime = parts[4];
 		String increment = parts[5];
+		String id = parts[6];
+		if(id.equals(member.getMe_id())) {
+			System.out.println("[입찰 성공]");
+		}
 		int highestPriceInt = Integer.parseInt(highestPrice);
 		int incrementInt = Integer.parseInt(increment);		
 		possibleMinBid = highestPriceInt + incrementInt; // 입찰 가능 금액
