@@ -35,7 +35,7 @@ public class Auctioneer {
 	private BufferedReader in;
 	private PrintWriter out;
 	boolean auctionState = false; // 경매 시작 상태
-	boolean firstState = true; // 경매 시작 후 처음인지 아닌지
+	boolean exitFlag = false;
 	PresentCondition presentCondition;
 	LocalTime finishAuction;
 	public Auctioneer(){
@@ -56,15 +56,13 @@ public class Auctioneer {
 		try(ServerSocket serverSocket = new ServerSocket(port)) {
 			while(true) {
 				Socket clientSocket = serverSocket.accept();
+				if(exitFlag) {
+					break;
+				}
 				if(clientSocket.isConnected()) {
 					System.out.println("[" + clientSocket + "에서 접속]");
 				}	
-				String client = clientSocket.getLocalSocketAddress().toString();
-				String host = InetAddress.getLocalHost().getHostAddress().toString();
-				if(client.substring(0, 10).equals("/127.0.0.1")) {
-					System.out.println("확인");
-					break;
-				}
+
 				ClientHandler clientHandler = new ClientHandler(clientSocket);
 				clientHandler.start();
 			}
@@ -93,17 +91,20 @@ public class Auctioneer {
 	public void runMenu(int menu)  {
 		switch (menu) {
 		case 1 : 
+			PrintController.mniBar();
 			memberMenuList();
 			break;
 		case 2 :
+			PrintController.mniBar();
 			auctionMenuList();
 			break;
 		case 3 :
+			exitFlag = true;
+			System.out.println("[프로그램 종료]");
 			try {
 				Socket socket = new Socket("localhost", 6006);
 			} catch (Exception e) {
 			}
-			System.out.println("[프로그램 종료]");
 			break;
 		default :
 			System.out.println(menu);
@@ -140,6 +141,30 @@ public class Auctioneer {
 			runMemberMenu(menu);
 		}
 	}	
+
+	// 멤버 메뉴
+	private void runMemberMenu(int menu) {
+		switch (menu) {
+		case 1 : 
+			memberController.insertMember();
+			break;
+		case 2 :
+			memberController.updateMember();
+			break;
+		case 3 :
+			memberController.deleteMember();
+			break;
+		case 4 :
+			memberController.searchMember();
+			break;
+		case 5 :
+			PrintController.mniBar();
+			break;
+		default :
+			System.out.println("잘못된 메뉴 입니다.");
+		}
+	}
+
 	// 경매 타이머
 	private void auctionTimer(LocalTime finishAuction2) {
 		Thread at = new Thread(()->{
@@ -169,6 +194,10 @@ public class Auctioneer {
 				break;
 			}
 			presentCondition = insertItem();
+			if(presentCondition != null) {
+				System.out.println("[등록 완료]");
+				PrintController.bar();
+			}
 			break;
 		case 2 :
 			if(auctionState) {
@@ -180,10 +209,10 @@ public class Auctioneer {
 				break;
 			}
 			auctionState = true;
-			auctionController.startAuction(presentCondition);
-			out.println("AUCTION_ON::경매를 시작합니다.");
-			sendAll(presentCondition, "-");
-			firstState = false;
+			auctionController.startAuction(presentCondition); //경매기록
+			if(clients.size() > 0) {
+				out.println("AUCTION_START::경매를 시작합니다.");
+			}
 			auctionTimer(finishAuction);
 			break;
 		case 3 :
@@ -193,6 +222,7 @@ public class Auctioneer {
 			searchBid();
 			break;
 		case 5 :
+			PrintController.mniBar();
 			break;
 		default :
 			System.out.println("잘못된 메뉴 입니다.");
@@ -227,41 +257,17 @@ public class Auctioneer {
 		switch(menu) {
 		case 1:
 			System.out.print(">");
-			SearchAuction();
+			String search = scan.next();		
+			//검색된 경매기록 출력
+			auctionController.searchAuctionList(search);
+			PrintController.bar();
 			break;
 		case 2:
 			break;
 		}
 	}
 
-	private void SearchAuction() {
-		String search = scan.next();		
-		//검색된 경매기록 출력
-		auctionController.searchAuctionList(search);
-		PrintController.bar();
-	}
 
-	// 멤버 메뉴
-	private void runMemberMenu(int menu) {
-		switch (menu) {
-		case 1 : 
-			memberController.insertMember();
-			break;
-		case 2 :
-			memberController.updateMember();
-			break;
-		case 3 :
-			memberController.deleteMember();
-			break;
-		case 4 :
-			memberController.searchMember();
-			break;
-		case 5 :
-			break;
-		default :
-			System.out.println("잘못된 메뉴 입니다.");
-		}
-	}
 	//	경매품명, 시작가, 입찰 유효 시간, 인상액 을 입력하여 등록하는 기능
 	public PresentCondition insertItem() {
 		try {
@@ -270,27 +276,27 @@ public class Auctioneer {
 			scan.nextLine();
 			String name = scan.nextLine();
 			if(!Pattern.matches(getRegex("itemName"), name)) {
-				System.out.println("[20자 이내로 입력, 특수문자 사용금지]");
+				System.out.println("-> 특수문자 없이 20자 이내로 입력하십시오.");
 				return null;
 			}
 			System.out.print("시작가 입력 > ");
 			int startPrice;
 			while((startPrice = scan.nextInt()) < 0) {
-				System.out.println("[음수 입력]");
+				System.out.println("-> 0보다 커야 됩니다.");
 				System.out.print("시작가 입력 > ");
 				startPrice = scan.nextInt();
 			}
 			System.out.print("유효시간 입력(분) > ");
 			int validityPeriod = scan.nextInt();
 			while(validityPeriod < 1 || validityPeriod > 120) {
-				System.out.println("[1~120분]");
+				System.out.println("-> 입력 가능 범위: 1~120분");
 				System.out.print("유효시간 입력(분) > ");
 				validityPeriod = scan.nextInt();
 			}
 			System.out.print("인상액 입력 > ");
 			int increment = scan.nextInt();
 			while(increment < 100 || increment > 1000000) {
-				System.out.println("[100~1,000,000]");
+				System.out.println("-> 입력 가능 범위: 100~1,000,000");
 				System.out.print("인상액 > ");
 				increment = scan.nextInt();
 			}
@@ -300,7 +306,6 @@ public class Auctioneer {
 			int highestBid = startPrice;
 			//경매현황에는 경매품명, 시작가, 최고입찰가, 종료시간, 인상액 있다
 			PresentCondition presentCondition = new PresentCondition(name, startPrice, highestBid, endTime, increment);
-			System.out.println("-[등록완료]-");
 			return presentCondition;
 			//경매기록에는 날짜, 경매품명, 시작가, 낙찰가, 낙찰자 아이디가 있다.
 		} catch (InputMismatchException e) {
@@ -313,6 +318,7 @@ public class Auctioneer {
 	// 클라이언트 요청 처리를 담당하는 쓰레드
 	class ClientHandler extends Thread {
 		private final Socket clientSocket;
+		boolean firstSend = true; // 처음 보내는 경매현황인지 체크
 		String logId = null;
 		public ClientHandler(Socket socket) {
 			this.clientSocket = socket;
@@ -355,7 +361,6 @@ public class Auctioneer {
 				try {
 					clientSocket.close();
 				} catch (IOException e) {
-					e.printStackTrace();
 				}
 			}
 		}		
@@ -365,13 +370,14 @@ public class Auctioneer {
 				String[] parts = request.split("::");
 				String id = parts[1];
 				String bid = parts[2];
-				presentCondition.setHighestBidToInt(bid); // 경매현황 최고입찰가 갱신
+				presentCondition.setHighestBidToInt(bid); // 경매현황 최고입찰가/id 갱신
+				presentCondition.setId(id); 
 				if(auctionController.insertBid(id, bid)) { // 입찰기록 db에 추가
-					sendAll(presentCondition, id);
+					sendPc(presentCondition, firstSend);
 				}
 
 			} else {
-				out.println("진행중인 경매가 없습니다.");
+				out.println("AUCTION_OFF::진행 중인 경매가 없습니다.");
 			}
 		}
 
@@ -389,9 +395,11 @@ public class Auctioneer {
 		}
 		public void handleJoin(String request) {
 			if(auctionState) {
-				sendOne(presentCondition); 
+				out.println("AUCTION_ON::경매가 진행 중입니다.");
+				sendPc(presentCondition, firstSend); 
+				firstSend = false;
 			} else {
-				out.println("AUCTION_OFF::진행중인 경매가 없습니다.");
+				out.println("AUCTION_OFF::진행 중인 경매가 없습니다.");
 			}
 		}
 
@@ -400,34 +408,27 @@ public class Auctioneer {
 			String[] parts = request.split("::");
 			String id = parts[1];
 			logId = id;
-			System.out.println("[로그인 > "+ id);			
+			System.out.println("[로그인 > "+ id+"]");			
 		}
 	}	
 	// 로그인 중인 회원들에게 경매현황을 전송하는 기능
-	public void sendAll(PresentCondition presentCondition, String id) {
+	public void sendPc(PresentCondition presentCondition, boolean firstSend) {
 		String name = presentCondition.getName();
 		String startPrice = Integer.toString(presentCondition.getStartPrice());
 		String highestPrice = Integer.toString(presentCondition.getHighestBid());
 		String endTime = presentCondition.getEndTimeToString();
 		String increment = Integer.toString(presentCondition.getIncrement());
-		for(PrintWriter out : clients) {
-			if(firstState) {
-				out.println("경매를 시작합니다.");
+		String id = presentCondition.getId();
+		if(firstSend) {
+			out.println("PRESENT_CONDITION::" + name + "::" + startPrice +"::" + highestPrice + "::" + endTime + "::" + increment +"::--");
+		} else {
+			for(PrintWriter out : clients) {
+				out.println("PRESENT_CONDITION::" + name + "::" + startPrice +"::" + highestPrice + "::" + endTime + "::" + increment 
+						+ "::" + id);
 			}
-			out.println("PRESENT_CONDITION::" + name + "::" + startPrice +"::" + highestPrice + "::" + endTime + "::" + increment + "::" + id);
 		}
 	}
-	// 경매현황을 전송하는 기능 
-	public void sendOne(PresentCondition presentCondition) {
-		String name = presentCondition.getName();
-		String startPrice = Integer.toString(presentCondition.getStartPrice());
-		String highestPrice = Integer.toString(presentCondition.getHighestBid());
-		String endTime = presentCondition.getEndTimeToString();
-		String increment = Integer.toString(presentCondition.getIncrement());
 
-		out.println("PRESENT_CONDITION::" + name + "::" + startPrice +"::" + highestPrice + "::" + endTime + "::" + increment);
-
-	}
 
 	//정규표현식 모음
 	private String getRegex(String regex) {

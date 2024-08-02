@@ -26,8 +26,10 @@ public class AuctionController {
 		AuctionVO auction = new AuctionVO(au_name, au_start_price);
 		if(auctionService.insertAuction(auction)) {
 			System.out.println("[경매 시작]");
+			PrintController.bar();
 		} else {
-			System.out.println("[기록 실패]");
+			System.out.println("[경매기록 실패]");
+			PrintController.bar();
 		}
 	}
 

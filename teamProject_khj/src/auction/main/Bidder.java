@@ -16,7 +16,7 @@ import auction.model.vo.MemberVO;
 
 public class Bidder {
 
-	private String SERVER_IP = "192.168.30.209";
+	private String SERVER_IP = "182.227.11.155";
 	private int SERVER_PORT = 6006;
 	Socket socket;
 	BufferedReader in;
@@ -80,14 +80,10 @@ public class Bidder {
 			System.out.print("선택: ");
 			char choice = scan.next().charAt(0);
 
-			if (choice == '1') {	
-				if(auctionState) {
-					Bidding = true;
-					bidStart();
-				} else {
-					System.out.println("진행중인 경매가 없습니다.");
-				}
-
+			if (choice == '1') {
+				out.println("JOIN::");
+				bidStart();
+				
 			} else if (choice == '2') {				
 				auctionController.getBidListById(member.getMe_id());
 				PrintController.bar();
@@ -106,8 +102,11 @@ public class Bidder {
 			System.out.println("2. 이전으로");
 			System.out.print("선택: ");
 			char choice = scan.next().charAt(0);
-
 			if (choice == '1') {	
+				if(!auctionState) {
+					System.out.println("진행 중인 경매가 없습니다.");
+					break;
+				}
 				System.out.print("입찰가 입력 > ");
 				int bid = scan.nextInt();
 				if(bid >= possibleMinBid) {
@@ -134,7 +133,13 @@ public class Bidder {
 						String response;
 						try {
 							response = in.readLine();
-							if(response.startsWith("AUCTION_ON")) {
+							if(response.startsWith("AUCTION_START")) {
+								auctionState = true;
+								String[] parts = response.split("::");
+								String notify = parts[1];
+								System.out.println(notify);
+							}
+							else if(response.startsWith("AUCTION_ON")) {
 								auctionState = true;
 								String[] parts = response.split("::");
 								String notify = parts[1];
@@ -157,8 +162,6 @@ public class Bidder {
 							}
 						}catch(NullPointerException e) {
 						}
-
-
 					}
 				} catch (IOException e) {
 				}
@@ -182,8 +185,8 @@ public class Bidder {
 		int highestPriceInt = Integer.parseInt(highestPrice);
 		int incrementInt = Integer.parseInt(increment);		
 		possibleMinBid = highestPriceInt + incrementInt; // 입찰 가능 금액
-		System.out.println("진행중인 경매 [경매품: " + name + "][시작가: " + getFormatWon(startPrice) + "][최고입찰가: " 
-				+ getFormatWon(highestPrice) +"][종료시간: " + endTime + "]\n최소 입찰 가능액: " + getFormatWon(possibleMinBid) + ">");	
+		System.out.println("진행중인 경매 [경매품:] " + name + " [시작가:] " + getFormatWon(startPrice) + " [최고입찰가:] " 
+				+ getFormatWon(highestPrice) +"("+id+") [종료시간:] " + endTime + "\n[최소 입찰 가능액:] " + getFormatWon(possibleMinBid) + "");	
 	}
 
 	// 세자리마다 , 넣어주는 기능
