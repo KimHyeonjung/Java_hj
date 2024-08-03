@@ -25,6 +25,7 @@ public class Bidder {
 	int possibleMinBid; 
 	boolean auctionState = false;
 	boolean Bidding = false;
+	boolean exitFlag = false;
 	private Scanner scan = new Scanner(System.in);
 	MemberController memberController = new MemberController(scan);
 	AuctionController auctionController = new AuctionController(scan);
@@ -37,7 +38,6 @@ public class Bidder {
 			out = new PrintWriter(socket.getOutputStream(), true);
 
 		}  catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 	public void start() {       
@@ -65,6 +65,7 @@ public class Bidder {
 			} else if (choice == '3') {
 				out.println("EXIT");
 				System.out.println("[프로그램 종료]");
+				exitFlag = true;
 				break;
 			} else {
 				System.out.println("잘못된 선택입니다.");
@@ -82,13 +83,13 @@ public class Bidder {
 
 			if (choice == '1') {
 				out.println("JOIN::");
+				Bidding = true;
 				bidStart();
 				
-			} else if (choice == '2') {				
+			} else if (choice == '2') {		
 				auctionController.getBidListById(member.getMe_id());
 				PrintController.bar();
 			} else if (choice == '3') {	
-				Bidding = false;
 				break;
 			} else {
 				System.out.println("잘못된 선택입니다.");
@@ -105,16 +106,17 @@ public class Bidder {
 			if (choice == '1') {	
 				if(!auctionState) {
 					System.out.println("진행 중인 경매가 없습니다.");
-					break;
+					continue;
 				}
-				System.out.print("입찰가 입력 > ");
-				int bid = scan.nextInt();
-				if(bid >= possibleMinBid) {
-					out.println("BID::" + member.getMe_id() + "::" + bid);
-				} else {
-					System.out.println(getFormatWon(possibleMinBid) + "원 이상만 입찰 가능합니다.");
+				if(Bidding) {
+					System.out.print("입찰가 입력 > ");
+					int bid = scan.nextInt();
+					if(bid >= possibleMinBid) {
+						out.println("BID::" + member.getMe_id() + "::" + bid);
+					} else {
+						System.out.println(getFormatWon(possibleMinBid) + "원 이상만 입찰 가능합니다.");
+					}
 				}
-
 			} else if (choice == '2') {	
 				Bidding = false;
 				break;
@@ -127,7 +129,7 @@ public class Bidder {
 	// 경매현황 수신
 	private void bidderReceiver() {
 		Thread thread = new Thread(()->{
-			while(true) {
+			while(!exitFlag) {
 				try {
 					synchronized(in) {
 						String response;

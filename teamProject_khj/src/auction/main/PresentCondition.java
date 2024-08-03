@@ -32,16 +32,6 @@ public class PresentCondition{
 	+ highestBid + "] [종료시간: " + endTime + "] [최소 입찰 가능액: " + increment + "]";
 	}
 
-	public PresentCondition(String name, int startPrice, int highestBid, LocalTime endTime, int increment) {
-		this.name = name;
-		this.startPrice = startPrice;
-		this.highestBid = highestBid;
-		this.endTime = endTime;
-		this.increment = increment;
-	}
-	
-	
-
 // // yyyy-MM-dd HH:mm:ss 형식으로 변경하기
 //	String parsedLocalDateTimeNow = localDateTimeNow.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 //	System.out.println("기존의 LocalDateTimeNow : " + localDateTimeNow);

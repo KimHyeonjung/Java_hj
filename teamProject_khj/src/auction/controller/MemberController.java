@@ -212,13 +212,5 @@ public class MemberController {
 			}
 			return null;
 		}
-		public String getFormatWon(int price) {
-			DecimalFormat format = new DecimalFormat("###,###,###,###");
-			return format.format(price);
-		}
-		public String getFormatWon(String price) {
-			int priceInt = Integer.parseInt(price);
-			DecimalFormat format = new DecimalFormat("###,###,###,###");
-			return format.format(priceInt);
-		}
+		
 }
