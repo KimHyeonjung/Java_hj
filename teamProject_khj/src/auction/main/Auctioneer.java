@@ -175,10 +175,14 @@ public class Auctioneer {
 					count--;
 				}
 				if(count == 0) {
-					for(PrintWriter out : clients) {
-						out.println("FINISH::경매가 종료되었습니다.");
-					}
 					auctionState = false;
+					for(PrintWriter out : clients) {
+						out.println("FINISH::경매가 종료되었습니다. ");
+						out.println("이번 경매품 " + presentCondition.getName() + "은(는) " + presentCondition.getId()
+						+ "님에게 " + presentCondition.getHighestBid() + "원에 낙찰되었습니다.");
+					}
+					System.out.println("경매품 <" + presentCondition.getName() + "> " + presentCondition.getId() + "님이 " 
+							+ presentCondition.getHighestBid() + "원에 낙찰");
 					auctionController.finishAuction();
 					break;
 				}
