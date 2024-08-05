@@ -17,7 +17,7 @@ import auction.model.vo.MemberVO;
 
 public class Bidder {
 
-	private String SERVER_IP = "182.227.11.155";
+	private String SERVER_IP = "192.168.30.209";
 	private int SERVER_PORT = 6006;
 	Socket socket;
 	BufferedReader in;
