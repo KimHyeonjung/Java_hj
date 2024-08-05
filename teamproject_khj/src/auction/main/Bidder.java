@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.text.DecimalFormat;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import auction.controller.AuctionController;
@@ -110,11 +111,17 @@ public class Bidder {
 				}
 				if(Bidding) {
 					System.out.print("입찰가 입력 > ");
-					int bid = scan.nextInt();
-					if(bid >= possibleMinBid) {
-						out.println("BID::" + member.getMe_id() + "::" + bid);
-					} else {
-						System.out.println(getFormatWon(possibleMinBid) + "원 이상만 입찰 가능합니다.");
+					try {
+						int bid = scan.nextInt();
+						if(bid >= possibleMinBid) {
+							out.println("BID::" + member.getMe_id() + "::" + bid);
+						} else {
+							System.out.println(getFormatWon(possibleMinBid) + "원 이상만 입찰 가능합니다.");
+						}
+					} catch (InputMismatchException e) {
+						System.out.println("[입력이 올바르지 않음]");
+						scan.nextLine();
+						break;
 					}
 				}
 			} else if (choice == '2') {	
@@ -137,9 +144,7 @@ public class Bidder {
 							response = in.readLine();
 							if(response.startsWith("AUCTION_START")) {
 								auctionState = true;
-								String[] parts = response.split("::");
-								String notify = parts[1];
-								System.out.println(notify);
+								printStartAuctionPc(response);
 							}
 							else if(response.startsWith("AUCTION_ON")) {
 								auctionState = true;
@@ -148,6 +153,7 @@ public class Bidder {
 								System.out.println(notify);
 							}
 							else if (response.startsWith("PRESENT_CONDITION")) {
+								auctionState = true;
 								printAuctionPc(response);
 							} else if (response.startsWith("FINISH")) {
 								String[] parts = response.split("::");
@@ -173,6 +179,25 @@ public class Bidder {
 		});
 		thread.start();
 
+	}
+	// 경매 시작시 전송받은 경매현황을 출력해주는 기능
+	private void printStartAuctionPc(String response) {
+		String[] parts = response.split("::");
+		String name = parts[1];
+		String startPrice = parts[2];
+		String endTime = parts[3];
+		String increment = parts[4];
+		if(Bidding) {
+			System.out.println("경매가 진행 중입니다.");
+		} else {
+			System.out.println("경매를 시작합니다.");
+		}
+		
+		int highestPriceInt = Integer.parseInt(startPrice);
+		int incrementInt = Integer.parseInt(increment);		
+		possibleMinBid = highestPriceInt + incrementInt; // 입찰 가능 금액
+		System.out.println("경매품: " + name + "  |  시작가: " + getFormatWon(startPrice) + "  |  인상액: " + increment
+				+ "  |  종료시간: " + endTime + "\n최소 입찰 가능액: " + getFormatWon(possibleMinBid));
 	}
 	// 전송받은 경매현황을 출력해주는 기능
 	private void printAuctionPc(String response) {
@@ -203,6 +228,5 @@ public class Bidder {
 		DecimalFormat format = new DecimalFormat("###,###,###,###");
 		return format.format(priceInt);
 	}
-
 
 }

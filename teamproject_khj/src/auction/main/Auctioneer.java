@@ -178,8 +178,12 @@ public class Auctioneer {
 					auctionState = false;
 					for(PrintWriter out : clients) {
 						out.println("FINISH::경매가 종료되었습니다. ");
-						out.println("이번 경매품 " + presentCondition.getName() + "은(는) " + presentCondition.getId()
-						+ "님에게 " + presentCondition.getHighestBid() + "원에 낙찰되었습니다.");
+						if(presentCondition.getId().equals("아이디")) {
+							out.println("이번 경매품 " + presentCondition.getName() + "은(는) 유찰되었습니다.");
+						} else {
+							out.println("이번 경매품 " + presentCondition.getName() + "은(는) " + presentCondition.getId()
+							+ "님에게 " + presentCondition.getHighestBid() + "원에 낙찰되었습니다.");
+						}
 					}
 					System.out.println("경매품 <" + presentCondition.getName() + "> " + presentCondition.getId() + "님이 " 
 							+ presentCondition.getHighestBid() + "원에 낙찰");
@@ -218,15 +222,16 @@ public class Auctioneer {
 			auctionController.startAuction(presentCondition); //경매기록
 			if(clients.size() > 0) {
 				for(PrintWriter out : clients) {
-				out.println("AUCTION_START::경매를 시작합니다.");
-				out.println("경매품: " + presentCondition.getName() + "  |  시작가: " + presentCondition.getStartPrice() 
-				 	+ "  |  인상액:" + presentCondition.getIncrement()+ "  |  종료시간: " + presentCondition.getEndTimeToString());
+				out.println("AUCTION_START::"+ presentCondition.getName() + "::" + presentCondition.getStartPrice() 
+				+"::" + presentCondition.getEndTimeToString() + "::" + presentCondition.getIncrement());
 				}
 			}
 			auctionTimer();
 			break;
 		case 3 :
-			searchAuction();
+			//컨트롤에게 전체 경매기록 출력을 시킴
+			auctionController.searchAuctionList();
+			PrintController.bar();
 			break;
 		case 4 :
 			searchBid();
@@ -245,11 +250,6 @@ public class Auctioneer {
 		PrintController.bar();
 	}
 
-	private void searchAuction() {
-		//컨트롤에게 전체 경매기록 출력을 시킴
-		auctionController.searchAuctionList();
-		PrintController.bar();
-	}
 
 	//	경매품명, 시작가, 입찰 유효 시간, 인상액 을 입력하여 등록하는 기능
 	public PresentCondition insertItem() {
@@ -288,7 +288,7 @@ public class Auctioneer {
 			finishAuction = endTime;
 			int highestBid = startPrice;
 			//경매현황에는 경매품명, 시작가, 최고입찰가, 종료시간, 인상액 있다
-			PresentCondition presentCondition = new PresentCondition(name, startPrice, highestBid, endTime, increment, "ID");
+			PresentCondition presentCondition = new PresentCondition(name, startPrice, highestBid, endTime, increment, "아이디");
 			return presentCondition;
 			//경매기록에는 날짜, 경매품명, 시작가, 낙찰가, 낙찰자 아이디가 있다.
 		} catch (InputMismatchException e) {
@@ -329,7 +329,7 @@ public class Auctioneer {
 						break;
 					}						
 				}
-				clientSocket.close();
+//				clientSocket.close();
 			} catch (IOException e) {
 			} finally {
 				if(logId != null) {
@@ -398,8 +398,8 @@ public class Auctioneer {
 			String increment = Integer.toString(presentCondition.getIncrement());
 			String id = presentCondition.getId();
 			if(firstSend) {
-				out.println("PRESENT_CONDITION::" + name + "::" + startPrice +"::" + highestPrice + "::" + endTime + "::" + increment
-						+ "::" + id);
+//				out.println("PRESENT_CONDITION::" + name + "::" + startPrice +"::" + highestPrice + "::" + endTime + "::" + increment
+//						+ "::" + id); // 수정 
 				firstSend = false;
 			} else {
 				for(PrintWriter out : clients) {
@@ -430,7 +430,7 @@ public class Auctioneer {
 			return scan.nextInt();
 		} catch (InputMismatchException e) {
 			scan.nextLine();
-			System.out.println();
+			System.out.println("숫자만 입력가능");
 			return Integer.MIN_VALUE;
 		}
 	}
