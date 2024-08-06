@@ -17,7 +17,7 @@ import auction.model.vo.MemberVO;
 
 public class Bidder {
 
-	private String SERVER_IP = "192.168.30.209";
+	private String SERVER_IP = "localhost";
 	private int SERVER_PORT = 6006;
 	Socket socket;
 	BufferedReader in;
@@ -25,7 +25,7 @@ public class Bidder {
 	MemberVO member = null;
 	int possibleMinBid; 
 	boolean auctionState = false;
-	boolean Bidding = false;
+	boolean bidding = false;
 	boolean exitFlag = false;
 	boolean logIn = false;
 	private Scanner scan = new Scanner(System.in);
@@ -61,13 +61,11 @@ public class Bidder {
 			if (choice == 1) {
 				PrintController.bar();
 				member = memberController.logIn();
-				PrintController.bar();
 				if(member != null) {
 					bidderReceiver();
 					try {
 						Thread.sleep(500);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
 					}
 					out.println("LOGIN::"+ member.getMe_id()); // 서버에 로그인 알림
 					auctionStart();
@@ -112,7 +110,7 @@ public class Bidder {
 					continue;
 				}
 				out.println("JOIN::");
-				Bidding = true;
+				bidding = true;
 				bidStart();
 			} else if (choice == 2) {	
 				PrintController.bar();
@@ -125,6 +123,10 @@ public class Bidder {
 			} else {
 				System.out.println(">>> 잘못된 선택입니다.");
 				PrintController.bar();
+			}
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
 			}
 		}
 	}
@@ -143,7 +145,7 @@ public class Bidder {
 					continue;
 				}
 				out.println("JOIN::");
-				if(Bidding) {
+				if(bidding) {
 					System.out.print("입찰가 입력 > ");
 					try {
 						int bid = scan.nextInt();
@@ -167,7 +169,7 @@ public class Bidder {
 				}
 			} else if (choice == 2) {
 				PrintController.bar();
-				Bidding = false;
+				bidding = false;
 				break;
 			} else {
 				System.out.println(">>> 잘못된 선택입니다.");
@@ -240,27 +242,12 @@ public class Bidder {
 		thread.start();
 
 	}
-	// 경매 시작시 전송받은 경매현황을 출력해주는 기능
-//	private void printStartAuctionPc(String response) {
-//		String[] parts = response.split("::");
-//		String name = parts[1];
-//		String startPrice = parts[2];
-//		String endTime = parts[3];
-//		String increment = parts[4];
-//		if(Bidding) {
-//			System.out.println("경매가 진행 중입니다.");
-//		} else {
-//			System.out.println("경매를 시작합니다.");
-//		}
-//		
-//		int highestPriceInt = Integer.parseInt(startPrice);
-//		int incrementInt = Integer.parseInt(increment);		
-//		possibleMinBid = highestPriceInt + incrementInt; // 입찰 가능 금액
-//		System.out.println("경매품: " + name + "  |  시작가: " + getFormatWon(startPrice) + "  |  인상액: " + increment
-//				+ "  |  종료시간: " + endTime + "\n최소 입찰 가능액: " + getFormatWon(possibleMinBid));
-//	}
+	
 	// 전송받은 경매현황을 출력해주는 기능
 	private void printAuctionPc(String response) {
+		if(!bidding) {
+			return;
+		}
 		String[] parts = response.split("::");
 		String name = parts[1];
 		String startPrice = parts[2];
@@ -268,18 +255,22 @@ public class Bidder {
 		String endTime = parts[4];
 		String increment = parts[5];
 		String id = parts[6];
-		if(id.equals(member.getMe_id())) {
-			System.out.println("[입찰 성공]");
-		} else {
-			if(!id.equals("아이디")) {
-				System.out.println(">>> " + id + "님이 " + getFormatWon(highestPrice) + "원에 입찰!");
-			}
-		}
 		int highestPriceInt = Integer.parseInt(highestPrice);
 		int incrementInt = Integer.parseInt(increment);		
 		possibleMinBid = highestPriceInt + incrementInt; // 입찰 가능 금액
-		System.out.println("경매 현황 > 경매품: " + name + "  |  최고입찰가: " + getFormatWon(highestPrice) +"("+id+")"
-				+"  |  종료시간: " + endTime + "\n[최소 입찰 가능액: " + getFormatWon(possibleMinBid) + "]");	
+		if(!id.equals("아이디")) {	
+			if(id.equals(member.getMe_id())) {
+				System.out.println("[입찰 성공]");
+			} else {
+				System.out.println(">>> " + id + "님이 " + getFormatWon(highestPrice) + "원에 입찰!");
+			}
+			System.out.println("경매 현황 > 경매품: " + name + "  |  최고입찰가: " + getFormatWon(highestPrice) +"원 ("+id+")"
+					+"  |  종료시간: " + endTime + "\n[최소 입찰 가능액: " + getFormatWon(possibleMinBid) + "원]");	
+		} else {
+			System.out.println("경매 현황 > 경매품: " + name + "  |  시작가: " + getFormatWon(startPrice) +"원 ("+id+")"
+					+"  |  종료시간: " + endTime + "\n[최소 입찰 가능액: " + getFormatWon(possibleMinBid) + "원]");				
+		}
+		
 	}
 
 	// 세자리마다 , 넣어주는 기능

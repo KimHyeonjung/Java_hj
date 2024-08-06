@@ -86,6 +86,7 @@ public class Auctioneer {
 		}
 	}
 
+	@SuppressWarnings("resource")
 	public void runMenu(int menu)  {
 		switch (menu) {
 		case 1 : 
@@ -100,7 +101,7 @@ public class Auctioneer {
 			exitFlag = true;
 			System.out.println("[프로그램 종료]");
 			try {
-				Socket socket = new Socket("localhost", 6006);
+				new Socket("localhost", 6006);
 			} catch (Exception e) {
 			}
 			break;
@@ -348,9 +349,10 @@ public class Auctioneer {
 				//				clientSocket.close();
 			} catch (IOException e) {
 			} finally {
-//				if(logId != null) {
-//					System.out.println("[나감 > " + logId + "]");
-//				} else {
+				if(logId != null) {
+					System.out.println("[나감 > " + logId + "]");
+				} 
+//				else {
 //					System.out.println("[나감 > " + clientSocket + "]");
 //				}
 				clients.remove(out);
