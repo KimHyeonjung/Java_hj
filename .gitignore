@@ -4,4 +4,5 @@
 .settings/
 
 java_khj/.gitignore
-teamproject_khj/.gitignore
+
+MANIFEST.MF
