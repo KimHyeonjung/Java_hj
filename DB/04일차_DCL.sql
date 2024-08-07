@@ -8,6 +8,9 @@ CREATE USER 'cgv_admin'@'%' IDENTIFIED BY 'admin123';
 # 계정 조회
 SELECT USER, HOST FROM MYSQL.USER;
 
+# 사용자 권한 조회
+SHOW GRANTS FOR '사용자계정'@'호스트';
+
 # 계정 비번 변경
 # SET PASSWORD FOR '아이디'@'호스트명' = '새비밀번호';
 SET PASSWORD FOR 'cgv_admin'@'%' = 'admin1234';

@@ -17,7 +17,7 @@ import auction.model.vo.MemberVO;
 
 public class Bidder {
 
-	private String SERVER_IP = "localhost";
+	private String SERVER_IP = "192.168.30.209";
 	private int SERVER_PORT = 6006;
 	Socket socket;
 	BufferedReader in;
@@ -47,7 +47,8 @@ public class Bidder {
 			return;
 		}
 	}
-	public void start() {       
+	public void start() { 
+		int choice = -1;
 		while (true) {
 			if(exitFlag) {
 				break;
@@ -56,9 +57,10 @@ public class Bidder {
 			System.out.println("2. 회원가입");
 			System.out.println("3. 종료");
 			System.out.print("선택: ");
-			int choice = nextInt();
-
-			if (choice == 1) {
+			choice = nextInt();
+			
+			switch(choice) {
+			case 1:
 				PrintController.bar();
 				member = memberController.logIn();
 				if(member != null) {
@@ -70,7 +72,8 @@ public class Bidder {
 					out.println("LOGIN::"+ member.getMe_id()); // 서버에 로그인 알림
 					auctionStart();
 				}
-			} else if (choice == 2) {
+				break;
+			case 2:
 				PrintController.bar();
 				MemberVO nMem = memberController.register();
 				PrintController.bar();
@@ -79,30 +82,35 @@ public class Bidder {
 				}
 				out.println("REGISTER::"+nMem.getMe_id()+"::"+nMem.getMe_name()+"::"
 						+ nMem.getMe_address() +"::"+ nMem.getMe_contact()); // 서버에 회원가입 알림
-			} else if (choice == 3) {
+				break;
+			case 3:
 				if(out != null) {
 					out.println("EXIT");
 				}
 				System.out.println("[프로그램 종료]");
 				exitFlag = true;
 				break;
-			} else {
+			default:
 				System.out.println(">>> 잘못된 선택입니다.");
 				PrintController.bar();
 			}
+
 		}
 
 	}
 	private void auctionStart() {
 		logIn = true;
-		while (true) {
+		int choice = -1;
+		while (choice != 4) {
 			System.out.println("1. 경매 참여");
-			System.out.println("2. 경매기록조회");
-			System.out.println("3. 나가기");
+			System.out.println("2. 경매기록 조회");
+			System.out.println("3. 개인정보 수정");
+			System.out.println("4. 나가기");
 			System.out.print("선택: ");
-			int choice = nextInt();
+			choice = nextInt();
 
-			if (choice == 1) {
+			switch(choice) {
+			case 1:
 				PrintController.bar();
 				if(!auctionState) {
 					System.out.println(">>> 진행 중인 경매가 없습니다.");
@@ -112,15 +120,19 @@ public class Bidder {
 				out.println("JOIN::");
 				bidding = true;
 				bidStart();
-			} else if (choice == 2) {	
+				break;
+			case 2: 
 				PrintController.bar();
 				auctionController.getBidListById(member.getMe_id());
 				PrintController.bar();
-			} else if (choice == 3) {	
+				break;
+			case 3:
+				break;
+			case 4:
 				logIn = false;
 				out.println("LOGOUT::"+ member.getMe_id());
 				break;
-			} else {
+			default:
 				System.out.println(">>> 잘못된 선택입니다.");
 				PrintController.bar();
 			}
@@ -128,6 +140,34 @@ public class Bidder {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
 			}
+			
+			
+//			if (choice == 1) {
+//				PrintController.bar();
+//				if(!auctionState) {
+//					System.out.println(">>> 진행 중인 경매가 없습니다.");
+//					PrintController.bar();
+//					continue;
+//				}
+//				out.println("JOIN::");
+//				bidding = true;
+//				bidStart();
+//			} else if (choice == 2) {	
+//				PrintController.bar();
+//				auctionController.getBidListById(member.getMe_id());
+//				PrintController.bar();
+//			} else if (choice == 3) {	
+//				logIn = false;
+//				out.println("LOGOUT::"+ member.getMe_id());
+//				break;
+//			} else {
+//				System.out.println(">>> 잘못된 선택입니다.");
+//				PrintController.bar();
+//			}
+//			try {
+//				Thread.sleep(500);
+//			} catch (InterruptedException e) {
+//			}
 		}
 	}
 
