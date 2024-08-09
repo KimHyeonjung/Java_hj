@@ -25,5 +25,6 @@
 	
 	<mappers>
 	  <mapper resource="servlet1/dao/MemberMapper.xml"/>
+	  <mapper resource="servlet1/dao/PostMapper.xml"/>
 	</mappers>
 </configuration>
