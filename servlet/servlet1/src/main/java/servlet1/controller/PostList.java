@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import servlet1.model.vo.CommunityVO;
 import servlet1.model.vo.PostVO;
+import servlet1.pagination.Criteria;
+import servlet1.pagination.PageMaker;
+import servlet1.pagination.PostCriteria;
 import servlet1.service.PostService;
 import servlet1.service.PostServiceImp;
 
@@ -27,21 +30,33 @@ public class PostList extends HttpServlet {
 		int coNum = 0; 
 		try {
 			coNum = Integer.parseInt(request.getParameter("co_num"));
+			//화면에서 보낸 페이지 번호를 가져옴
+			String pageStr = request.getParameter("page");
+			int page = 1;
+			if(pageStr != null && pageStr.length() != 0) {
+				page = Integer.parseInt(pageStr);
+			}
+			
 			//서비스에게 커뮤니티 번호를 주면서 커뮤니티 정보를 가져오라고 시킴
 			CommunityVO co = postService.getCommunity(coNum);
 			//커뮤니티 정보가 없으면 예외를 발생시킴
 			if(co == null) {
 				throw new NullPointerException();
 			}
+			Criteria cri = new PostCriteria(page, 2, "", coNum);
+			PageMaker pm = postService.getPageMaker(cri, 2);
+			
 			//서비스에게 커뮤니티 번호를 주면서 게시글 리스트를 가져오라고 시킴
-			List<PostVO> list = postService.getPostList(co.getCo_num());
+			List<PostVO> list = postService.getPostList(cri);
 			//화면에 커뮤니티 정보를 전송
 			request.setAttribute("co", co);
 			//화면에 가져온 게시글 리스트를 전송
 			request.setAttribute("list", list);
-			
+			//화면에 페이지네이션 정보를 전송
+			request.setAttribute("pm", pm);
 			request.getRequestDispatcher("/WEB-INF/views/post/list.jsp").forward(request, response);
 		} catch (Exception e) {
+			e.printStackTrace();
 			request.setAttribute("msg", "잘못된 커뮤니티입니다.");
 			request.setAttribute("url", "/community");
 			request.getRequestDispatcher("/WEB-INF/views/message.jsp").forward(request, response);

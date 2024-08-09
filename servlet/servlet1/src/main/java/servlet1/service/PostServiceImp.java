@@ -12,6 +12,8 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import servlet1.dao.PostDAO;
 import servlet1.model.vo.CommunityVO;
 import servlet1.model.vo.PostVO;
+import servlet1.pagination.Criteria;
+import servlet1.pagination.PageMaker;
 
 public class PostServiceImp implements PostService{
 
@@ -46,10 +48,19 @@ public class PostServiceImp implements PostService{
 	}
 
 	@Override
-	public List<PostVO> getPostList(int co_num) {
-		if(co_num <= 0) {
-			return null;
+	public List<PostVO> getPostList(Criteria cri) {
+		if(cri == null) {
+			throw new RuntimeException();
 		}
-		return postDao.selectPostList(co_num);
+		return postDao.selectPostList(cri);
+	}
+
+	@Override
+	public PageMaker getPageMaker(Criteria cri, int displayPageNum) {
+		if(cri == null) {
+			throw new RuntimeException();
+		}
+		int totalCount = postDao.selectPostTotalCount(cri);
+		return new PageMaker(totalCount, displayPageNum, cri);
 	}
 }
