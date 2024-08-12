@@ -24,4 +24,8 @@ public interface PostDAO {
 
 	void updatePostView(@Param("po_num")int num);
 
+	boolean updatePost(@Param("post")PostVO post);
+
+	boolean deletePost(@Param("po_num")int po_num);
+
 }

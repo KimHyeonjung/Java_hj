@@ -24,7 +24,7 @@ public class MemberFilter extends HttpFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest hrequest = (HttpServletRequest)request;
 		HttpSession session = hrequest.getSession();
-		MemberVO user = (MemberVO)session.getAttribute("usr");
+		MemberVO user = (MemberVO)session.getAttribute("user");
 		
 //		MemberVO user = (MemberVO) ((HttpServletRequest)request).getSession().getAttribute("user");
 		if(user == null) {
