@@ -23,7 +23,7 @@
 		서버로 아이디, 비번, 이메일을 전송하고
 		서버에서는 전송받은 아이디, 비번, 이메일을 콘솔에 출력
 		 -->
-		<form action="<%=request.getContextPath() %>/Signup" method="post" id="form">
+		<form action="<c:url value="/signup"/>" method="post" id="form">
 			<div>
 				<div class="form-group">
 				  <label for="usr">아이디:</label>

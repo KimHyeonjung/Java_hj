@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,6 +13,20 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <div class="container">
 	<h1>${co.co_name} 커뮤니티 목록</h1>
+	<form class="input-group mb-3" action="<c:url value="/post/list"/>">
+			<div class="input-group-prepend">
+		    	<select class="form-control" name="type">
+		    		<option value="all" <c:if test="${pm.cri.type == 'all' }">selected</c:if>>전체</option>
+		    		<option value="title" <c:if test="${pm.cri.type == 'title' }">selected</c:if>>제목</option>
+		    		<option value="id" <c:if test="${pm.cri.type == 'id' }">selected</c:if>>작성자</option>
+		    	</select>
+		  </div>
+	  <input type="text" class="form-control" placeholder="검색어를 입력하세요" name="search" value="${pm.cri.search}">
+		  <div class="input-group-append">
+		    <button class="btn btn-primary" type="submit">검색</button>
+		  </div>
+		<input type="hidden" name="co_num" value="${pm.cri.co_num}">
+	</form>
 	<table class="table table-hover">
 	   <thead>
 	     <tr>
@@ -19,7 +34,7 @@
 	       <th>제목</th>
 	       <th>작성자</th>
 	       <th>작성일</th>
-	       <th>신고</th>
+	       <th>추천/비추천</th>
 	       <th>조회수</th>
 	     </tr>
 	   </thead>
@@ -31,8 +46,8 @@
 		      	<a href="">${post.po_title }</a> 
 		       </td>
 		       <td>${post.po_me_id }</td>
-		       <td>${post.po_date }</td>
-		       <td>${post.po_report }</td>
+		       <td><fmt:formatDate value="${post.po_date }" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+		       <td>0</td>
 		       <td>${post.po_views }</td>
 		     </tr>
 	    </c:forEach>
@@ -49,6 +64,8 @@
 		   		 <c:url var="url" value="/post/list">
 					<c:param name="co_num" value="${pm.cri.co_num }"/>		    	
 					<c:param name="page" value="${pm.startPage-1}"/>		    	
+					<c:param name="type" value="${pm.cri.type}"/>		    	
+					<c:param name="search" value="${pm.cri.search}"/>		    	
 		    	</c:url>
 		    	<a class="page-link" href="${url}">이전</a>
 		    </li>
@@ -65,7 +82,9 @@
 		    <li class="page-item ${active}">
 		    	<c:url var="url" value="/post/list">
 					<c:param name="co_num" value="${pm.cri.co_num }"/>		    	
-					<c:param name="page" value="${i}"/>		    	
+					<c:param name="page" value="${i}"/>	
+					<c:param name="type" value="${pm.cri.type}"/>		    	
+					<c:param name="search" value="${pm.cri.search}"/>		    	
 		    	</c:url>
 		    
 		    	<a class="page-link" href="${url}">${i}</a>
@@ -75,12 +94,15 @@
 		    <li class="page-item">
 		    	<c:url var="url" value="/post/list">
 					<c:param name="co_num" value="${pm.cri.co_num }"/>		    	
-					<c:param name="page" value="${pm.endPage+1}"/>		    	
+					<c:param name="page" value="${pm.endPage+1}"/>	
+					<c:param name="type" value="${pm.cri.type}"/>		    	
+					<c:param name="search" value="${pm.cri.search}"/>		    	
 		    	</c:url>
 		    	<a class="page-link" href="${url}">다음</a>
 		    </li>
 	    </c:if>
 	 </ul>
+	 <a href="<c:url value="/post/insert?co_num=${pm.cri.co_num}"/>" class="btn btn-outline-danger">게시글 등록</a>
 </div>
 </body>
 </html>

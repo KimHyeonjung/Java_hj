@@ -23,7 +23,7 @@ public class Signup extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		request.getRequestDispatcher("WEB-INF/views/signup.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/views/signup.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -41,7 +41,7 @@ public class Signup extends HttpServlet {
 			request.setAttribute("msg", "회원가입에 실패했습니다.");
 			request.setAttribute("url", "/Signup");
 		}
-		request.getRequestDispatcher("WEB-INF/views/message.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/views/message.jsp").forward(request, response);
 		
 	}
 	public void init(FilterConfig fConfig) throws ServletException {

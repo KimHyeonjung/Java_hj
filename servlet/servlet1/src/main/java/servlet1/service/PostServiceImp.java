@@ -63,4 +63,18 @@ public class PostServiceImp implements PostService{
 		int totalCount = postDao.selectPostTotalCount(cri);
 		return new PageMaker(totalCount, displayPageNum, cri);
 	}
+
+	@Override
+	public boolean insertPost(PostVO post) {
+		if(post == null) {
+			return false;
+		}
+		if(post.getPo_title() == null || post.getPo_title().trim().length() == 0) {
+			return false;
+		}
+		if(post.getPo_sub() == null || post.getPo_sub().trim().length() == 0) {
+			return false;
+		}
+		return postDao.insertPost(post);
+	}
 }
