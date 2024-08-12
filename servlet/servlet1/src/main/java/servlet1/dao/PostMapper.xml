@@ -38,6 +38,12 @@
 		insert into post(po_co_num, po_me_id, po_title, po_sub)
 		values(#{post.po_co_num}, #{post.po_me_id}, #{post.po_title}, #{post.po_sub} )
 	</insert>
+	<select id="selectPost" resultType="PostVO">
+		select * from post where po_num = #{po_num}
+	</select>
+	<update id="updatePostView">
+		update post set po_views = po_views + 1 where po_num = #{po_num}
+	</update>
 </mapper>
 
 
