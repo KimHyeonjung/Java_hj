@@ -12,7 +12,7 @@ public class PageMaker {
 	private boolean next; //다음 버튼 활성화
 	private Criteria cri; //현재 페이지 정보
 	
-	//시작 페이지, 마지막 페이지, 이전 버튼 활서오하 여부, 다음 버튼 활성화 여부를 계산하는 메소드
+	//시작 페이지, 마지막 페이지, 이전 버튼 활성화 여부, 다음 버튼 활성화 여부를 계산하는 메소드
 	public void calculate() {
 		//마지막 페이지 번호를 계산 = > 최대 페이지 번호
 		endPage = (int)(Math.ceil(cri.getPage()/(double)displayPageNum) * displayPageNum);
@@ -27,7 +27,6 @@ public class PageMaker {
 		//이전 다음을 한 페이지네이션 단위로 이동
 		prev = startPage == 1 ? false : true;
 		next = endPage == lastEndPage ? false : true;
-		//이전 다음을 한 페이지 단위로 이동	
 	}
 
 	public PageMaker(int totalCount, int displayPageNum, Criteria cri) {
