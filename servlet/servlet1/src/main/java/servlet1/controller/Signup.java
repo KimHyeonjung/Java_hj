@@ -42,10 +42,6 @@ public class Signup extends HttpServlet {
 			request.setAttribute("url", "/Signup");
 		}
 		request.getRequestDispatcher("/WEB-INF/views/message.jsp").forward(request, response);
-		
-	}
-	public void init(FilterConfig fConfig) throws ServletException {
-		// TODO Auto-generated method stub
 	}
 
 }
