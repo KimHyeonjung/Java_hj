@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import servlet1.model.vo.CommentVO;
 import servlet1.model.vo.CommunityVO;
 import servlet1.model.vo.PostVO;
 import servlet1.model.vo.RecommendVO;
 import servlet1.pagination.Criteria;
+import servlet1.pagination.PageMaker;
 
 public interface PostDAO {
 
@@ -34,4 +36,8 @@ public interface PostDAO {
 	void deleteRecommend(@Param("re_num")int re_num);
 
 	void insertRecommend(@Param("reco")RecommendVO reco);
+
+	List<CommentVO> selectCommentList(@Param("cri")Criteria cri);
+
+	int selectCommentTotalCount(@Param("cri")Criteria cri);
 }

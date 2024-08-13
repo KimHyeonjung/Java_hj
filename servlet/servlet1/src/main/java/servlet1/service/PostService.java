@@ -2,6 +2,7 @@ package servlet1.service;
 
 import java.util.List;
 
+import servlet1.model.vo.CommentVO;
 import servlet1.model.vo.CommunityVO;
 import servlet1.model.vo.MemberVO;
 import servlet1.model.vo.PostVO;
@@ -34,5 +35,9 @@ public interface PostService {
 	int recommend(RecommendVO reco);
 
 	RecommendVO getRecommend(int num, MemberVO user);
+
+	List<CommentVO> getCommntList(Criteria cri);
+
+	PageMaker getCommentPageMaker(Criteria cri);
 
 }

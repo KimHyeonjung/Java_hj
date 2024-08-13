@@ -35,11 +35,11 @@
 		  <input type="text" class="form-control"  value="${post.po_views }">
 		</div>
 		<div class="text-center">
-			<a href="<c:url value="/post/recommend?po_num=${post.po_num}&state=1"/>" 
-			class="btn btn<c:if test="${reco.re_state ne 1}">-outline</c:if>-primary"> 👍 추천${post.po_up})</a>
+			<a href="#" data-state="1"
+			class="btn-up btn btn<c:if test="${reco.re_state ne 1}">-outline</c:if>-primary"> 👍 추천(<span>${post.po_up}</span>)</a>
 			<span> / </span>
-			<a href="<c:url value="/post/recommend?po_num=${post.po_num}&state=-1"/>" 
-			class="btn btn<c:if test="${reco.re_state ne -1}">-outline</c:if>-danger"> 🤬 비추천(${post.po_down})</a>
+			<a href="#" data-state="-1"
+			class="btn-down btn btn<c:if test="${reco.re_state ne -1}">-outline</c:if>-danger"> 🤬 비추천(<span>${post.po_down}</span>)</a>
 		</div>
 		<div class="form-group">
 		  <label for="content">내용:</label>
@@ -52,10 +52,124 @@
 			<input type="password" class="pw" name="pw"  style="min-width: 50px"/>
 			<!-- <c:url value="/post/delete?co_num=${post.po_co_num}&po_num=${post.po_num}"/> -->
 		</c:if>
-		
 	</div>
-	<script type="text/javascript">
-		$('#delete').click(()=>{
+	<div>
+	 <ul class="comment-list">
+	 	
+	 </ul>
+	</div>
+	
+<script type="text/javascript">
+	var cri = {
+		po_num : '${post.po_num}',
+		page : 1
+	}
+	$('.btn-up, .btn-down').click(function(e){
+		e.preventDefault();
+		
+		if('${user.me_id}' == ''){
+			if(confirm('로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?')){
+				location.href = '<c:url value="/login"/>';
+				return;
+			}else {
+				return;
+			}
+		}
+		
+		let state = $(this).data('state');
+		let num = '${post.po_num}';
+		$.ajax({
+			url : '<c:url value="/post/recommend"/>',
+			method : "get", //원하는 방식 선택
+			data : { //보낸 데이터를 객체로
+				state : state,
+				po_num : num
+			},
+			success : function(data){
+				let res = data.result;
+				if(res == 1){
+					alert('추천 했습니다.');
+				}else if(res == -1){
+					alert('비추천 했습니다.');
+				}else{
+					alert(`\${state == 1? '추천' : '비추천'}을 취소했습니다.`);
+				}
+				checkRecommendBtns(res);
+				let post = JSON.parse(data.post);
+				$('.btn-up span').text(post.po_up);
+				$('.btn-down span').text(post.po_down);
+			}, 
+			error : function(xhr, status, error){
+				//xhr : XHLHttpRequest 객체, 요청과 관련된 정보를 제공
+				//status :HTTP 상태 코드, 요청이 실패한 원인
+				//error : 에러에 대한 추가 정보
+				console.log("error");
+			}
+		});
+	});
+	//해당 게시글이 추천/비추천에 따라 각 버튼의 색상을 채워주는 함수
+	function checkRecommendBtns(state){
+		$('.btn-up').removeClass('btn-primary');
+		$('.btn-down').removeClass('btn-danger');
+		$('.btn-up').addClass('btn-outline-primary');
+		$('.btn-down').addClass('btn-outline-danger');
+		if(state != 0){
+			if(state==1){
+				$('.btn-up').removeClass('btn-outline-primary');
+				$('.btn-up').addClass('btn-primary');
+			} else {
+				$('.btn-down').removeClass('btn-outline-danger');
+				$('.btn-down').addClass('btn-danger');
+			}
+		}
+	}
+	
+	//댓글 목록 가져오기
+	getCommentList(cri);
+	function getCommentList(cri){
+		console.log(cri);
+		$.ajax({
+			url : '<c:url value="/comment/list"/>',
+			method : "post", //원하는 방식 선택
+			data : cri,
+			success : function(data){
+				let list = data.list;
+				displayCommentList(list);
+				console.log(data);
+				let pm = JSON.parse(data.pm);
+				displayPagination(pm);
+			}, 
+			error : function(xhr, status, error){
+				//xhr : XHLHttpRequest 객체, 요청과 관련된 정보를 제공
+				//status :HTTP 상태 코드, 요청이 실패한 원인
+				//error : 에러에 대한 추가 정보
+				console.log("에러 발생");
+				console.log(xhr);
+			}
+		});
+	}
+	function displayPagination(pm){
+		console.log(pm);
+	}
+	
+	function displayCommentList(list){
+		var str = '';
+		if(list.length == 0){
+			str = `<li>등록된 댓글이 없습니다.</li>`;
+			$('.comment-list').html(str);
+			return;
+		}
+		
+		for(co of list){
+			str +=`
+			<li>\${co.cm_content}</li>
+			`;
+		}
+		$('.comment-list').html(str);
+	}
+	
+	// 삭제시 비번 입력 받음
+	$('#delete').click(()=>{
 			var pw = $('[name=pw]').val();
 			if(pw.length != 0){
 				$('#delete').prop('href','<c:url value="/post/delete?co_num=${post.po_co_num}&po_num=${post.po_num}&pw='+pw+'"/>' );
@@ -64,6 +178,8 @@
 			$('[name=pw]').toggleClass('pw');
 			}
 		});
-	</script>
+		
+		
+</script>
 </body>
 </html>

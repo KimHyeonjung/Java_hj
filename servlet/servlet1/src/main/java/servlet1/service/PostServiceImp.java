@@ -10,6 +10,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import servlet1.dao.PostDAO;
+import servlet1.model.vo.CommentVO;
 import servlet1.model.vo.CommunityVO;
 import servlet1.model.vo.MemberVO;
 import servlet1.model.vo.PostVO;
@@ -190,5 +191,22 @@ public class PostServiceImp implements PostService{
 		}
 		RecommendVO reco = new RecommendVO(num, 0, user.getMe_id());
 		return postDao.selectRecommend(reco);
+	}
+
+	@Override
+	public List<CommentVO> getCommntList(Criteria cri) {
+		if(cri == null) {
+			return null;
+		}
+		return postDao.selectCommentList(cri);
+	}
+
+	@Override
+	public PageMaker getCommentPageMaker(Criteria cri) {
+		if(cri == null) {
+			return null;
+		}
+		int totalCount =  postDao.selectCommentTotalCount(cri);
+		return new PageMaker(totalCount, 2, cri);
 	}
 }
