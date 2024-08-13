@@ -13,6 +13,7 @@ import servlet1.dao.PostDAO;
 import servlet1.model.vo.CommunityVO;
 import servlet1.model.vo.MemberVO;
 import servlet1.model.vo.PostVO;
+import servlet1.model.vo.RecommendVO;
 import servlet1.pagination.Criteria;
 import servlet1.pagination.PageMaker;
 
@@ -153,5 +154,41 @@ public class PostServiceImp implements PostService{
 			return false;
 		}
 		return postDao.deletePost(po_num);
+	}
+
+	@Override
+	public int recommend(RecommendVO reco) {
+		if(reco == null) {
+			throw new RuntimeException();
+		}
+		if(reco.getRe_state() > 1 || reco.getRe_state() < -1) {
+			throw new RuntimeException();
+		}
+		//기존의 추천 내용을 확인
+		RecommendVO dbReco = postDao.selectRecommend(reco);
+		
+		//없으면 추가 후 추천상태를 리턴
+		if (dbReco == null){
+			postDao.insertRecommend(reco);
+			return reco.getRe_state();
+		}
+		//있으면 삭제
+		postDao.deleteRecommend(dbReco.getRe_num());
+		//기존상태와 새 상태가 같으면(취소)
+		if (dbReco.getRe_state() == reco.getRe_state()){
+			return 0;
+		}
+		//기존상태와 새 상태가 다르면(변경)
+		postDao.insertRecommend(reco);
+		return reco.getRe_state();
+	}
+
+	@Override
+	public RecommendVO getRecommend(int num, MemberVO user) {
+		if(user == null) {
+			return null;
+		}
+		RecommendVO reco = new RecommendVO(num, 0, user.getMe_id());
+		return postDao.selectRecommend(reco);
 	}
 }

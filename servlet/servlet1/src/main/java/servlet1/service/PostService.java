@@ -5,6 +5,7 @@ import java.util.List;
 import servlet1.model.vo.CommunityVO;
 import servlet1.model.vo.MemberVO;
 import servlet1.model.vo.PostVO;
+import servlet1.model.vo.RecommendVO;
 import servlet1.pagination.Criteria;
 import servlet1.pagination.PageMaker;
 
@@ -29,5 +30,9 @@ public interface PostService {
 	boolean updatePost(PostVO post, MemberVO user);
 
 	boolean deletePost(int po_num, MemberVO user);
+
+	int recommend(RecommendVO reco);
+
+	RecommendVO getRecommend(int num, MemberVO user);
 
 }

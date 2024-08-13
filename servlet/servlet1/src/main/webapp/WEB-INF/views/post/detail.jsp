@@ -34,9 +34,16 @@
 		  <label for="title">조회수:</label>
 		  <input type="text" class="form-control"  value="${post.po_views }">
 		</div>
+		<div class="text-center">
+			<a href="<c:url value="/post/recommend?po_num=${post.po_num}&state=1"/>" 
+			class="btn btn<c:if test="${reco.re_state ne 1}">-outline</c:if>-primary"> 👍 추천${post.po_up})</a>
+			<span> / </span>
+			<a href="<c:url value="/post/recommend?po_num=${post.po_num}&state=-1"/>" 
+			class="btn btn<c:if test="${reco.re_state ne -1}">-outline</c:if>-danger"> 🤬 비추천(${post.po_down})</a>
+		</div>
 		<div class="form-group">
 		  <label for="content">내용:</label>
-		  <div class="form-control" style="min-height: 300px">${post.po_sub}</div>
+		  <div class="form-control" style="min-height: 320px">${post.po_sub}</div>
 		</div>
 		<a href="<c:url value="/post/list?co_num=${post.po_co_num}"/>" class="btn btn-outline-primary">목록</a>
 		<c:if test="${user ne null && post.po_me_id eq user.me_id}">
@@ -45,10 +52,17 @@
 			<input type="password" class="pw" name="pw"  style="min-width: 50px"/>
 			<!-- <c:url value="/post/delete?co_num=${post.po_co_num}&po_num=${post.po_num}"/> -->
 		</c:if>
+		
 	</div>
 	<script type="text/javascript">
 		$('#delete').click(()=>{
-			$('.pw').toggleClass('pw');
+			var pw = $('[name=pw]').val();
+			if(pw.length != 0){
+				$('#delete').prop('href','<c:url value="/post/delete?co_num=${post.po_co_num}&po_num=${post.po_num}&pw='+pw+'"/>' );
+				
+			} else {
+			$('[name=pw]').toggleClass('pw');
+			}
 		});
 	</script>
 </body>

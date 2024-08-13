@@ -46,11 +46,16 @@
 		       <!-- 실제 게시글 번호를 배정 -->
 		       <!-- <td>${post.po_num}</td> -->
 		       <td>
-		      	<a href="<c:url value="/post/detail?num=${post.po_num}"/>">${post.po_title }</a> 
+		      	<a href="<c:url value="/post/detail?po_num=${post.po_num}"/>">${post.po_title }</a> 
 		       </td>
 		       <td>${post.po_me_id }</td>
 		       <td><fmt:formatDate value="${post.po_date }" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-		       <td>0</td>
+		       <td>
+		       <c:choose>
+		       		<c:when test="${post.po_up eq 0 && post.po_down eq 0}">0</c:when>
+		       		<c:otherwise> ${post.po_up} / -${post.po_down}</c:otherwise>
+		       </c:choose>
+		       </td>
 		       <td>${post.po_views }</td>
 		     </tr>
 	    </c:forEach>

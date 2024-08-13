@@ -24,18 +24,22 @@ public class PostDelete extends HttpServlet {
 		//게시글 번호를 받아옴
 		String po_numStr = request.getParameter("po_num");	
 		String co_numStr = request.getParameter("co_num");	
+		String pw = request.getParameter("pw");
 		try {
 			int po_num = Integer.parseInt(po_numStr);
 			//회원 정보를 받아옴
 			MemberVO user = (MemberVO)request.getSession().getAttribute("user");
-
-			//서비스에게 게시글 정보와 회원 정보를 주면서 게시글을 삭제하라고 요청
-			if(postService.deletePost(po_num, user)) {
-				request.setAttribute("msg", "게시글 삭제에 성공했습니다.");
-			}
-			//실패하면 실패 알림
-			else {
-				throw new RuntimeException();
+			if(user.getMe_pw().equals(pw)) {
+				//서비스에게 게시글 정보와 회원 정보를 주면서 게시글을 삭제하라고 요청
+				if(postService.deletePost(po_num, user)) {
+					request.setAttribute("msg", "게시글 삭제에 성공했습니다.");
+				}
+				//실패하면 실패 알림
+				else {
+					throw new RuntimeException();
+				}
+			} else {
+				request.setAttribute("msg", "비빌번호가 잘못되었습니다.");
 			}
 		} catch (Exception e) {
 			request.setAttribute("msg", "게시글 삭제에 실패했습니다.");

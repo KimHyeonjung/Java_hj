@@ -17,7 +17,7 @@ import servlet1.model.vo.MemberVO;
 /**
  * Servlet Filter implementation class MemberFilter
  */
-@WebFilter({"/post/insert", "/post/update", "/post/delete"})
+@WebFilter({"/post/insert", "/post/update", "/post/delete", "/post/recommend"})
 public class MemberFilter extends HttpFilter implements Filter {
        
     
