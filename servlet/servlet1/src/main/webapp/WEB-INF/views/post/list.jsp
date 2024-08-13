@@ -53,7 +53,12 @@
 		       <td>
 		       <c:choose>
 		       		<c:when test="${post.po_up eq 0 && post.po_down eq 0}">0</c:when>
-		       		<c:otherwise> ${post.po_up} / -${post.po_down}</c:otherwise>
+		       		<c:otherwise> ${post.po_up} / 
+		       			<c:choose>
+		       				<c:when test="${post.po_down eq 0}">0</c:when>
+		       				<c:otherwise>-${post.po_down}</c:otherwise>
+		       			</c:choose>
+		       		</c:otherwise>
 		       </c:choose>
 		       </td>
 		       <td>${post.po_views }</td>

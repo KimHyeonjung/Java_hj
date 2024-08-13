@@ -33,6 +33,7 @@ public class PostDelete extends HttpServlet {
 				//서비스에게 게시글 정보와 회원 정보를 주면서 게시글을 삭제하라고 요청
 				if(postService.deletePost(po_num, user)) {
 					request.setAttribute("msg", "게시글 삭제에 성공했습니다.");
+					request.setAttribute("url", "/post/list?co_num="+co_numStr);
 				}
 				//실패하면 실패 알림
 				else {
@@ -40,11 +41,12 @@ public class PostDelete extends HttpServlet {
 				}
 			} else {
 				request.setAttribute("msg", "비빌번호가 잘못되었습니다.");
+				request.setAttribute("url", "/post/detail?po_num="+po_numStr);
 			}
 		} catch (Exception e) {
 			request.setAttribute("msg", "게시글 삭제에 실패했습니다.");
+			request.setAttribute("url", "/post/list?co_num="+co_numStr);
 		}
-		request.setAttribute("url", "/post/list?co_num="+co_numStr);
 		request.getRequestDispatcher("/WEB-INF/views/message.jsp").forward(request, response);
 	}
 
