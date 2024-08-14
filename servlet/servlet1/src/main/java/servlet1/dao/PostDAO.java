@@ -40,4 +40,12 @@ public interface PostDAO {
 	List<CommentVO> selectCommentList(@Param("cri")Criteria cri);
 
 	int selectCommentTotalCount(@Param("cri")Criteria cri);
+
+	boolean insertComment(@Param("cm")CommentVO comment);
+
+	CommentVO selectComment(@Param("cm_num")int cm_num);
+
+	boolean deleteComment(@Param("cm_num")int cm_num);
+
+	boolean updateComment(@Param("cm")CommentVO comment);
 }

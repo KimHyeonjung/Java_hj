@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>테스트</title>
+	<style type="text/css">
+		.list-community{ list-style: none; display: flex; flex-wrap: wrap; border: 1px solid black;}
+		.item-community{ width: 33.33%; height: 80px; box-sizing: border-box; padding: 10px;}
+		.link-community{
+			display: block; border: 1px solid black; box-sizing: border-box;
+			height: 100%; text-align: center; line-height: 58px; font-size: 24px;
+			text-decoration: none; color: black;
+		}
+		.link-community:hover{
+			text-decoration: none; color: white; background-color: tomato;
+		}
+	</style>
+	</head>
+	<body>
+	<jsp:include page="/WEB-INF/views/common/header.jsp"/>
+	<div class="container">
+		<h1>커뮤니티 목록</h1>
+		<ul class="list-community">
+			
+		
+			
+			<li class="item-community">
+				<a href="#" class="link-community">1</a>		
+			</li>
+			
+		</ul>
+	</div>
+	</body>
+</html>

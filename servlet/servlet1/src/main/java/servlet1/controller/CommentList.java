@@ -36,7 +36,7 @@ public class CommentList extends HttpServlet {
 		try {
 			int po_num = Integer.parseInt(po_numStr);
 			int page = Integer.parseInt(pageStr);
-			Criteria cri = new CommentCriteria(page, 2, po_num);
+			Criteria cri = new CommentCriteria(page, 4, po_num);
 			//댓글 목록
 			List<CommentVO> list = postService.getCommntList(cri);
 			//댓글 페이지 네이션

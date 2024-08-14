@@ -11,12 +11,15 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.min.js"></script>
 <style type="text/css">
 	.error{color:red;}
+	.container{width: 500px;}
+	.btn{margin-top: 20px;}
 </style>
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 	<div class="container">
-		<h1 class="mt-3">회원가입</h1>
+		<h1 class="mt-3 text-center">회원가입</h1>
+		<br>
 		<!-- 
 		회원 가입을 위한 화면을 구성
 		- 아이디, 비번, 비번확인, 이메일

@@ -8,8 +8,8 @@
 <title>커뮤니티</title>
 <jsp:include page="/WEB-INF/views/common/head.jsp"/>
 <style type="text/css">
-	.list-community{ list-style: none; display: flex; flex-wrap: wrap;}
-	.item-community{ width: 33.33%; height: 80px; box-sizing: border-box; padding: 10px;}
+	.list-community{ list-style: none; display: flex; flex-wrap: wrap; margin-top: 40px;}
+	.item-community{ width: 33.33%; height: 80px; box-sizing: border-box; padding: 5px;}
 	.link-community{
 		display: block; border: 1px solid black; box-sizing: border-box;
 		height: 100%; text-align: center; line-height: 58px; font-size: 24px;
@@ -18,12 +18,13 @@
 	.link-community:hover{
 		text-decoration: none; color: white; background-color: tomato;
 	}
+	.text-center{margin: 30px;}
 </style>
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <div class="container">
-	<h1>커뮤니티 목록</h1>
+	<h1 class="text-center">커뮤니티 목록</h1>
 	<ul class="list-community">
 		
 	<c:forEach items="${list}" var="co" varStatus="vs">

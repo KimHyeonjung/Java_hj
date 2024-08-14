@@ -10,11 +10,14 @@
 <jsp:include page="/WEB-INF/views/common/head.jsp"/>
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+<style type="text/css">
+.text-center{margin: 40px;}
+</style>
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <div class="container">
-	<h1>게시글 수정</h1>
+	<h1 class="text-center">게시글 수정</h1>
 	<form action="<c:url value="/post/update"/>" method="post">
 		<div class="form-group">
 		  <label for="title">제목:</label>

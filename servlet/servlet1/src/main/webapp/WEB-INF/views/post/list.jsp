@@ -8,11 +8,16 @@
 <meta charset="UTF-8">
 <title>${co.co_name} 커뮤니티</title>
 <jsp:include page="/WEB-INF/views/common/head.jsp"/>
+<style type="text/css">
+.text-center{margin: 40px;}
+.searchbar{float : right;}
+</style>
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <div class="container">
-	<h1>${co.co_name} 커뮤니티 목록</h1>
+	<h1 class="text-center">${co.co_name} 커뮤니티 목록</h1>
+	<div class="searchbar">
 	<form class="input-group mb-3" action="<c:url value="/post/list"/>">
 			<div class="input-group-prepend">
 		    	<select class="form-control" name="type">
@@ -27,6 +32,7 @@
 		  </div>
 		<input type="hidden" name="co_num" value="${pm.cri.co_num}">
 	</form>
+	</div>
 	<table class="table table-hover">
 	   <thead>
 	     <tr>
