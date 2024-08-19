@@ -44,7 +44,7 @@
 		and po_me_id = #{cri.search}
 		</if>
 	</select>
-	<insert id="insertPost">
+	<insert id="insertPost" useGeneratedKeys="true" keyProperty="post.po_num">
 		insert into post(po_co_num, po_me_id, po_title, po_sub)
 		values(#{post.po_co_num}, #{post.po_me_id}, #{post.po_title}, #{post.po_sub} )
 	</insert>
@@ -91,7 +91,7 @@
 	</insert>
 	<select id="selectCommentList" resultType="CommentVO">
 		select * from comment where cm_po_num = #{cri.po_num}
-		order by cm_ori_num desc, cm_num desc
+		order by cm_ori_num desc, cm_num asc
 		limit #{cri.pageStart}, #{cri.perPageNum}
 	</select>
 	<select id="selectCommentTotalCount" resultType="int">
@@ -128,6 +128,13 @@
 		where 
 			cm_num = #{cm.cm_num}
 	</update>
+	<insert id="insertFile">
+		insert into file(fi_po_num, fi_name, fi_ori_name)
+		values(#{file.fi_po_num}, #{file.fi_name}, #{file.fi_ori_name})
+	</insert>
+	<select id="selectFileList" resultType="FileVO">
+		select * from file where fi_po_num = #{po_num}
+	</select>
 </mapper>
 
 

@@ -6,10 +6,10 @@ import org.apache.ibatis.annotations.Param;
 
 import servlet1.model.vo.CommentVO;
 import servlet1.model.vo.CommunityVO;
+import servlet1.model.vo.FileVO;
 import servlet1.model.vo.PostVO;
 import servlet1.model.vo.RecommendVO;
 import servlet1.pagination.Criteria;
-import servlet1.pagination.PageMaker;
 
 public interface PostDAO {
 
@@ -48,4 +48,8 @@ public interface PostDAO {
 	boolean deleteComment(@Param("cm_num")int cm_num);
 
 	boolean updateComment(@Param("cm")CommentVO comment);
+
+	void insertFile(@Param("file")FileVO fileVO);
+
+	List<FileVO> selectFileList(@Param("po_num")int num);
 }

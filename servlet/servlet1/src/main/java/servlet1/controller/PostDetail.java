@@ -1,6 +1,7 @@
 package servlet1.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import servlet1.model.vo.FileVO;
 import servlet1.model.vo.MemberVO;
 import servlet1.model.vo.PostVO;
 import servlet1.model.vo.RecommendVO;
@@ -37,6 +39,11 @@ public class PostDetail extends HttpServlet {
 			MemberVO user = (MemberVO)request.getSession().getAttribute("user");
 			RecommendVO reco = postService.getRecommend(num, user);
 			request.setAttribute("reco", reco);
+			
+			//첨부파일 정보를 가져옴
+			List<FileVO> fileList = postService.getFileList(num);
+			//가져온 첨부파일을 화면에 전송
+			request.setAttribute("fileList", fileList);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

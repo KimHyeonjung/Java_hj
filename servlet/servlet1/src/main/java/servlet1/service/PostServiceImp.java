@@ -1,8 +1,12 @@
 package servlet1.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.Part;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -12,15 +16,19 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import servlet1.dao.PostDAO;
 import servlet1.model.vo.CommentVO;
 import servlet1.model.vo.CommunityVO;
+import servlet1.model.vo.FileVO;
 import servlet1.model.vo.MemberVO;
 import servlet1.model.vo.PostVO;
 import servlet1.model.vo.RecommendVO;
 import servlet1.pagination.Criteria;
 import servlet1.pagination.PageMaker;
+import servlet1.utils.FileUploadUtils;
 
 public class PostServiceImp implements PostService{
 
 	private PostDAO postDao;
+	
+	private String uploadPath = "D:\\uploads";
 
 	public PostServiceImp() {
 		String resource = "servlet1/config/mybatis-config.xml";
@@ -68,7 +76,7 @@ public class PostServiceImp implements PostService{
 	}
 
 	@Override
-	public boolean insertPost(PostVO post) {
+	public boolean insertPost(PostVO post, ArrayList<Part> files) {
 		if(post == null) {
 			return false;
 		}
@@ -78,7 +86,34 @@ public class PostServiceImp implements PostService{
 		if(post.getPo_sub() == null || post.getPo_sub().trim().length() == 0) {
 			return false;
 		}
-		return postDao.insertPost(post);
+		boolean res =  postDao.insertPost(post);
+		//게시글이 등록되지 않으면 첨부파일을 추가하지 않음
+		if(!res) {
+			return false;
+		}
+		if(files == null || files.size() == 0) {
+			return true;
+		}
+		//첨부파일을 추가
+		for(Part file : files) {
+			uploadFile(post.getPo_num(), file);
+		}
+		return true;
+	}
+
+	private void uploadFile(int po_num, Part file) {
+		if(file == null) {
+			return;
+		}
+		String fileName = FileUploadUtils.getFileName(file);
+//		System.out.println(fileName);
+		if(fileName == null || fileName.trim().length() == 0) {
+			return;
+		}
+		//첨부파일을 업로드 하고 업로드된 경로와 파일명을 가져옴
+		String uploadFileName = FileUploadUtils.upload(uploadPath, file);
+		FileVO fileVO = new FileVO(po_num, fileName, uploadFileName);
+		postDao.insertFile(fileVO);
 	}
 
 	@Override
@@ -154,7 +189,27 @@ public class PostServiceImp implements PostService{
 		if(!checkWriter(po_num, user)) {
 			return false;
 		}
+		//게시글 삭제 전 첨부파일 삭제
+		List<FileVO> fileList = postDao.selectFileList(po_num);
+		
+		for(FileVO file : fileList) {
+			deleteFile(file);
+		}
+		
+		//게시글 삭제
 		return postDao.deletePost(po_num);
+	}
+
+	private void deleteFile(FileVO file) {
+		if(file == null) {
+			return;
+		}
+		File realFile = new File(uploadPath + file.getFi_name().replace('/', File.separatorChar));
+		
+		if(realFile.exists()) {
+			realFile.delete();
+		}
+		
 	}
 
 	@Override
@@ -250,5 +305,11 @@ public class PostServiceImp implements PostService{
 			return false;
 		}
 		return postDao.updateComment(comment);
+	}
+
+	@Override
+	public List<FileVO> getFileList(int num) {
+		
+		return postDao.selectFileList(num);
 	}
 }
