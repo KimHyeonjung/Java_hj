@@ -65,10 +65,10 @@ public class PostInsert extends HttpServlet {
 			PostVO post = new PostVO(co_num, title, content, id);
 			
 			//첨부파일을 가져옴
-			ArrayList<Part> files = (ArrayList<Part>) request.getParts();
+			ArrayList<Part> fileList = (ArrayList<Part>) request.getParts();
 			
 			//서비스에게 게시글을 주면서 등록하라고 요청
-			if(postService.insertPost(post, files)) {
+			if(postService.insertPost(post, fileList)) {
 				request.setAttribute("msg", "게시글을 등록했습니다..");
 				request.setAttribute("url", "/post/list?co_num="+co_num);
 			}
