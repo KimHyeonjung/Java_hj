@@ -39,7 +39,7 @@ public class Signup extends HttpServlet {
 			request.setAttribute("url", "/");
 		} else {
 			request.setAttribute("msg", "회원가입에 실패했습니다.");
-			request.setAttribute("url", "/Signup");
+			request.setAttribute("url", "/signup");
 		}
 		request.getRequestDispatcher("/WEB-INF/views/message.jsp").forward(request, response);
 	}

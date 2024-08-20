@@ -9,19 +9,19 @@
 <jsp:include page="/WEB-INF/views/common/head.jsp"/>
 <style type="text/css">
 	.list-community{ list-style: none; display: flex; flex-wrap: wrap; margin-top: 40px;}
-	.item-community{ width: 33.33%; height: 80px; box-sizing: border-box; padding: 5px;}
+	.item-community{ width: 33.33%; box-sizing: border-box; padding: 5px;}
 	.link-community{
 		display: block; border: 1px solid black; box-sizing: border-box;
-		height: 100%; text-align: center; line-height: 58px; font-size: 24px;
-		text-decoration: none; color: black;
+		text-align: center; line-height: 40px; font-size: 24px;
+		text-decoration: none; color: black; padding-bottom: 10px;
 	}
 	.link-community:hover{
 		text-decoration: none; color: white; background-color: tomato;
 	}
 	.text-center{margin: 30px;}
-	.link-community>span{float: right; margin-right: 10px}
-	.link-community::after{clear: both; content: ''; display: block;}
+	
 	.input-group{justify-content: center;}
+	.inner-community{display: block;}
 </style>
 </head>
 <body>
@@ -35,22 +35,49 @@
 			<c:param name="co_num" value="${co.co_num }"/>
 		</c:url>
 		<li class="item-community">
-			<div class="link-community">
-				${co.co_name }
-				<span>
-					<button class="btn btn-outline-danger btn-update" data-num="${co.co_num }">수정</button>	
-					<button class="btn btn-outline-dark btn-delete" data-num="${co.co_num }">삭제</button>	
-				</span>
-			</div>	
+			<span class="link-community">
+				<span class="inner-community"> ${co.co_name }</span>
+				<button class="btn btn-outline-danger btn-update" data-num="${co.co_num }">수정</button>	
+				<a class="btn btn-outline-dark btn-delete" 
+				href="<c:url value="/admin/community/delete?co_num=${co.co_num}"/>">삭제</a>	
+			</span>	
 		</li>
 	</c:forEach>		
 	</ul>
-	<form class="input-group mb-3" action="<c:url value="/admin/community/insert"/>" method="post">
+	<form class="input-group mb-3" action="<c:url value="/admin/community/insert"/>" method="post" id="form_insert">
 	    <input type="text" class="community-input" name="co_name" style="width: 200px">
 	    <div class="input-group-append">
 	    	<button type="submit" class="btn btn-outline-success">등록</button>
 	    </div>
 	</form>
 </div>
+<script type="text/javascript">
+$('.btn-delete').click(function(e){
+	if(!confirm('해당 커뮤니티를 삭제하시겠습니까?')){
+	e.preventDefault();
+	return;
+	}
+});
+$('.btn-update').click(function(e){
+	$('#form_update').remove();
+	var num = $(this).data('num');
+	var name = $(this).prev().text();
+	var str = `
+	<form class="input-group mb-3" action="<c:url value="/admin/community/update"/>" method="post" id="form_update">
+	    <input type="text" class="community-input" name="co_name" style="width: 200px" value="\${name}">
+	    <div class="input-group-append">
+	    	<button type="submit" class="btn btn-outline-danger">수정</button>
+	    </div>
+	    <input type="hidden" name="co_num" value="\${num}">
+	</form>
+	`;
+	$('#form_insert').after(str);
+	$('#form_insert').hide();
+	
+});
+
+</script>
 </body>
 </html>
+
+
