@@ -8,7 +8,7 @@
 		values(#{me.me_id}, #{me.me_pw}, #{me.me_email}, '사용')
 	</insert>
 	<select id="selectMember" resultType="MemberVO">
-		select * from member where me_id = #{id}
+		select * from member where me_id = #{me_id}
 	</select>
 </mapper>
 

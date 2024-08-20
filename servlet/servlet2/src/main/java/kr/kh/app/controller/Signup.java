@@ -28,10 +28,6 @@ public class Signup extends HttpServlet {
 		String me_pw = request.getParameter("me_pw");
 		String me_email = request.getParameter("me_email");
 		
-		System.out.println(me_id);
-		System.out.println(me_pw);
-		System.out.println(me_email);
-		
 		MemberVO member = new MemberVO(me_id, me_pw, me_email);
 		if(memberService.signup(member)) {
 			request.setAttribute("msg", "회원가입에 성공했습니다.");
