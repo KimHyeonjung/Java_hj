@@ -17,7 +17,7 @@
 <body>
 	<jsp:include page="/WEB-INF/views/common/header.jsp" />
 
-	<h3 class="text-center">회원가입</h3>
+	<h3 class="text-center title">회원가입</h3>
 	<div class="container">
 		<form action="<c:url value="/signup"/>" method="post" id="form">
 			<div class="form-group">

@@ -1,0 +1,7 @@
+@charset "UTF-8";
+.title{margin-top: 30px;}
+#form{width: 40%; margin: 0 auto;}
+.btn-outline-success{margin-top: 30px;}
+.left-nav{width: 60%; }
+.left-nav>li{margin: 0 20px;}
+.right-nav{width: 30%; justify-content: flex-end;}
