@@ -23,12 +23,14 @@ public class PostDetail extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String po_num = request.getParameter("po_num");
+		String page = request.getParameter("page");
 		
 		//게시글 조회수를 증가
 		postService.updatePostView(po_num);
 		PostVO post = postService.getPostDetail(po_num);
 		
 		request.setAttribute("post", post);
+		request.setAttribute("page", page);
 		
 		request.getRequestDispatcher("/WEB-INF/views/post/detail.jsp").forward(request, response);
 	}

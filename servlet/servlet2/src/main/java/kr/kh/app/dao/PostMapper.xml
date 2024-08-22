@@ -41,6 +41,18 @@
 	<update id="updatePostViews">
 		update post set po_views = po_views + 1 where po_num = #{po_num}
 	</update>
+	<insert id="insertPost">
+		insert into post(po_title, po_sub, po_me_id, po_co_num)
+		values(#{po.po_title}, #{po.po_sub}, #{po.po_me_id}, #{po.po_co_num})
+	</insert>
+	<update id="updatePost">
+		update post
+		set
+			po_title = #{po.po_title},
+			po_sub = #{po.po_sub}
+		where
+			po_num = #{po.po_num}
+	</update>
 </mapper>
 
 

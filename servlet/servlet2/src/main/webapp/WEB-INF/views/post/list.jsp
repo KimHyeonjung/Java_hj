@@ -8,6 +8,9 @@
 <meta charset="UTF-8">
 <jsp:include page="/WEB-INF/views/common/head.jsp"/>
 <title>${comu.co_name}게시글</title>
+<style type="text/css">
+.flex-test{display: flex; justify-content: space-between;}
+</style>
 </head>
 <body>
 	<jsp:include page="/WEB-INF/views/common/header.jsp" />
@@ -15,20 +18,26 @@
 	<div class="container">
 		<h2 class="title text-center">${comu.co_name} 게시글</h2>
 		<form  action="">
-		<div class="input-group mt-3 mb-3 bar-search">
-			<div class="input-group-prepend">
-				<select class="form-control menu-search" name="type">
-					<option value="all" <c:if test="${pm.cri.type == 'all' }">selected</c:if>>전체</option>
-					<option value="title" <c:if test="${pm.cri.type == 'title' }">selected</c:if>>제목</option>
-					<option value="id" <c:if test="${pm.cri.type == 'id' }">selected</c:if>>작성자</option>
-				</select>	
-			</div>	
-			<input type="text" class="form-control" name="search" placeholder="Search" value="${pm.cri.search}">
-			<input type="hidden" name="co_num" value="${pm.cri.co_num}">
-			<div class="input-group-append">
-			    <button class="btn btn-outline-success input-group-text" type="submit">
-			    	<span >검색</span>
-			    </button>
+		<div class="flex-test">
+			<div class="input-group mt-3 mb-3 bar-search">
+				<div class="input-group-prepend">
+					<select class="form-control menu-search" name="type">
+						<option value="all" <c:if test="${pm.cri.type == 'all' }">selected</c:if>>전체</option>
+						<option value="title" <c:if test="${pm.cri.type == 'title' }">selected</c:if>>제목</option>
+						<option value="id" <c:if test="${pm.cri.type == 'id' }">selected</c:if>>작성자</option>
+					</select>	
+				</div>	
+				<input type="text" class="form-control" name="search" placeholder="Search" value="${pm.cri.search}">
+				<input type="hidden" name="co_num" value="${pm.cri.co_num}">
+				<div class="input-group-append">
+				    <button class="btn btn-outline-success input-group-text" type="submit">
+				    	<span >검색</span>
+				    </button>
+				</div>
+			</div>
+			<div class="mt-3 mb-3">
+				<a href="<c:url value="/post/insert?co_num=${comu.co_num }&co_name=${comu.co_name}"/>" 
+				class="btn btn-outline-danger">글 쓰기</a>
 			</div>
 		</div>
 		</form>
@@ -49,7 +58,7 @@
 					<tr>
 						<td>${po.po_num}</td>
 						<td>
-							<a href="<c:url value="/post/detail?po_num=${po.po_num}"/>">${po.po_title}</a>
+							<a href="<c:url value="/post/detail?po_num=${po.po_num}&page=${pm.cri.page }"/>">${po.po_title}</a>
 						</td>
 						<td><fmt:formatDate value="${po.po_date}"
 								pattern="yyyy-MM-dd HH:mm:ss" />
