@@ -12,8 +12,8 @@ public class PostCriteria extends Criteria{
 	
 	public PostCriteria(int page, int perPageNum, int co_num, String search, String type) {
 		this.page = page;
-		this.search = search;
-		this.type = type;
+		this.search = search == null ? "" : search;
+		this.type = type == null ? "all" : type;
 		this.co_num = co_num;
 		this.perPageNum = perPageNum;
 	}
