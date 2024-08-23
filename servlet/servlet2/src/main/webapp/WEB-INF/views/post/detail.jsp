@@ -12,8 +12,8 @@
 <body>
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
 <div class="container" style="min-height: calc(100vh - 240px)">
-	<div class="container">
-		<h3 class="title text-center">게시글 상세</h3>
+	<h3 class="title text-center">게시글 상세</h3>
+	<c:if test="${post != null }">
 		<div class="form-group">
 			<label>제목</label>
 			<div class="form-control">${post.po_title }</div>
@@ -40,13 +40,14 @@
 		<c:if test="${user.me_id == post.po_me_id }">
 			<a href="<c:url value="/post/update?po_num=${post.po_num}"/>" class="btn btn-outline-primary">수정</a>
 			<c:url var="url" value="/post/delete">
-				<c:param name="co_num" value="${post.po_co_num }"/>
 				<c:param name="po_num" value="${post.po_num }"/>
-				<c:param name="page" value="${page}"/>
 			</c:url>
 			<a href="${url}" class="btn btn-outline-danger">삭제</a>
 		</c:if>
-	</div>	
+	</c:if>
+	<c:if test="${post == null }">
+		<h4>삭제 되거나 등록되지 않은 게시글입니다.</h4>
+	</c:if>
 </div>
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
 </body>

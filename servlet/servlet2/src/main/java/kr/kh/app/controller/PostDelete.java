@@ -21,14 +21,13 @@ public class PostDelete extends HttpServlet {
 	private PostService postService = new PostServiceImp();
        
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String co_num = request.getParameter("co_num");
 		String po_num = request.getParameter("po_num");
-		String page = request.getParameter("page");
 		
 		MemberVO user = (MemberVO)request.getSession().getAttribute("user");
 		
-		if(postService.deletePost(po_num, user)) {
-			request.setAttribute("url", "/post/list?co_num="+ co_num +"&page=" + page);
+		int coNum = postService.deletePost(po_num, user);
+		if(coNum != 0) {
+			request.setAttribute("url", "/post/list?co_num="+ coNum);
 			request.setAttribute("msg", "게시글을 삭제했습니다.");
 		}else {
 			request.setAttribute("url", "/post/detail?po_num="+po_num);

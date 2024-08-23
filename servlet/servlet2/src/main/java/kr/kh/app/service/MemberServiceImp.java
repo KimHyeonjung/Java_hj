@@ -2,7 +2,12 @@ package kr.kh.app.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.regex.Pattern;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -80,5 +85,33 @@ public class MemberServiceImp implements MemberService{
 			return null;
 		}
 		return dbMember;
+	}
+	@Override
+	public Cookie creatCookie(MemberVO user, HttpServletRequest request) {
+		if(user == null) {
+			return null;
+		}
+		HttpSession session = request.getSession();
+		//쿠키는 이름, 값, 만료시간, path 
+		String me_cookie = session.getId();
+		//쿠키 이름이 AL, 값은 현재 세션 아이디값
+		Cookie cookie = new Cookie("AL", me_cookie);
+		cookie.setPath("/");
+		int time = 60 * 60 * 24 * 7;
+		cookie.setMaxAge(time);
+		user.setMe_cookie(me_cookie);
+		//만료시간은 현재 시간 + 1주일 뒤
+		Date date = new Date(System.currentTimeMillis() + time * 1000);
+		user.setMe_limit(date);
+		memberDao.updateMemberCookie(user);
+		return cookie;
+	}
+	@Override
+	public MemberVO getMemberBySid(String sid) {
+		return memberDao.selectMemberBySid(sid);
+	}
+	@Override
+	public void updateMemberCookie(MemberVO user) {
+		memberDao.updateMemberCookie(user);
 	}
 }
