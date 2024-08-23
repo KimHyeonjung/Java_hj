@@ -39,7 +39,12 @@
 		<a href="<c:url value="/post/list?co_num=${post.po_co_num }&page=${page}"/>" class="btn btn-outline-success">목록</a>
 		<c:if test="${user.me_id == post.po_me_id }">
 			<a href="<c:url value="/post/update?po_num=${post.po_num}"/>" class="btn btn-outline-primary">수정</a>
-			<a href="<c:url value="/post/delete?po_num=${post.po_num}"/>" class="btn btn-outline-danger">삭제</a>
+			<c:url var="url" value="/post/delete">
+				<c:param name="co_num" value="${post.po_co_num }"/>
+				<c:param name="po_num" value="${post.po_num }"/>
+				<c:param name="page" value="${page}"/>
+			</c:url>
+			<a href="${url}" class="btn btn-outline-danger">삭제</a>
 		</c:if>
 	</div>	
 </div>

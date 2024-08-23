@@ -26,4 +26,6 @@ public interface PostDAO {
 
 	boolean updatePost(@Param("po")PostVO post);
 
+	boolean deletePost(@Param("po_num")String po_num);
+
 }
