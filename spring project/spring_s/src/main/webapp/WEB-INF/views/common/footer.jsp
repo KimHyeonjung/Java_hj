@@ -7,9 +7,9 @@
 <meta charset="UTF-8">
 </head>
 <body>
-<div class="jumbotron jumbotron-fluid mb-0">
+<div class="jumbotron jumbotron-fluid mb-0 mt-4">
   <div class="container">
-    <h1>푸터</h1>
+    <h4>꼬리말</h4>
   </div>
 </div>
 </body>
