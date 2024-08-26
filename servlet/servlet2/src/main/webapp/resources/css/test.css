@@ -1,0 +1,9 @@
+@charset "UTF-8";
+.title{margin-top: 30px; margin-bottom: 40px;}
+#form{width: 40%; margin: 0 auto;}
+.left-nav{width: 60%; }
+.left-nav>li{margin: 0 20px;}
+.right-nav{width: auto;}
+.bar-search{width: 60%; margin-left: 10px;}
+.input-group-text{width: 100px;}
+.input-group-text>span{margin: 0 auto;}

@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="<c:url value="/resources/css/test.css"/>">
 
 <!-- jQuery library -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
@@ -11,7 +12,7 @@
 
 <!-- Latest compiled JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-<style>
+<!-- <style>
 .title{margin-top: 30px; margin-bottom: 40px;}
 #form{width: 40%; margin: 0 auto;}
 .left-nav{width: 60%; }
@@ -20,4 +21,4 @@
 .bar-search{width: 60%; margin-left: 10px;}
 .input-group-text{width: 100px;}
 .input-group-text>span{margin: 0 auto;}
-</style>
+</style> -->
