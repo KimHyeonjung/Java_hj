@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import kr.kh.spring.model.dto.PersonDTO;
+import kr.kh.spring.model.vo.MemberVO;
 import kr.kh.spring.service.MemberService;
 
 @Controller
@@ -34,5 +36,16 @@ public class HomeController {
 	public String signup() {
 		return "/member/signup";
 	}
-	
+	@PostMapping("/signup")
+	public String signupPost(Model model, MemberVO member) {
+		boolean res = memberService.signup(member);
+		if(res) {
+			model.addAttribute("msg", "회원 가입을 했습니다.");
+			model.addAttribute("url", "/");
+		}else {
+			model.addAttribute("msg", "회원 가입을 하지 못했습니다.");
+			model.addAttribute("url", "/signup");
+		}
+		return "/main/message";
+	}
 }
