@@ -68,4 +68,12 @@ public class HomeController {
 		session.setAttribute("user", user);
 		return "/main/message";
 	}
+	
+	@GetMapping("/logout")
+	public String logout(Model model, HttpSession session) {
+		session.removeAttribute("user");
+		model.addAttribute("msg", "로그아웃 했습니다.");
+		model.addAttribute("url", "/");	
+		return "/main/message";
+	}
 }
