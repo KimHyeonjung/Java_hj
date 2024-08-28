@@ -37,4 +37,12 @@
 			</otherwise>
 		</choose>
 	</select>
+	<insert id="insertPost" useGeneratedKeys="true" keyProperty="post.po_num">
+		insert into post(po_co_num, po_title, po_sub, po_me_id)
+		values(#{post.po_co_num}, #{post.po_title}, #{post.po_sub}, #{post.po_me_id})
+	</insert>
+	<insert id="insertFile">
+		insert into file(fi_name, fi_ori_name, fi_po_num)
+		values(#{file.fi_name}, #{file.fi_ori_name}, #{file.fi_po_num})
+	</insert>
 </mapper>

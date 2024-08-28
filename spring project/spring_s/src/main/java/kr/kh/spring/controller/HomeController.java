@@ -20,8 +20,6 @@ import kr.kh.spring.service.MemberService;
 @Controller
 public class HomeController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-	
 	//private MemberService memberService = new MemberServiceImp();
 	@Autowired
 	private MemberService memberService;
