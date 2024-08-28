@@ -41,8 +41,13 @@
 						</td>
 						<td><fmt:formatDate value="${po.po_date}" pattern="yyyy-MM-dd." />
 						</td>
-						<td>							
-							<a  href="#">${po.po_me_id}</a>
+						<td>
+							<c:url var="url" value="/post/list">
+								<c:param name="co_num" value="${pm.cri.co_num }"/>
+								<c:param name="type" value="id"/>
+								<c:param name="search" value="${po.po_me_id}"/>
+							</c:url>							
+							<a  href="${url}">${po.po_me_id}</a>
 						</td>
 						<td>0</td>
 						<td>${po.po_views}</td>
@@ -55,5 +60,64 @@
 				</c:if>
 			</tbody>
 		</table>
+		<c:if test="${pm.totalCount ne 0 }">
+			<ul class="pagination justify-content-center">
+				<c:if test="${pm.prev }">
+					<c:url var="url" value="/post/list">
+						<c:param name="co_num" value="${pm.cri.co_num }"/>
+						<c:param name="page" value="${pm.startPage - 1 }"/>
+						<c:param name="type" value="${pm.cri.type }"/>
+						<c:param name="search" value="${pm.cri.search }"/>
+					</c:url>
+				    <li class="page-item">
+				    	<a class="page-link" href="${url}">이전</a>
+				    </li>
+				</c:if>
+				<c:forEach begin="${pm.startPage }" end="${pm.endPage }" var="i">
+				<c:url var="url" value="/post/list">
+						<c:param name="co_num" value="${pm.cri.co_num }"/>
+						<c:param name="page" value="${i}"/>
+						<c:param name="type" value="${pm.cri.type }"/>
+						<c:param name="search" value="${pm.cri.search }"/>
+				</c:url>
+				<c:choose>
+					<c:when test="${pm.cri.page eq i }">
+						<c:set var="active" value="active"/>
+					</c:when>
+					<c:otherwise>
+						<c:set var="active" value=""/>
+					</c:otherwise>
+				</c:choose>
+			    <li class="page-item ${active }">
+			    	<a class="page-link" href="${url}">${i }</a>
+			    </li>
+				</c:forEach>
+			    <c:if test="${pm.next }">
+			   	 	<c:url var="url" value="/post/list">
+						<c:param name="co_num" value="${pm.cri.co_num }"/>
+						<c:param name="page" value="${pm.endPage + 1 }"/>
+						<c:param name="type" value="${pm.cri.type }"/>
+						<c:param name="search" value="${pm.cri.search }"/>
+					</c:url>
+				    <li class="page-item">
+				    	<a class="page-link" href="${url}">다음</a>
+				    </li>
+			    </c:if>
+			  </ul>
+		</c:if>
+		<form action="<c:url value="/post/list"/>">
+			<input type="hidden" name="co_num" value="${pm.cri.co_num }">
+			<div class="input-group mb-3">
+				<select class="form-control" name="type">
+					<option value="all" <c:if test="${pm.cri.type eq 'all' }">selected</c:if>>전체</option>
+					<option value="title" <c:if test="${pm.cri.type eq 'title' }">selected</c:if>>제목</option>
+					<option value="id" <c:if test="${pm.cri.type eq 'id' }">selected</c:if>>작성자</option>
+				</select>
+			    <input type="text" class="form-control" placeholder="검색어" name="search" value="${pm.cri.search }">
+			    <div class="input-group-append">
+			      <button type="submit" class="btn btn-outline-info col-12">검색</button>
+			    </div>
+			 </div>
+		</form>
 </body>
 </html>
