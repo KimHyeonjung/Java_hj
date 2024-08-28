@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.kh.spring.model.dto.PersonDTO;
 import kr.kh.spring.model.vo.MemberVO;
@@ -75,5 +77,11 @@ public class HomeController {
 		model.addAttribute("msg", "로그아웃 했습니다.");
 		model.addAttribute("url", "/");	
 		return "/main/message";
+	}
+	@ResponseBody
+	@GetMapping("/check/id")
+	public boolean checkId(@RequestParam("id")String id) {
+		boolean res = memberService.checkId(id);
+		return res;
 	}
 }

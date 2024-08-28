@@ -1,35 +1,88 @@
+
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>테스트</title>
-	<style type="text/css">
-		.list-community{ list-style: none; display: flex; flex-wrap: wrap; border: 1px solid black;}
-		.item-community{ width: 33.33%; height: 80px; box-sizing: border-box; padding: 10px;}
-		.link-community{
-			display: block; border: 1px solid black; box-sizing: border-box;
-			height: 100%; text-align: center; line-height: 58px; font-size: 24px;
-			text-decoration: none; color: black;
-		}
-		.link-community:hover{
-			text-decoration: none; color: white; background-color: tomato;
-		}
-	</style>
-	</head>
-	<body>
-	<jsp:include page="/WEB-INF/views/common/header.jsp"/>
-	<div class="container">
-		<h1>커뮤니티 목록</h1>
-		<ul class="list-community">
-			
-		
-			
-			<li class="item-community">
-				<a href="#" class="link-community">1</a>		
-			</li>
-			
-		</ul>
-	</div>
-	</body>
+    <meta charset="UTF-8">
+    <title>Login Popup</title>
+    <style>
+        /* 배경 어두운 부분 스타일 */
+        .overlay {
+            display: none; /* 기본적으로 숨김 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+            z-index: 1000; /* 로그인 팝업보다 아래 */
+        }
+        /* 로그인 팝업 스타일 */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1001; /* 배경 위에 표시 */
+        }
+        .popup h2 {
+            margin-top: 0;
+        }
+        .popup button.close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        // 페이지 로드 후 팝업을 닫는 함수 정의
+        function closePopup() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('login-popup').style.display = 'none';
+        }
+
+        // 페이지 로드 후 팝업을 열고 닫는 함수 정의
+        function openPopup() {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('login-popup').style.display = 'block';
+        }
+
+        window.onload = function() {
+            // 페이지가 로드되면 팝업을 열기
+            openPopup();
+        };
+    </script>
+</head>
+<body>
+    <!-- 배경을 어둡게 하는 오버레이 -->
+    <div id="overlay" class="overlay" onclick="closePopup()"></div>
+
+    <!-- 로그인 팝업 -->
+    <div id="login-popup" class="popup">
+        <button class="close" onclick="closePopup()">&times;</button>
+        <h2>Login</h2>
+        <form action="login.jsp" method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <br>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+
+    <!-- 나머지 페이지 내용 -->
+    <div>
+        <h1>Welcome to the Page!</h1>
+        <p>This is the main content of the page.</p>
+    </div>
+</body>
 </html>
