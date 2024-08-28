@@ -76,8 +76,8 @@
 				var id = $('#id').val();
 				var res = checkId(id);
 				if(res == 0){
-					displayCheckId(res);
-					alert('이미 사용 중이 아이디입니다.');
+					/* displayCheckId(res); */
+					alert('이미 사용 중인 아이디입니다.');
 					return false;
 				}
 				return true;
