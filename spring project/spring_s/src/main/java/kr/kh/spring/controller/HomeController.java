@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -78,6 +79,7 @@ public class HomeController {
 		model.addAttribute("url", "/");	
 		return "/main/message";
 	}
+//	@CrossOrigin(origins = "*")//모든 사이트들이 해당 URL에 데이터를 요청하도록 허용
 	@ResponseBody
 	@GetMapping("/check/id")
 	public boolean checkId(@RequestParam("id")String id) {
