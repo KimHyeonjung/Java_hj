@@ -87,4 +87,16 @@ public class PostService {
 			e.printStackTrace();
 		}
 	}
+
+	public PostVO getPost(Integer po_num) {
+		return postDao.selectPost(po_num);
+	}
+
+	public List<FileVO> getFileList(Integer po_num) {
+		return postDao.selectFileList(po_num);
+	}
+
+	public void updateView(Integer po_num) {
+		postDao.updateView(po_num);
+	}
 }

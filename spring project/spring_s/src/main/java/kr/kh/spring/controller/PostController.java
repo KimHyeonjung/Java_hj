@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.kh.spring.model.vo.CommunityVO;
+import kr.kh.spring.model.vo.FileVO;
 import kr.kh.spring.model.vo.MemberVO;
 import kr.kh.spring.model.vo.PostVO;
 import kr.kh.spring.pagination.PageMaker;
@@ -35,6 +36,7 @@ public class PostController {
 		//현재 페이지 정보를 주면서 게시글 리스트를 가져오라고 시킴
 		cri.setPerPageNum(2);
 		List<PostVO> postList = postService.getPostList(cri);
+		
 		//현제 페이지 정보를 주면서 페이지네이션 정보를 가져오라고 시킴
 		PageMaker pm = postService.getPageMaker(cri);
 		
@@ -63,4 +65,25 @@ public class PostController {
 		}
 		return "/main/message";
 	}
+	
+	@GetMapping("/detail")
+	public String postDetail(Model model, Integer po_num, PostCriteria cri) {
+		postService.updateView(po_num);
+		PostVO post = postService.getPost(po_num);	
+		List<FileVO> fileList = postService.getFileList(po_num);
+		model.addAttribute("post", post);
+		model.addAttribute("fl", fileList);
+		model.addAttribute("cri", cri);
+		return "/post/detail";
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
