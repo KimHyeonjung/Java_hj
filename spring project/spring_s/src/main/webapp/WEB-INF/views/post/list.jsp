@@ -48,8 +48,7 @@
 							</c:url> 
 							<a href="${url }">${po.po_title}</a>
 						</td>
-						<td><fmt:formatDate value="${po.po_date}"
-								pattern="yyyy-MM-dd." /></td>
+						<td><fmt:formatDate value="${po.po_date}" pattern="yyyy-MM-dd." /></td>
 						<td>
 							<c:url var="url" value="/post/list">
 								<c:param name="co_num" value="${pm.cri.co_num }" />

@@ -77,6 +77,44 @@ public class PostController {
 		return "/post/detail";
 	}
 	
+	@GetMapping("/update")
+	public String postUpdate(Model model, Integer po_num, PostCriteria cri) {
+		PostVO post = postService.getPost(po_num);
+		List<FileVO> fileList = postService.getFileList(po_num);
+		model.addAttribute("post", post);
+		model.addAttribute("fl", fileList);
+		model.addAttribute("cri", cri);
+		return "/post/update";
+	}
+	@PostMapping("/update")
+	public String postUpdatePost(Model model, PostVO post, PostCriteria cri,
+			int []fi_nums, MultipartFile[] fileList, HttpSession session) {
+		
+		MemberVO user = (MemberVO)session.getAttribute("user");
+		
+		if(postService.updatePost(post, fi_nums, fileList, user)) {
+			model.addAttribute("url", "/post/detail?po_num="+post.getPo_num() +"&"+ cri.toString());
+			model.addAttribute("msg", "게시글을 수정했습니다.");
+		}else {
+			model.addAttribute("url", "/post/detail?po_num="+post.getPo_num() +"&"+ cri.toString());
+			model.addAttribute("msg", "게시글을 수정하지 못했습니다.");
+		}
+		return "/main/message";
+	}
+	
+	@GetMapping("/delete")
+	public String postDelete(Model model, Integer po_num, PostCriteria cri, HttpSession session) {
+		MemberVO user = (MemberVO)session.getAttribute("user");
+		
+		if(postService.deletePost(po_num, user)) {
+			model.addAttribute("url", "/post/list?" + cri.toString());
+			model.addAttribute("msg", "게시글을 삭제했습니다.");
+		}else {
+			model.addAttribute("url", "/post/detail?po_num="+po_num +"&"+ cri.toString());
+			model.addAttribute("msg", "게시글을 삭제하지 못했습니다.");
+		}
+		return "/main/message";
+	}
 	
 	
 	

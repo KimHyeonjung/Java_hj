@@ -54,4 +54,21 @@
 	<update id="updateView">
 		update post set po_views = po_views + 1 where po_num = #{po_num}
 	</update>
+	<select id="selectFile" resultType="FileVO">
+		select * from file where fi_num = #{fi_num}
+	</select>
+	<delete id="deleteFile">
+		delete from file where fi_num = #{fi_num}
+	</delete>
+	<update id="updatePost">
+		update post 
+		set 
+			po_title = #{post.po_title}, 
+			po_sub = #{post.po_sub}
+		where 
+			po_num = #{post.po_num}
+	</update>
+	<delete id="deletePost">
+		delete from post where po_num = #{po_num}
+	</delete>
 </mapper>
