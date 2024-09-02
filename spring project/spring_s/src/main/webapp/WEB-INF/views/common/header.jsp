@@ -20,6 +20,7 @@
 			  커뮤니티
 			</a>
 			<div class="dropdown-menu" id="community-list">
+				
 			</div>
 		</li>
 	</ul>
@@ -39,5 +40,30 @@
 	    </c:if>
 	</ul>
 </nav>
+<script type="text/javascript">
+	$('#navbardrop').click(function(){
+		$.ajax({
+			async : true, //비동기 : true(비동기), false(동기)
+			url : '<c:url value="/post/community/list"/>', 
+			type : 'post', 
+			dataType : "json", 
+			success : function (data){
+				console.log(data);
+				var list = data;
+				var str ='';				
+				for(community of list){
+					str += `
+						<a href="<c:url value="/post/list?co_num=\${community.co_num}"/>" class="dropdown-item">\${community.co_name}</a>
+					`;
+				}				
+				$('#community-list').html(str);
+			}, 
+			error : function(jqXHR, textStatus, errorThrown){
+		
+			}
+		});
+	});
+	
+</script>
 </body>
 </html>

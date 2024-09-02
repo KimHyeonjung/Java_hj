@@ -1,6 +1,8 @@
 package kr.kh.spring.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -10,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.kh.spring.model.vo.CommunityVO;
@@ -46,6 +49,11 @@ public class PostController {
 		model.addAttribute("pm", pm);
 		
 		return "/post/list";
+	}
+	@ResponseBody
+	@PostMapping("/community/list")
+	public List<CommunityVO> community2(){
+		return postService.getCommunityList();
 	}
 	
 	@GetMapping("/insert")
