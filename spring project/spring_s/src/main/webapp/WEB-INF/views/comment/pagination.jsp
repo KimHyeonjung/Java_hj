@@ -6,11 +6,11 @@
 	<c:forEach items="${list }" var="comment">
 	<li class="comment-item">
 		<div class="clearfix">
-			<span class="float-left" style="line-height: 38px;">${comment.cm_me_id}</span>
+			<span class="float-left cm-id" style="line-height: 36px;">${comment.cm_me_id}</span>
 			<c:if test="${comment.cm_me_id eq user.me_id }">
 				<div class="float-right">
 					<button class="btn btn-outline-info">수정</button>
-					<button class="btn btn-outline-danger">삭제</button>
+					<button class="btn btn-outline-danger" id="btn-delete" data-num="${comment.cm_num }">삭제</button>
 				</div>
 			</c:if>
 		</div>

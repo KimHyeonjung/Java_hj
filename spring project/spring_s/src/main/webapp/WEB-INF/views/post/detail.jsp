@@ -12,6 +12,8 @@
 .sub {width: 170px; font-size: 12px; display: flex; justify-content: space-between; 
 	margin-left: 0; }
 .content{min-height: 320px; height: auto; margin-top: 15px;}
+.cm-id{font-weight: bold;}
+.btn{font-size: 15px;}
 </style>
 </head>
 <body>
@@ -76,7 +78,7 @@
 		<ul class="comment-list" style="list-style: none; padding: 0">
 			<li class="comment-item">
 				<div class="clearfix">
-					<span class="float-left" style="line-height: 38px;">아이디</span>
+					<span class="float-left cm-id" style="line-height: 36px;">아이디</span>
 					<div class="float-right">
 						<button class="btn btn-outline-info">수정</button>
 						<button class="btn btn-outline-danger">삭제</button>
@@ -213,41 +215,160 @@
 	
 	getCommentList2(cri)
 	
-		//댓글 등록을 클릭하면 댓글을 등록
-		$(document).on('click', '.btn-insert', function(){
-			//로그인 확인
-			if(alertLogin()){
-				return;
-			}
-			//댓글 내용, 게시글 번호
-			var cm_content = $('#input-comment').val();
-			var cm_po_num = ${post.po_num};
-			var comment = {
-					cm_content : cm_content,
-					cm_po_num : cm_po_num
-			}
-			//서버로 데이터를 전송해서 댓글을 등록하고 알림을 띄움
-			$.ajax({
-				async : true, //비동기 : true(비동기), false(동기)
-				url : '<c:url value="/comment/insert"/>', 
-				type : 'post', 
-				data : JSON.stringify(comment), 
-				contentType : "application/json; charset=utf-8",
-				success : function (data){
-					if(data){
-						alert('댓글을 등록했습니다.');
-						$('#input-comment').val('');
-					}else {
-						alert('댓글을 등록하지 못했습니다.')
-					}
-					//댓글 목록을 다시 불러옴
-					getCommentList2(cri)
-				}, 
-				error : function(jqXHR, textStatus, errorThrown){
-					console.log(jqXHR);
+	//댓글 등록을 클릭하면 댓글을 등록
+	$(document).on('click', '.btn-insert', function(){
+		//로그인 확인
+		if(alertLogin()){
+			return;
+		}
+		//댓글 내용, 게시글 번호
+		var cm_content = $('#input-comment').val();
+		var cm_po_num = ${post.po_num};
+		var comment = {
+				cm_content : cm_content,
+				cm_po_num : cm_po_num
+		}
+		//서버로 데이터를 전송해서 댓글을 등록하고 알림을 띄움
+		$.ajax({
+			async : true, //비동기 : true(비동기), false(동기)
+			url : '<c:url value="/comment/insert"/>', 
+			type : 'post', 
+			data : JSON.stringify(comment), 
+			contentType : "application/json; charset=utf-8",
+			success : function (data){
+				if(data){
+					alert('댓글을 등록했습니다.');
+					$('#input-comment').val('');
+				}else {
+					alert('댓글을 등록하지 못했습니다.')
 				}
-			});
+				//댓글 목록을 다시 불러옴
+				getCommentList2(cri)
+			}, 
+			error : function(jqXHR, textStatus, errorThrown){
+				console.log(jqXHR);
+			}
 		});
+	});
+	/*
+	detail.jsp
+	1. 댓글 번호를 알아야 삭제할 수 있음
+	- 삭제 버튼을 눌렀을 때 댓글 번호를 알아야 함
+		=> 삭제 버튼에 댓글번호를 추가
+		=> data-xxx
+	2. 삭제 버튼을 클릭 했을 때 댓글 번호를 서버에(컨트롤러) 주면서 삭제하고 삭제 여부를 알려달라고 요청
+		=> 삭제할 댓글 번호를 가져옴. $('삭제버튼 선택자').data('xxx')
+		=> ajax로 댓글 번호를 전송
+		=> ajax 성공 시 성공 여부에 따라 알림을 출력하고 댓글을 새로고침
+		
+	컨트롤러
+	1. 댓글 삭제를 위한 메소드를 추가
+		=> @RequestMapping or @GetMapping or @PostMapping 중 하나를 선택해서 메소드 위에 추가
+		=> @ResponseBody를 추가
+	2. 메소드에서 기능을 구현
+		=> 화면에서 보낸 정보를 가져옴(댓글 번호)
+		=> 서비스에게 삭제할 댓글 번호와 로그인한 사용자 정보를 주면서 삭제하라고 요청하고 결과를 저장
+		=> 삭제 성공 여부를 화면에 전달
+	서비스
+	1. 사용자가 없으면 false를 반환
+	2. 댓글을 삭제후 결과를 반환
+	다오/매퍼
+	1. 댓글을 삭제하는 쿼리를 구현
+	*/
+	$(document).on('click','#btn-delete', function(){
+		var cm_num = $(this).data('num');
+		commentDel3(cm_num);
+		/* 내가 한거
+		$.ajax({
+			async : true, //비동기 : true(비동기), false(동기)
+			url : '<c:url value="/comment/delete"/>', 
+			type : 'post', 
+			data : {cm_num : cm_num}, 
+			success : function (data){
+				if(data){
+					alert('댓글을 삭제하였습니다.');
+				}else {
+					alert('댓글을 삭제하지 못했습니다.');
+				}
+				getCommentList2(cri)
+			}, 
+			error : function(jqXHR, textStatus, errorThrown){
+				console.log(jqXHR);
+			}
+		});
+		 */
+	});
+	function commentDel1(cm_num){
+		//json으로 화면에서 서버로 전송 => 서버에서 화면으로 json으로 전송
+		let comment = {
+				cm_num : cm_num
+		}
+		$.ajax({
+			async : true, //비동기 : true(비동기), false(동기)
+			url : '<c:url value="/comment/delete1"/>', 
+			type : 'post', 
+			data : JSON.stringify(comment), 
+			contentType : "application/json; charset=utf-8",
+			dataType : "json", 
+			success : function (data){
+				if(data.res){
+					alert('댓글을 삭제했습니다.');
+				}else {
+					alert('댓글을 삭제하지 못했습니다.');
+				}
+				getCommentList2(cri);
+			}, 
+			error : function(jqXHR, textStatus, errorThrown){
+
+			}
+		});
+	}
+	function commentDel2(cm_num){
+		//Object으로 화면에서 서버로 전송 => 서버에서 화면으로 json으로 전송
+		let comment = {
+				cm_num : cm_num
+		}
+		$.ajax({
+			async : true, //비동기 : true(비동기), false(동기)
+			url : '<c:url value="/comment/delete2"/>', 
+			type : 'post', 
+			data : comment, 
+			dataType : "json", 
+			success : function (data){
+				if(data.res){
+					alert('댓글을 삭제했습니다.');
+				}else {
+					alert('댓글을 삭제하지 못했습니다.');
+				}
+				getCommentList2(cri);
+			}, 
+			error : function(jqXHR, textStatus, errorThrown){
+
+			}
+		});
+	}
+	function commentDel3(cm_num){
+		let comment = {
+			cm_num : cm_num
+		}
+		$.ajax({
+			async : true, //비동기 : true(비동기), false(동기)
+			url : '<c:url value="/comment/delete3"/>', 
+			type : 'post', 
+			data : comment, 
+			success : function (data){
+				if(data){
+					alert('댓글을 삭제했습니다.');
+				}else {
+					alert('댓글을 삭제하지 못했습니다.');
+				}
+				getCommentList2(cri);
+			}, 
+			error : function(jqXHR, textStatus, errorThrown){
+
+			}
+		});
+	}
 	</script>
 </body>
 </html>

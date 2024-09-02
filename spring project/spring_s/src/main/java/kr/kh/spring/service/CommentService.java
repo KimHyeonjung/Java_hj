@@ -40,4 +40,22 @@ public class CommentService {
 		return new PageMaker(5, cri, totalCount);
 	}
 
+	public boolean deleteComment(Integer cm_num, MemberVO user) {
+		if(user == null) {
+			return false;
+		}
+		CommentVO comment = commentDao.selectComment(cm_num);
+		if(!comment.getCm_me_id().equals(user.getMe_id())) {
+			return false;
+		}
+		return commentDao.deleteComment(cm_num);
+	}
+
+	public boolean deleteComment(CommentVO comment, MemberVO user) {
+		if(user == null || comment == null) {
+			return false;
+		}
+		return commentDao.deleteComment(comment.getCm_num());
+	}
+
 }
