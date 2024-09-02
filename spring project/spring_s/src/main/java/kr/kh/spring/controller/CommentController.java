@@ -97,4 +97,11 @@ public class CommentController {
 		boolean res = commentService.deleteComment(cm_num, user);
 		return res;
 	}
+	@ResponseBody
+	@PostMapping("/update")
+	public boolean update(@RequestBody CommentVO comment, HttpSession session) {
+		MemberVO user = (MemberVO)session.getAttribute("user");
+		boolean res = commentService.updateComment(comment, user);
+		return res;
+	}
 }

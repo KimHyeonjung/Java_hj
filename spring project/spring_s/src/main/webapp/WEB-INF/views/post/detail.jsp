@@ -154,7 +154,7 @@
 				console.log(jqXHR);
 			}
 		});
-	}
+	}	
 	//댓글 목록이 주어지면 화면에 출력하는 함수
 	function displayCommentList(list){
 		if(list == null || list.length == 0){
@@ -228,6 +228,11 @@
 				cm_content : cm_content,
 				cm_po_num : cm_po_num
 		}
+		if(cm_content.length == 0){
+			alert('댓글을 입력하세요');
+			$('#input-comment').focus();
+			return;
+		}
 		//서버로 데이터를 전송해서 댓글을 등록하고 알림을 띄움
 		$.ajax({
 			async : true, //비동기 : true(비동기), false(동기)
@@ -275,7 +280,7 @@
 	다오/매퍼
 	1. 댓글을 삭제하는 쿼리를 구현
 	*/
-	$(document).on('click','#btn-delete', function(){
+	$(document).on('click','.btn-cm-delete', function(){
 		var cm_num = $(this).data('num');
 		commentDel3(cm_num);
 		/* 내가 한거
@@ -369,6 +374,28 @@
 			}
 		});
 	}
+	/* 
+	pagination.jsp
+	1. 수정 버튼에 data-xxx을 추가해서 댓글 번호를 추가
+	2. 수정(댓글 옆) 버튼 클릭이벤트를 등록
+		- 댓글 번호를 가져옴
+		- 현재 선택한 댓글의 댓글 내용을 가져옴
+		- 댓글 번호와 댓글 내용을 이용해서 문자열로 된 html코드를 구성
+			=> 현재 댓글이 들어간 textarea태그를 포함한 html 코드
+		- 기존에 있는 댓글 등록 화면을 감춤
+		- 기존에 있는 댓글 등록 화면 뒤에 위에서 만든 html 코드를 추가
+	3. 수정(댓글 수정창 옆) 버튼 클릭 이벤트 등록
+		- 댓글 번호를 가져옴
+		- 댓글 내용을 가져옴
+		- 서버에 전송해서 수정을 요청
+		- 성공 여부에 따라 알림을 출력
+	컨트롤러
+	1. 화면에서 보낸 댓글번호, 댓글 내용을 가져옴
+	2. 로그인한 사용자를 가져옴
+	3. 서비스에게 댓글번호, 내용, 사용자를 주면서 수정하라고 요청
+	4. 수정 여부를 화면에 전달
+	*/
+	
 	</script>
 </body>
 </html>

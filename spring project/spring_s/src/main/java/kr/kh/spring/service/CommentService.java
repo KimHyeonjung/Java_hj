@@ -44,8 +44,7 @@ public class CommentService {
 		if(user == null) {
 			return false;
 		}
-		CommentVO comment = commentDao.selectComment(cm_num);
-		if(!comment.getCm_me_id().equals(user.getMe_id())) {
+		if(!isWriter(cm_num, user.getMe_id())) {
 			return false;
 		}
 		return commentDao.deleteComment(cm_num);
@@ -58,4 +57,24 @@ public class CommentService {
 		return commentDao.deleteComment(comment.getCm_num());
 	}
 
+	public boolean updateComment(CommentVO comment, MemberVO user) {
+		if(user == null || comment == null) {
+			return false;
+		}
+		if(!isWriter(comment.getCm_num(), user.getMe_id())) {
+			return false;
+		}
+		return commentDao.updateComment(comment);
+	}
+	public boolean isWriter(int cm_num, String me_id) {
+		CommentVO comment = commentDao.selectComment(cm_num);
+		if(comment == null) {
+			return false;
+		}
+		if(comment.getCm_me_id().equals(me_id)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
