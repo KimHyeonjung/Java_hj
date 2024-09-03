@@ -60,18 +60,25 @@ public class HomeController {
 	public String loginPost(Model model, MemberVO member, HttpSession session) {
 		MemberVO user = memberService.login(member);
 		if(user != null) {
+			user.setAutoLogin(member.isAutoLogin());
 			model.addAttribute("msg", "로그인에 성공했습니다.");
 			model.addAttribute("url", "/");
 		}else {
 			model.addAttribute("msg", "로그인에 실패했습니다.");
 			model.addAttribute("url", "/login");
 		}
-		session.setAttribute("user", user);
+		model.addAttribute("user", user);
 		return "/main/message";
 	}
 	
 	@GetMapping("/logout")
 	public String logout(Model model, HttpSession session) {
+		MemberVO user = (MemberVO)session.getAttribute("user");
+		if(user != null) {
+			user.setMe_cookie(null);
+			memberService.updateMemberCookie(user);
+		}
+		//세션에 있는 user를 제거
 		session.removeAttribute("user");
 		model.addAttribute("msg", "로그아웃 했습니다.");
 		model.addAttribute("url", "/");	

@@ -56,4 +56,18 @@ public class MemberServiceImp implements MemberService{
 		return memberDao.selectMember(id) == null;
 	}
 
+	@Override
+	public void updateMemberCookie(MemberVO user) {
+		if(user == null) {
+			return;
+		}
+		memberDao.updateMemberCookie(user);
+	}
+
+	@Override
+	public MemberVO getMemberByCookie(String sid) {
+		
+		return memberDao.selectMemberByCookie(sid);
+	}
+
 }
