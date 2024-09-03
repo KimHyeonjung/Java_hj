@@ -9,6 +9,8 @@
 .settings/
 java_khj/.gitignore
 ​
+config.properties
+
 # Log file
 *.log
 ​
