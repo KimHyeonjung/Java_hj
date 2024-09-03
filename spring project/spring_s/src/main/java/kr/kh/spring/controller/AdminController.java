@@ -22,14 +22,14 @@ public class AdminController {
 	@Autowired
 	private PostService postService;
 	
-	@GetMapping("/community")
+	@RequestMapping("/community")
 	public String community(Model model) {
 		List<CommunityVO> list = postService.getCommunityList();
 		model.addAttribute("list", list);
 		return "/admin/community";
 	}
 	
-	@PostMapping("/community/insert")
+	@RequestMapping("/community/insert")
 	public String communityInsert(Model model, String name, HttpSession session) {
 		MemberVO user = (MemberVO)session.getAttribute("user");
 		boolean res = false;
@@ -45,7 +45,7 @@ public class AdminController {
 		}
 		return "main/message";
 	}
-	@GetMapping("/community/delete")
+	@RequestMapping("/community/delete")
 	public String communityDelete(Model model, HttpSession session, int co_num) {
 		MemberVO user = (MemberVO)session.getAttribute("user");
 		boolean res = false;
@@ -61,7 +61,7 @@ public class AdminController {
 		}
 		return "main/message";
 	}
-	@PostMapping("/community/update")
+	@RequestMapping("/community/update")
 	public String communityUpdate(Model model, HttpSession session, CommunityVO community) {
 		MemberVO user = (MemberVO)session.getAttribute("user");
 		boolean res = false;
