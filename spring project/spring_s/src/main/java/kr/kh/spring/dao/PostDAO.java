@@ -37,4 +37,8 @@ public interface PostDAO {
 
 	boolean insertCommunity(@Param("co_name")String name);
 
+	boolean deleteCommunity(@Param("co_num")Integer co_num);
+
+	boolean updateCommunity(@Param("co")CommunityVO community);
+
 }

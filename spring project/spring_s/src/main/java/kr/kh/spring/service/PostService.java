@@ -187,4 +187,29 @@ public class PostService {
 			return false;
 		}
 	}
+
+	public boolean deleteCommunity(Integer co_num) {
+		List<CommunityVO> list = postDao.selectCommunityList();
+		if(list.size() == 1) {
+			return false;
+		}
+		try {
+			return postDao.deleteCommunity(co_num);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public boolean updateCommunity(CommunityVO community) {
+		if(community == null) {
+			return false;
+		}
+		try {
+			return postDao.updateCommunity(community);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

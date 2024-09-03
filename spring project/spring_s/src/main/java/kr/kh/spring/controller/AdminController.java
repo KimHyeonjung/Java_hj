@@ -45,5 +45,37 @@ public class AdminController {
 		}
 		return "main/message";
 	}
+	@GetMapping("/community/delete")
+	public String communityDelete(Model model, HttpSession session, int co_num) {
+		MemberVO user = (MemberVO)session.getAttribute("user");
+		boolean res = false;
+		if(user != null && user.getMe_authority().equals("ADMIN")) {
+			res = postService.deleteCommunity(co_num);
+		}
+		if(res) {
+			model.addAttribute("url", "/admin/community");
+			model.addAttribute("msg", "커뮤니티를 삭제했습니다.");
+		}else {
+			model.addAttribute("url", "/admin/community");
+			model.addAttribute("msg", "커뮤니티를 삭제하지 못했습니다.");
+		}
+		return "main/message";
+	}
+	@PostMapping("/community/update")
+	public String communityUpdate(Model model, HttpSession session, CommunityVO community) {
+		MemberVO user = (MemberVO)session.getAttribute("user");
+		boolean res = false;
+		if(user != null && user.getMe_authority().equals("ADMIN")) {
+			res = postService.updateCommunity(community);
+		}
+		if(res) {
+			model.addAttribute("url", "/admin/community");
+			model.addAttribute("msg", "커뮤니티를 수정했습니다.");
+		}else {
+			model.addAttribute("url", "/admin/community");
+			model.addAttribute("msg", "커뮤니티를 수정하지 못했습니다.");
+		}
+		return "main/message";
+	}
 
 }
