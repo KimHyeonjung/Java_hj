@@ -22,7 +22,7 @@ public class HomeController {
 		log.info("/ : 메인 페이지입니다.");
 		
 		
-		return "home";
+		return "/main/home";
 	}
 	
 }
