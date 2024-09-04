@@ -2,10 +2,23 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
- 
+<!DOCTYPE html>
 <html>
 <head>
-<title>스프링</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="<c:url value="/resources/css/bootstrap.min.css"/>">
+<!-- jQuery library -->
+<script src="<c:url value="/resources/js/jquery.min.js"/>"></script>
+<!-- Popper JS -->
+<script src="<c:url value="/resources/js/popper.min.js"/>"></script>
+<!-- Latest compiled JavaScript -->
+<script src="<c:url value="/resources/js/bootstrap.bundle.js"/>"></script>
+<title>
+	<c:catch>
+		<c:when test="${title ne null }">${title }</c:when>
+		<c:otherwise>스프링</c:otherwise>
+	</c:catch>
+</title>
 </head>
 <body>
     <tiles:insertAttribute name="header"/>
