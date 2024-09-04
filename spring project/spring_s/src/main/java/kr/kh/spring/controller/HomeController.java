@@ -118,7 +118,7 @@ public class HomeController {
 	}
 	@PostMapping("/mypage")
 	public String mypagePost(Model model, HttpSession session, MemberVO member) {
-		MemberVO user = (MemberVO)session.getAttribute("uesr");
+		MemberVO user = (MemberVO)session.getAttribute("user");
 		boolean res = memberService.updateMember(user, member);
 		if(res) {
 			model.addAttribute("msg", "회원정보를 수정했습니다.");

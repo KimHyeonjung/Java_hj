@@ -1,4 +1,4 @@
-package kr.kh.spring3;
+package kr.kh.spring3.controller;
 
 
 import org.springframework.stereotype.Controller;
@@ -16,6 +16,10 @@ public class HomeController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Model model) {
 		log.info("/ : 메인 페이지입니다.");
+		
+		
+		
+		
 		return "home";
 	}
 	
