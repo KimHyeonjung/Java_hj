@@ -22,7 +22,8 @@
 		</div>
 		<div class="form-group">
 			<label>첨부파일:</label>
-			<input type="file" class="form-control" name="fileList">
+			<label for="file01">파일골라</label>
+			<input type="file" class="form-control" name="fileList" id="file01" style="display: none;">
 			<input type="file" class="form-control" name="fileList">
 			<input type="file" class="form-control" name="fileList">
 		</div>
