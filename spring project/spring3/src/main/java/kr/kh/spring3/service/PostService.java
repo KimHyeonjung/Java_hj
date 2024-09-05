@@ -35,4 +35,8 @@ public class PostService {
 		int totalCount = postDao.getPostTotalCount(cri);
 		return new PageMaker(2, cri, totalCount);
 	}
+
+	public PostVO getPost(int po_num) {
+		return postDao.selectPost(po_num);
+	}
 }

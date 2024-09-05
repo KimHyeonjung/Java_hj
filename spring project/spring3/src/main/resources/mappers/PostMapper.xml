@@ -30,4 +30,7 @@
 	 		</otherwise>
 	 	</choose>
 	</select>
+	<select id="selectPost" resultType="PostVO">
+		select * from post where po_num = #{po_num}
+	</select>
 </mapper>

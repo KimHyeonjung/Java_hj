@@ -15,4 +15,6 @@ public interface PostDAO {
 
 	int getPostTotalCount(Criteria cri);
 
+	PostVO selectPost(int po_num);
+
 }

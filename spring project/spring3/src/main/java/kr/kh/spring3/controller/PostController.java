@@ -28,7 +28,7 @@ public class PostController {
 	@GetMapping("/list/{co_num}")
 	public String postList(@PathVariable("co_num")int co_num, Model model, PostCriteria cri) {
 		cri.setCo_num(co_num);
-		cri.setPerPageNum(1);
+		cri.setPerPageNum(4);
 		List<CommunityVO> coList = postService.getCommunityList();
 		if(co_num != 0) {
 			List<PostVO> poList = postService.getPostList(cri);
@@ -43,5 +43,15 @@ public class PostController {
 		model.addAttribute("coList", coList);
 		
 		return "/post/list";
+	}
+	
+	@GetMapping("/detail/{po_num}")
+	public String postDetail(@PathVariable("po_num")int po_num, Model model, PostCriteria cri) {
+		
+		PostVO post = postService.getPost(po_num);
+			model.addAttribute("post", post);
+			model.addAttribute("cri", cri);
+		
+		return "/post/detail";
 	}
 }

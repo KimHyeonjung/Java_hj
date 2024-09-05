@@ -38,7 +38,13 @@
 				      <tr>
 				        <td>${po.po_num}</td>
 				        <td>
-				        	<a href="">${po.po_title}</a>
+				        	<c:url var="url" value="/post/detail/${po.po_num }">
+						   		<c:param name="co_num" value="${pm.cri.co_num }"/>
+						   		<c:param name="type" value="${pm.cri.type }"/>
+					   			<c:param name="search" value="${pm.cri.search }"/>
+					   			<c:param name="page" value="${pm.cri.page }"/>
+					   		</c:url>
+				        	<a href="${url }">${po.po_title}</a>
 				        </td>
 				        <td>
 				        	<fmt:formatDate value="${po.po_date}" pattern="yyyy-MM-dd."/>
@@ -64,7 +70,7 @@
 			    </tbody>
 			  </table>
 			   <ul class="pagination justify-content-center">
-			   <c:if test="${prev }">
+			   <c:if test="${pm.prev }">
 			   		<c:url var="url" value="/post/list/${pm.cri.co_num }">
 			   			<c:param name="page" value="${pm.startPage - 1 }"/>
 			   			<c:param name="type" value="${pm.cri.type }"/>
@@ -90,7 +96,7 @@
 				    <li class="page-item ${active }">
 				    <a class="page-link" href="${url }">${i }</a></li>
 			   </c:forEach>
-			   <c:if test="${next }">
+			   <c:if test="${pm.next }">
 			   		<c:url var="url" value="/post/list/${pm.cri.co_num }">
 			   			<c:param name="page" value="${pm.endPage + 1 }"/>
 			   			<c:param name="type" value="${pm.cri.type }"/>
