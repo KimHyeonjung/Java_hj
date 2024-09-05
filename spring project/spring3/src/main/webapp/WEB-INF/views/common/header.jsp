@@ -16,7 +16,7 @@
 				style="width: 40px;">
 			</a>
 			</li>
-			<li class="nav-item"><a class="nav-link" href="#">커뮤니티</a></li>
+			<li class="nav-item"><a class="nav-link" href="<c:url value="/post/list/0"/>">커뮤니티</a></li>
 			<li class="nav-item"><a class="nav-link" href="#">Link 2</a></li>
 			<li class="nav-item"><a class="nav-link" href="#">Link 3</a></li>
 		</ul>
