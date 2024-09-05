@@ -12,6 +12,7 @@ import org.springframework.web.util.WebUtils;
 import kr.kh.spring.model.vo.MemberVO;
 import kr.kh.spring.service.MemberService;
 
+//자동 로그인 되게 
 public class AutoLoginInterceptor extends HandlerInterceptorAdapter{
 	@Autowired
 	MemberService memberService;

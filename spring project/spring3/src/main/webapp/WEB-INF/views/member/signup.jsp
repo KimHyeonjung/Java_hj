@@ -8,6 +8,7 @@
 <script src="<c:url value="/resources/js/jquery.validate.min.js"/>"></script>
 <script src="<c:url value="/resources/js/additional-methods.min"/>"></script>
 <style type="text/css">
+.container-sm{width: 500px;}
 .error{color: red;}
 </style>
 </head>

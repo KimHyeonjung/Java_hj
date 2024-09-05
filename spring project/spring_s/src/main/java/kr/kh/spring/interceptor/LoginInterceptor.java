@@ -14,7 +14,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import kr.kh.spring.model.vo.MemberVO;
 import kr.kh.spring.service.MemberService;
 
-//관리자만 관리자 페이지에 접근할 수 있게 하기 위해서
+//자동로그인 체크했을 경우 쿠키 생성 및 멤버db 쿠키정보 추가
 public class LoginInterceptor extends HandlerInterceptorAdapter{
 
 	@Autowired
