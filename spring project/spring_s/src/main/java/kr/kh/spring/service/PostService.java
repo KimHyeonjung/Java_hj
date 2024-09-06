@@ -51,10 +51,8 @@ public class PostService {
 		}
 		boolean res;
 		try {
-			System.out.println(post);
 			post.setPo_me_id(user.getMe_id());
 			res = postDao.insertPost(post);
-			System.out.println(post);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

@@ -2,6 +2,7 @@ package kr.kh.spring3.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 
 import kr.kh.spring3.model.vo.CommunityVO;
 import kr.kh.spring3.model.vo.FileVO;
@@ -21,5 +22,9 @@ public interface PostDAO {
 	void updateViews(int po_num);
 
 	List<FileVO> selectFileList(int po_num);
+
+	boolean insertPost(PostVO post);
+
+	boolean insertFile(FileVO file);
 
 }

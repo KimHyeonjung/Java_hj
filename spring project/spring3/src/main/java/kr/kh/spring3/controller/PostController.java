@@ -2,15 +2,21 @@ package kr.kh.spring3.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
+import kr.kh.spring3.model.dto.MessageDTO;
 import kr.kh.spring3.model.vo.CommunityVO;
 import kr.kh.spring3.model.vo.FileVO;
+import kr.kh.spring3.model.vo.MemberVO;
 import kr.kh.spring3.model.vo.PostVO;
 import kr.kh.spring3.pagination.PageMaker;
 import kr.kh.spring3.pagination.PostCriteria;
@@ -59,5 +65,25 @@ public class PostController {
 		model.addAttribute("cri", cri);
 		
 		return "/post/detail";
+	}
+	
+	@GetMapping("/insert/{co_num}")
+	public String postInsert(Model model, @PathVariable("co_num")int co_num) {
+		
+		model.addAttribute("co_num", co_num);
+		return "/post/insert";
+	}
+	@PostMapping("/insert")
+	public String postInsertPost(Model model, PostVO post, MultipartFile [] fileList, HttpSession session) {
+		MemberVO user = (MemberVO)session.getAttribute("user");
+		MessageDTO message;
+		if(postService.insertPost(post, user, fileList)) {
+			message = new MessageDTO("/post/list/"+post.getPo_co_num()+"","게시글이 등록되었습니다.");
+		} else {
+			message = new MessageDTO("/post/insert/"+post.getPo_co_num()+"","게시글을 등록하지 못했습니다.");
+		}
+		model.addAttribute("msg", message);
+		
+		return "/main/message";
 	}
 }
