@@ -9,6 +9,33 @@
 	<link href="<c:url value="/resources/summernote/"/>summernote-bs4.min.css" rel="stylesheet">
     <script src="<c:url value="/resources/summernote/"/>summernote-bs4.min.js"></script>
 <style type="text/css">
+.filebox input[type="file"] {
+    position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+}
+.filebox label {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #fff;
+    vertical-align: middle;
+    background-color: #999999;
+    cursor: pointer;
+    height: 40px;
+}
+.filebox .upload-name {
+    margin-left: 10px;
+    display: inline-block;
+    height: 40px;
+    padding: 0 10px;
+    vertical-align: middle;
+    border: 1px solid #dddddd;
+    width: calc(100% - 125px);
+    color: #999999;
+}
 </style>
 </head>
 <body>
@@ -24,13 +51,22 @@
 		</div>
 		<div class="form-group">
 			<label>파일 첨부:</label>
-			<div>
-		<!-- 		<label for="file01" class="btn btn-outline-dark">파일1</label>
-				<label for="file02" class="btn btn-outline-dark">파일2</label>
-				<label for="file03" class="btn btn-outline-dark">파일3</label> -->
-				<input type="file" class="form-control" name="fileList">
-				<input type="file" class="form-control" name="fileList">
-				<input type="file" class="form-control" name="fileList">
+			<div class="">
+				<div class="filebox">
+				    <label for="file1">파일찾기</label> 
+				    <input class="upload-name" value="첨부파일" placeholder="첨부파일">
+				    <input type="file" class="form-control" name="fileList" id="file1">
+				</div>
+				<div class="filebox">
+				    <label for="file2">파일찾기</label> 
+				    <input class="upload-name" value="첨부파일" placeholder="첨부파일">
+				    <input type="file" class="form-control" name="fileList"  id="file2">
+				</div>
+				<div class="filebox">
+				    <label for="file3">파일찾기</label> 
+				    <input class="upload-name" value="첨부파일" placeholder="첨부파일">
+				    <input type="file" class="form-control" name="fileList"  id="file3">
+				</div>
 			</div>
 		</div>
 		<input type="hidden" name="po_co_num" value="${co_num}">	
@@ -42,6 +78,12 @@
         tabsize: 2,
         height: 320
       });
+    </script>
+    <script type="text/javascript">
+    	$('[type=file]').on('change', function(){
+    		var fileName = $(this).val();
+    		$(this).parent().find('.upload-name').val(fileName);
+    	});
     </script>
 </body>
 </html>
