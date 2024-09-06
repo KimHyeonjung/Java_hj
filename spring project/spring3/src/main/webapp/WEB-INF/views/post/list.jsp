@@ -22,6 +22,7 @@
 			</c:forEach>
 		</div>
 		<div class="post-list mt-5">
+		<c:if test="${pm.cri.co_num != 0 }">
 			<table class="table table-hover">
 			    <thead>
 			      <tr>
@@ -119,6 +120,7 @@
 			      <button class="btn btn-outline-info">검색</button>
 			    </div>
 			  </form>
+		</c:if>
 		</div>
 	</div>
 </body>

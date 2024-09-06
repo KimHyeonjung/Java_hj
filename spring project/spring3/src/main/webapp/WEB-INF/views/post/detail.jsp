@@ -17,6 +17,7 @@
 </style>
 </head>
 <body>
+	<h4 class="text-center mt-2">게시글 상세</h4>
 	<c:if test="${post ne null }">
 	<div class="mt-5">
 		<div class="title">
@@ -34,15 +35,15 @@
 		<div class="content">
 			<div class="" >${post.po_sub }</div>
 		</div>
-		<%-- <c:if test="${fl.size() != 0 }">
+		<c:if test="${list.size() != 0 }">
 		<div class="file-list">
 			<label>첨부파일:</label>
-			<c:forEach items="${fl }" var="file">
+			<c:forEach items="${list }" var="file">
 					<a style="margin-left: 5px;" class="" href="<c:url value="/download${file.fi_name }"/>" 
 					download="${file.fi_ori_name }"> ${file.fi_ori_name } </a>
 			</c:forEach>
 		</div>
-		</c:if> --%>
+		</c:if>
 	</div>
 	</c:if>
 	<c:if test="${post eq null }">
