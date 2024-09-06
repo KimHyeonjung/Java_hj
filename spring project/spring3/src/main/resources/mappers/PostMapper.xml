@@ -47,4 +47,21 @@
 		insert into file(fi_name, fi_ori_name, fi_po_num)
 		values(#{fi_name}, #{fi_ori_name}, #{fi_po_num})
 	</insert>
+	<update id="updatePost">
+		update post 
+		set
+			po_title = #{po_title},
+			po_sub = #{po_sub}
+		where
+			po_num = #{po_num}
+	</update>
+	<select id="selectFile" resultType="FileVO">
+		select * from file where fi_num = #{fi_num}
+	</select>
+	<delete id="deleteFile">
+		delete from file where fi_num = #{fi_num}
+	</delete>
+	<delete id="deletePost">
+		delete from post where po_num = #{po_num}
+	</delete>
 </mapper>

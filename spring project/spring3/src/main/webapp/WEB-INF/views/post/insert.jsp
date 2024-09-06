@@ -28,9 +28,9 @@
 		<!-- 		<label for="file01" class="btn btn-outline-dark">파일1</label>
 				<label for="file02" class="btn btn-outline-dark">파일2</label>
 				<label for="file03" class="btn btn-outline-dark">파일3</label> -->
-				<input type="file" class="form-control" name="fileList" id="file01">
-				<input type="file" class="form-control" name="fileList" id="file02">
-				<input type="file" class="form-control" name="fileList" id="file03">
+				<input type="file" class="form-control" name="fileList">
+				<input type="file" class="form-control" name="fileList">
+				<input type="file" class="form-control" name="fileList">
 			</div>
 		</div>
 		<input type="hidden" name="po_co_num" value="${co_num}">	

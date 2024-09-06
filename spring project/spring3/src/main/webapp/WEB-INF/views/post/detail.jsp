@@ -49,12 +49,40 @@
 	<c:if test="${post eq null }">
 		<h3 class="mt-8">삭제 되거나 잘못된 게시글입니다.</h3>
 	</c:if>
-	<c:url var="url" value="/post/list/${cri.co_num }">
-		<c:param name="page" value="${cri.page}" />
-		<c:param name="type" value="${cri.type }" />
-		<c:param name="search" value="${cri.search }" />
-	</c:url> 
-	<a href="${url }" class="btn btn-outline-success">목록</a>
+	<div class="d-flex justify-content-between">
+		<div>
+			<c:url var="url" value="/post/list/${cri.co_num }">
+				<c:param name="page" value="${cri.page}" />
+				<c:param name="type" value="${cri.type }" />
+				<c:param name="search" value="${cri.search }" />
+			</c:url> 
+			<a href="${url }" class="btn btn-outline-dark">목록</a>		
+		</div>
+		<div>
+		<c:if test="${post.po_me_id eq user.me_id }">
+			<c:url var="url" value="/post/update/${post.po_num }">
+				<c:param name="co_num" value="${cri.co_num}" />
+				<c:param name="page" value="${cri.page}" />
+				<c:param name="type" value="${cri.type }" />
+				<c:param name="search" value="${cri.search }" />
+			</c:url> 
+			<c:url var="url" value="/post/update/${post.po_num }">
+				<c:param name="co_num" value="${cri.co_num}" />
+				<c:param name="page" value="${cri.page}" />
+				<c:param name="type" value="${cri.type }" />
+				<c:param name="search" value="${cri.search }" />
+			</c:url> 
+			<a href="${url }" class="btn btn-outline-dark">수정</a>
+			<c:url var="url" value="/post/delete/${post.po_num }">
+				<c:param name="co_num" value="${cri.co_num}" />
+				<c:param name="page" value="${cri.page}" />
+				<c:param name="type" value="${cri.type }" />
+				<c:param name="search" value="${cri.search }" />
+			</c:url> 
+			<a href="${url }" class="btn btn-outline-danger">삭제</a>
+		</c:if>
+		</div>
+	</div>
 	
 </body>
 </html>

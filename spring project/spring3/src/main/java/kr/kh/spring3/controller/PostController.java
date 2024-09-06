@@ -41,7 +41,6 @@ public class PostController {
 		//페이지 메이커
 		PageMaker pm = postService.getPageMaker(cri);
 		//확인
-		log.info(pm);
 		
 		model.addAttribute("poList", poList);
 		model.addAttribute("pm", pm);
@@ -58,7 +57,6 @@ public class PostController {
 		PostVO post = postService.getPost(po_num);
 		//첨부파일 가져옴
 		List<FileVO> fileList = postService.getFileList(po_num);
-		log.info(fileList);
 		//화면에 전달
 		model.addAttribute("post", post);
 		model.addAttribute("list", fileList);
@@ -77,6 +75,7 @@ public class PostController {
 	public String postInsertPost(Model model, PostVO post, MultipartFile [] fileList, HttpSession session) {
 		MemberVO user = (MemberVO)session.getAttribute("user");
 		MessageDTO message;
+		
 		if(postService.insertPost(post, user, fileList)) {
 			message = new MessageDTO("/post/list/"+post.getPo_co_num()+"","게시글이 등록되었습니다.");
 		} else {
@@ -84,6 +83,44 @@ public class PostController {
 		}
 		model.addAttribute("msg", message);
 		
+		return "/main/message";
+	}
+	
+	@GetMapping("/update/{po_num}")
+	public String postUpdate(Model model, @PathVariable("po_num")int po_num, PostCriteria cri) {
+		PostVO post = postService.getPost(po_num);
+		List<FileVO> fileList = postService.getFileList(po_num);
+		model.addAttribute("list", fileList);
+		model.addAttribute("post", post);
+		model.addAttribute("cri", cri);
+		return "/post/update";
+	}
+	@PostMapping("/update")
+	public String postUpdatePost(Model model, PostVO post, PostCriteria cri, HttpSession session
+			, MultipartFile [] fileList, int [] nums) {
+		MemberVO user = (MemberVO)session.getAttribute("user");
+		boolean res = postService.updatePost(post, user, fileList, nums);
+		MessageDTO message;
+		if(res) {
+			message = new MessageDTO("/post/detail/"+post.getPo_num()+"?"+cri.toString(),"게시글을 수정하였습니다.");
+		}else {
+			message = new MessageDTO("/post/update/"+post.getPo_num()+"?"+cri.toString(),"게시글을 수정하지 못했습니다.");
+		}
+		model.addAttribute("msg", message);		
+		return "/main/message";
+	}
+	
+	@GetMapping("/delete/{po_num}")
+	public String postDelete(Model model, @PathVariable("po_num")int po_num, PostCriteria cri, HttpSession session) {
+		MemberVO user = (MemberVO)session.getAttribute("user");
+		boolean res = postService.deletePost(po_num, user);
+		MessageDTO message;
+		if(res) {
+			message = new MessageDTO("/post/list/"+cri.getCo_num()+"?"+cri.toString(), "게시글을 삭제했습니다.");
+		}else {
+			message = new MessageDTO("/post/detail/"+po_num+"?"+cri.toString(), "게시글을 삭제하지 못했습니다.");
+		}
+		model.addAttribute("msg", message);
 		return "/main/message";
 	}
 }
