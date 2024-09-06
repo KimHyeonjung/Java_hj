@@ -40,7 +40,7 @@
 			<label>첨부파일:</label>
 			<c:forEach items="${list }" var="file">
 					<a style="margin-left: 5px;" class="" href="<c:url value="/download${file.fi_name }"/>" 
-					download="${file.fi_ori_name }"> ${file.fi_ori_name } </a>
+					download="${file.fi_ori_name }">${file.fi_ori_name } </a>
 			</c:forEach>
 		</div>
 		</c:if>
