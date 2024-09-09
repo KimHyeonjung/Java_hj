@@ -11,23 +11,25 @@ input 창과 버튼, 리스트를 구성해서 버튼을 클릭하면 input창�
  - 배열의 map을 이용해서 구성(첫번째 예제 참고)
 */
 function TodoList(){
-	let [todo, setTodo] = useState("");
-	let [todoList, setTodoList] = useState([]);
+	const [todo, setTodo] = useState("");
+	const [todoList, setTodoList] = useState([]);
 	function change(e){
-		setTodo(e.target.value);
+		const inputText = e.target.value;
+		setTodo(inputText);
 	}
 	function add(){
-		setTodoList([...todoList, todo]);
+		setTodoList([...todoList, todo]);		
+		setTodo("");
 	}
 	return (
 		<div>
-			<input onChange={change}/>
+			<input onChange={change} value={todo}/>
 			<button onClick={add}>버튼</button>
 			<h4>오늘의 할일</h4>
 			<ul>
 				{
-				todoList.map((value)=>{
-					return <Li text={value} />
+				todoList.map((value, index)=>{
+					return <Li key={index}text={value} />
 				})
 				}
 			</ul>
