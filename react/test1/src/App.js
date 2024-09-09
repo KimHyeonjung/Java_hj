@@ -1,10 +1,10 @@
-import Test1 from "./test1/Test1";
+import Test2 from "./test2/test2";
 
 function App() {
   return (
    <div>
-    <Test1/>
-
+    {/* <Test1/> */}
+    <Test2/>
    </div>
   );
 }
