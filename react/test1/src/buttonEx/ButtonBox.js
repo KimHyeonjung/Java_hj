@@ -15,7 +15,6 @@ import { useState } from "react";
 */
 function ButtonBox(){
 	var [page, setPage] = useState(1);
-	var [text, setText] = useState("");
 	var maxPage = 5;
 	//이전 페이지로
 	function prev(){

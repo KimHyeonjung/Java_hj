@@ -5,6 +5,10 @@ import Todo from "./todo/Todo";
 import TodoList from "./todoList/TodoList";
 import ButtonBox2 from "./buttonEx/ButtonBox2";
 import ButtonBox3 from "./buttonEx/ButtonBox3";
+import Input1 from "./inputEx/Input1";
+import Input2 from "./inputEx/Input2";
+import List1 from "./listEx/List";
+import Select from "./inputEx/Select";
 
 function App() {
   return (
@@ -14,7 +18,11 @@ function App() {
     {/* <TodoList/> */}
     {/* <ButtonBox/> */}
     {/* <ButtonBox2/> */}
-    <ButtonBox3/>
+    {/* <ButtonBox3/> */}
+    {/* <Input1 /> */}
+    {/* <Input2 /> */}
+    {/* <List1 /> */}
+    <Select />
    </div>
   );
 }
