@@ -4,14 +4,14 @@ import Modal from "./Modal";
 function PostList({list, setList}){
 	
 	let [display, setDisplay] = useState(false);
-	let [p, setP] = useState({});
+	let [index, setIndex] = useState(0);
 
 	function modalClick(index){
+		setIndex(index);		
 		let tmp = [...list];
 		tmp[index].view++;
 		setList(tmp);	
 		setDisplay(true);
-		setP(index);		
 	}
 	function delPost(index){
 		setList(list.filter((item, i)=>index != i));
@@ -48,7 +48,7 @@ function PostList({list, setList}){
 					</tbody>					
 				</table>
 				{
-					display ?  <Modal funcClose={()=>setDisplay(false)} post={p} index={index}/> : ""
+					display ?  <Modal funcClose={()=>setDisplay(false)} list={list} index={index}/> : ""
 				}
 			</div>
 	)
