@@ -9,6 +9,7 @@ import Input1 from "./inputEx/Input1";
 import Input2 from "./inputEx/Input2";
 import List1 from "./listEx/List";
 import Select from "./inputEx/Select";
+import Post1 from "./postEx/Post1";
 
 function App() {
   return (
@@ -22,7 +23,8 @@ function App() {
     {/* <Input1 /> */}
     {/* <Input2 /> */}
     {/* <List1 /> */}
-    <Select />
+    {/* <Select /> */}
+    <Post1 />
    </div>
   );
 }

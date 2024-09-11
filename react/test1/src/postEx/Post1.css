@@ -1,0 +1,37 @@
+#title, #writer, #content{
+	display: block; height: 40px; border: 1px solid black;
+	border-radius: 8px; width: 100%; box-sizing: border-box;
+	margin: 10px 0; padding: 15px 15px;
+}
+
+#content{
+	height: 400px; 
+}
+
+.btn{
+	width: 100%; border: 1px solid; border-radius: 5px;
+	cursor: pointer; height: 40px;
+}
+
+#table-box{
+	margin-top: 10px;
+}
+#table-box table{
+	width: 100%; border-collapse: collapse;
+}
+#table-box tr{
+	height: 30px;
+}
+#modal{
+	position: fixed; top: 0; left: 0; right: 0; bottom: 400px;
+	background-color: rgba(0, 0, 0, 0.2);
+	padding: 30px 30px;
+}
+#modal-content{
+	background-color: #fff;
+}
+
+#popup{
+	width: 700px; height: 800px; border: 2px solid tomato; position: fixed; left: 50%; top: 50%;
+	transform: translate(-50%, -50%); background-color: beige; z-index: 1000;
+}
