@@ -9,15 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.kh.spring3.model.dto.MessageDTO;
 import kr.kh.spring3.model.vo.CommunityVO;
 import kr.kh.spring3.model.vo.MemberVO;
-import kr.kh.spring3.model.vo.PostVO;
 import kr.kh.spring3.service.MemberService;
 import kr.kh.spring3.service.PostService;
 import lombok.extern.log4j.Log4j;
@@ -28,6 +27,8 @@ public class HomeController {
 	
 	@Autowired
 	private MemberService memberService;
+	@Autowired
+	private PostService postService;
 	
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
@@ -85,5 +86,18 @@ public class HomeController {
 		return "/main/message";
 	}
 	
+	@ResponseBody
+	@GetMapping("/test")
+	public String test() {
+		return "Hi";
+	}
+	
+	@ResponseBody
+	@GetMapping("/test2")
+	public List<CommunityVO> test2() {
+		
+		return postService.getCommunityList();
+	}
+
 	
 }
