@@ -22,9 +22,9 @@ function Main() {
             { 
               list.map((item,index)=>{
                 return (
-                  <li key={index}>
-                    <Link to={"/post/list/"+item.co_num}>{item.co_name}</Link>
-                  </li>
+                  <div key={index}>
+                    <Link className="btn btn-outline-success" to={"/post/list/"+item.co_num}>{item.co_name}</Link>
+                  </div>
                 )
               })
             }

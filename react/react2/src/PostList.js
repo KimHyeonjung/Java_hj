@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+import Table from 'react-bootstrap/Table';
 
 function PostList(){
 	let [list, setList] = useState([]);
@@ -25,7 +26,7 @@ function PostList(){
 }, [])
 	return (
 		<div>
-			<table border={1}>
+			{/* <table border={1}>
 				<thead>
 					<tr>
 						<th>번호</th>
@@ -41,7 +42,9 @@ function PostList(){
 							return(
 								<tr key={index}>
 									<td>{item.po_num}</td>
-									<td>{item.po_title}</td>
+									<td>
+										<Link to={"/post/detail/"+item.po_num}>{item.po_title}</Link>
+									</td>
 									<td>{item.po_me_id}</td>
 									<td>{item.date}</td>
 									<td>{item.po_views}</td>
@@ -52,7 +55,35 @@ function PostList(){
 					}
 					
 				</tbody>
-			</table>
+			</table> */}
+			<Table striped bordered hover>
+      <thead>
+        <tr>
+					<th>번호</th>
+					<th>제목</th>
+					<th>작성자</th>
+					<th>작성일</th>
+					<th>조회수</th>
+        </tr>
+      </thead>
+      <tbody>
+				{
+					list.map((item, index)=>{
+						return(
+							<tr key={index}>
+								<td>{item.po_num}</td>
+								<td>
+									<Link to={"/post/detail/"+item.po_num}>{item.po_title}</Link>
+								</td>
+								<td>{item.po_me_id}</td>
+								<td>{item.date}</td>
+								<td>{item.po_views}</td>
+							</tr>
+						)
+					})						
+				}
+      </tbody>
+    </Table>
 		</div>
 	)
 }
