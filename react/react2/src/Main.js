@@ -22,7 +22,7 @@ function Main() {
             { 
               list.map((item,index)=>{
                 return (
-                  <div key={index}>
+                  <div key={index} className="d-flex justify-content-between">
                     <Link className="btn btn-outline-success" to={"/post/list/"+item.co_num}>{item.co_name}</Link>
                   </div>
                 )
