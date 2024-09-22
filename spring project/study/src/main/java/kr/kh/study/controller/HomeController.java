@@ -39,7 +39,7 @@ public class HomeController {
 		System.out.println("암호화된 문자열 == abc : " + passwordEncoder.matches("abc", enc));
 		System.out.println("암호화된 문자열 == abd : " + passwordEncoder.matches("abd", enc));
 		//메일 전송 테스트
-		mailSend("kardel@naver.com", "콘피그프로퍼티스 테스트", "전송이 잘 됐습니다");
+//		mailSend("kardel@naver.com", "콘피그프로퍼티스 테스트", "전송이 잘 됐습니다");
 		return "/home";
 	}
 	
