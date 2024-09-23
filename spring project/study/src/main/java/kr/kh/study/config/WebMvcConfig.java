@@ -10,9 +10,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
-import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 
+import kr.kh.study.Interceptor.GuestInterceptor;
 import kr.kh.study.Interceptor.MemberInterceptor;
 
 @Configuration
@@ -40,6 +39,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(new MemberInterceptor())
                 .addPathPatterns("/post/**")  // 모든 경로에 대해 인터셉터 적용
                 .excludePathPatterns("/post/list", "/post/detail"); //제외할 경로  // 특정 경로 제외
+        registry.addInterceptor(new GuestInterceptor())
+        		.addPathPatterns("/signup", "/login");
     }
     
 	@Bean

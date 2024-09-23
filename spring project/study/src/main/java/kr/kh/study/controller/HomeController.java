@@ -1,15 +1,13 @@
 package kr.kh.study.controller;
 
-import java.util.Locale;
-
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import kr.kh.study.dao.PostDAO;
@@ -30,7 +28,8 @@ public class HomeController {
 	private JavaMailSender mailSender;
 	
 	@GetMapping("/")
-	public String home(Locale locale, Model model) {
+	public String home(HttpSession session) {
+		session.setAttribute("user", "user");
 		System.out.println(""+postDao.count());
 		String str = "abc";
 		String enc = passwordEncoder.encode(str);
@@ -45,15 +44,19 @@ public class HomeController {
 	
 	@GetMapping("/post/list")
 	public String postList() {
-		return "home";
+		return "/home";
 	}
 	@GetMapping("/post/detail")
 	public String postDetail() {
-		return "home";
+		return "/home";
 	}
 	@GetMapping("/post/insert")
 	public String postInsert() {
-		return "home";
+		return "/home";
+	}
+	@GetMapping("/login")
+	public String login() {
+		return "/home";
 	}
 	
 	public boolean mailSend(String to, String title, String content) {
