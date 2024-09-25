@@ -21,7 +21,7 @@ public class PostController {
 	
 	private PostService postService;
 	
-	@GetMapping("/post/list/{co_num}") // @PathVariable("co_num") ()생략 가능
+	@GetMapping("/post/list/{co_num}") // @PathVariable("co_num") 변수 이름이 같으면 ()생략 가능
 	public String postList(Model model, @PathVariable int co_num, PostCriteria cri) {
 		cri.setCo_num(co_num);
 		cri.setPerPageNum(2);
@@ -35,5 +35,11 @@ public class PostController {
 		model.addAttribute("cList", communityList);
 		model.addAttribute("pm", pm);
 		return "post/list";
+	}
+	@GetMapping("/post/detail/{po_num}")
+	public String postDetail(Model model, @PathVariable int po_num) {
+		PostVO post = postService.getPost(po_num);
+		model.addAttribute("post", post);
+		return "post/detail";
 	}
 }

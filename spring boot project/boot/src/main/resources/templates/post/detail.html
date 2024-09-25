@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{layout/layout.html}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<main layout:fragment="content">
+		<div th:object=${post}>
+			<h2 class="mt-3 text-center">게시글 상세</h2>
+			<div class="mt-4">
+				<h4 th:text="*{po_title}"></h4>
+			</div>
+			<div>
+				<span th:text="*{po_me_id}" style="font: normal bold 12px 'Do Hyeon', sans-serif;"></span> /
+				<i th:text="*{#dates.format(po_date, 'yyyy-MM-dd')}"></i> / 조회수 : 
+				<span th:text="*{po_views}"> </span>
+			<hr/>
+			</div>
+			<div class="mt-4" th:utext="*{po_sub}" style="min-height: 400px;"></div>
+			<a class="btn btn-outline-dark" th:href="@{/post/list/{co_num}(co_num=*{po_co_num})}">목록으로</a>
+		</div>
+	</main>
+</body>
+</html>
