@@ -34,7 +34,21 @@
 		        <td th:text="${item.po_views}"></td>
 		      </tr>		      
 		    </tbody>
-		  </table>
+		  </table>		
+		<ul class="pagination justify-content-center" th:object="${pm}" th:unless="${pm.endPage == 0}">
+			 <li class="page-item" th:if="*{prev}">
+			 	<a class="page-link" th:href="@{/post/list/{co_num}(page=*{startPage - 1}, co_num=*{cri.co_num})}">이전</a>
+			 </li>
+			 <li class="page-item" 
+			 	th:each="i : *{#numbers.sequence(startPage, endPage)}"
+			 	th:classappend="*{cri.page} == ${i} ? 'active' : '' ">
+			 	<a class="page-link" th:href="@{/post/list/{co_num}(page=${i}, co_num=*{cri.co_num})}"
+			 	 th:text="${i}">1</a>
+			 </li>
+			 <li class="page-item" th:if="*{next}">
+			 	<a class="page-link" th:href="@{/post/list/{co_num}(page=*{endPage + 1}, co_num=*{cri.co_num})}">다음</a>
+			 </li>
+		</ul>
 	</main>
 </body>
 </html>
