@@ -35,4 +35,37 @@ public class PostService {
 		
 		return postDao.selectPost(po_num);
 	}
+
+	public CommunityVO getCommunity(int co_num) {
+		return postDao.selectCommunity(co_num);
+	}
+
+	public boolean insertPost(PostVO post) {
+		if(post == null) {
+			return false;
+		}
+		try {
+			return postDao.insertPost(post);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public boolean updatePost(PostVO post) {
+		if(post == null) {
+			return false;
+		}
+		try {
+			return postDao.updatePost(post);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public boolean deletePost(int po_num) {
+		
+		return postDao.deletePost(po_num);
+	}
 }

@@ -21,7 +21,12 @@
 			<hr/>
 			</div>
 			<div class="mt-4" th:utext="*{po_sub}" style="min-height: 400px;"></div>
-			<a class="btn btn-outline-dark" th:href="@{/post/list/{co_num}(co_num=*{po_co_num})}">목록으로</a>
+			<a class="btn btn-outline-dark"  
+				th:href="@{/post/list/{co_num}(co_num=*{po_co_num})}">목록으로</a>
+			<a class="btn btn-outline-dark" 
+				th:href="@{/post/update/{po_num}(po_num=*{po_num})}">수정</a>
+			<a class="btn btn-outline-dark"
+				th:href="@{/post/delete/{co_num}/{po_num}(po_num=*{po_num}, co_num=*{po_co_num})}">삭제</a>
 		</div>
 	</main>
 </body>

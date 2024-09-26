@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout.html}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<main layout:fragment="content">
+		<div>
+			<h2 class="mt-3 text-center"
+				th:text="${community.co_name} + ' 게시글 작성'"></h2>
+			<form method="post" th:action="@{/post/insert}">
+				<div class="form-group">
+					<label for="title">제목:</label> <input type="text"
+						class="form-control" id="title" name="po_title">
+				</div>
+				<div class="form-group">
+					<label for="writer">작성자:</label> <input type="text"
+						class="form-control" id="writer" name="po_me_id">
+				</div>
+				<div class="form-group">
+					<label for="content">내용:</label>
+					<textarea class="form-control" id="content" name="po_sub"
+							style="min-height: 400px; height: auto;"></textarea>
+				</div>
+
+				<button type="submit" class="btn btn-outline-dark">등록</button>
+				<input type="hidden" name="po_co_num" th:value="${co_num}">
+				<a class="btn btn-outline-dark"
+					th:href="@{/post/list/{co_num}(co_num=${co_num})}">목록으로</a>
+			</form>
+		</div>
+	</main>
+</body>
+</html>

@@ -18,4 +18,23 @@
 	<select id="selectPost" resultType="PostVO">
 		select * from post where po_num = #{po_num}
 	</select>
+	<select id="selectCommunity" resultType="CommunityVO">
+		select * from community where co_num = #{co_num}
+	</select>
+	<insert id="insertPost">
+		insert into post(po_title, po_sub, po_me_id, po_co_num)
+		values(#{po_title}, #{po_sub}, #{po_me_id}, #{po_co_num})
+	</insert>
+	<update id="updatePost">
+		update 
+			post 
+		set 
+			po_title = #{po_title},
+			po_sub = #{po_sub}
+		where
+			po_num = #{po_num}	
+	</update>
+	<delete id="deletePost">
+		delete from post where po_num = #{po_num}
+	</delete>
 </mapper>
