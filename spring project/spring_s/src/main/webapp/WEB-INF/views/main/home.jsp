@@ -19,5 +19,31 @@
 		<br>
 		<button type="submit">전송</button>
 	</form>
+	<div>
+		<input type="text" id="prompt" name="prompt"> <button id="btn-prompt">전송</button>
+	</div>
+	<div id="responsebox"></div>
+<script type="text/javascript">
+	$('#btn-prompt').click(function(){
+		var prompt = $('#prompt').val();
+		$.ajax({
+			async : true, //비동기 : true(비동기), false(동기)
+			url : '<c:url value="/api/openai/prompt"/>', 
+			type : 'post', 
+			dataType : 'text',
+			data : JSON.stringify(prompt), 
+			contentType : "application/json; charset=utf-8",
+			success : function (data){
+				console.log(data);
+				$('#responsebox').text(data);
+			}, 
+			error : function(jqXHR, textStatus, errorThrown){
+
+			}
+		});
+	});
+		
+	
+</script>
 </body>
 </html>

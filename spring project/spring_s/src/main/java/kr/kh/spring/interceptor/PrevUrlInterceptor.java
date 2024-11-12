@@ -20,7 +20,7 @@ public class PrevUrlInterceptor extends HandlerInterceptorAdapter{
 			//로그인 했으면 메인페이지로
 			if(user != null) {
 				response.setContentType("text/html; charset=UTF-8");
-				response.getWriter().write("<script>alert(\"회원은 접근할 수 있습니다.\")</script>");
+				response.getWriter().write("<script>alert(\"회원은 접근할 수 없습니다.\")</script>");
 				response.getWriter().write("<script>location.href=\""+ request.getContextPath() + "/" + "\"</script>");
 				response.flushBuffer();
 				return false;
